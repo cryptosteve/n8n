@@ -1,1 +1,17 @@
-{}
+{
+    "Test_Project": {
+        "projectName": "Test_Project",
+        "description": "Test Project",
+        "type": "community",
+        "author": "cryptosteve",
+        "version": "0.0.1",
+        "authorWebsite": "https://github.com/cryptosteve/n8n",
+        "githubUri": "https://github.com/cryptosteve/n8n",
+        "license": "MIT",
+        "lastUpdated": "1688136231862",
+        "tags": [
+            "Gluu",
+            "Automation"
+        ]
+    }
+}
