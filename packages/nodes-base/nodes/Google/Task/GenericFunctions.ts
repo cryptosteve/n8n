@@ -9,27 +9,27 @@ import {
 } from 'n8n-core';
 
 import {
-	IDataObject, NodeApiError,
+	IDataObject,
 } from 'n8n-workflow';
 
 export async function googleApiRequest(
 	this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions,
 	method: string,
 	resource: string,
-	body: IDataObject = {},
+	body: any = {},
 	qs: IDataObject = {},
 	uri?: string,
-	headers: IDataObject = {},
-): Promise<any> { // tslint:disable-line:no-any
+	headers: IDataObject = {}
+): Promise<any> {
 	const options: OptionsWithUri = {
 		headers: {
-			'Content-Type': 'application/json',
+			'Content-Type': 'application/json'
 		},
 		method,
 		body,
 		qs,
 		uri: uri || `https://www.googleapis.com${resource}`,
-		json: true,
+		json: true
 	};
 
 	try {
@@ -43,10 +43,20 @@ export async function googleApiRequest(
 		return await this.helpers.requestOAuth2.call(
 			this,
 			'googleTasksOAuth2Api',
-			options,
+			options
 		);
 	} catch (error) {
-		throw new NodeApiError(this.getNode(), error);
+		if (error.response && error.response.body && error.response.body.error) {
+
+			let errors = error.response.body.error.errors;
+
+			errors = errors.map((e: IDataObject) => e.message);
+			// Try to return the error prettier
+			throw new Error(
+				`Google Tasks error response [${error.statusCode}]: ${errors.join('|')}`
+			);
+		}
+		throw error;
 	}
 }
 
@@ -55,9 +65,9 @@ export async function googleApiRequestAllItems(
 	propertyName: string,
 	method: string,
 	endpoint: string,
-	body: IDataObject = {},
-	query: IDataObject = {},
-): Promise<any> { // tslint:disable-line:no-any
+	body: any = {},
+	query: IDataObject = {}
+): Promise<any> {
 	const returnData: IDataObject[] = [];
 
 	let responseData;
@@ -69,7 +79,7 @@ export async function googleApiRequestAllItems(
 			method,
 			endpoint,
 			body,
-			query,
+			query
 		);
 		query.pageToken = responseData['nextPageToken'];
 		returnData.push.apply(returnData, responseData[propertyName]);

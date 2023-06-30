@@ -1,36 +1,35 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 
 export class FileMaker implements ICredentialType {
 	name = 'fileMaker';
 	displayName = 'FileMaker API';
-	documentationUrl = 'fileMaker';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Host',
 			name: 'host',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Database',
 			name: 'db',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Login',
 			name: 'login',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Password',
 			name: 'password',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			typeOptions: {
 				password: true,
 			},

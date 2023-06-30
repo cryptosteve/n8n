@@ -2,7 +2,7 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export const dealOperations: INodeProperties[] = [
+export const dealOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -45,9 +45,9 @@ export const dealOperations: INodeProperties[] = [
 		default: 'get',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const dealFields: INodeProperties[] = [
+export const dealFields = [
 	/* -------------------------------------------------------------------------- */
 	/*                                  deal:get                               */
 	/* -------------------------------------------------------------------------- */
@@ -78,7 +78,6 @@ export const dealFields: INodeProperties[] = [
 		displayName: 'Limit',
 		name: 'limit',
 		type: 'number',
-		description: 'Max number of results to return',
 		default: 20,
 		displayOptions: {
 			show: {
@@ -109,8 +108,10 @@ export const dealFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
+
+
 	/* -------------------------------------------------------------------------- */
 	/*                                deal:create                                 */
 	/* -------------------------------------------------------------------------- */
@@ -133,7 +134,7 @@ export const dealFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Closing date of deal',
+		description: 'Closing date of deal.',
 	},
 	{
 		displayName: 'Expected Value',
@@ -142,7 +143,7 @@ export const dealFields: INodeProperties[] = [
 		required: true,
 		typeOptions: {
 			minValue: 0,
-			maxValue: 1000000000000,
+			maxValue: 1000000000000
 		},
 		displayOptions: {
 			show: {
@@ -158,7 +159,7 @@ export const dealFields: INodeProperties[] = [
 			},
 		},
 		default: 1,
-		description: 'Expected Value of deal',
+		description: 'Expected Value of deal.',
 	},
 	{
 		displayName: 'Milestone',
@@ -179,7 +180,7 @@ export const dealFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Milestone of deal',
+		description: 'Milestone of deal.',
 	},
 	{
 		displayName: 'Name',
@@ -200,7 +201,7 @@ export const dealFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Name of deal',
+		description: 'Name of deal.',
 	},
 	{
 		displayName: 'Probability',
@@ -209,7 +210,7 @@ export const dealFields: INodeProperties[] = [
 		required: true,
 		typeOptions: {
 			minValue: 0,
-			maxValue: 100,
+			maxValue: 100
 		},
 		displayOptions: {
 			show: {
@@ -225,13 +226,14 @@ export const dealFields: INodeProperties[] = [
 			},
 		},
 		default: 50,
-		description: 'Expected probability',
+		description: 'Expected probability.',
 	},
 	{
 		displayName: 'JSON Parameters',
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				resource: [
@@ -264,7 +266,7 @@ export const dealFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Object of values to set as described <a href="https://github.com/agilecrm/rest-api#1-deals---companies-api">here</a>',
+		description: `Object of values to set as described <a href="https://github.com/agilecrm/rest-api#1-deals---companies-api" target="_blank">here</a>.`,
 	},
 	{
 		displayName: 'Additional Fields',
@@ -295,13 +297,13 @@ export const dealFields: INodeProperties[] = [
 					multipleValueButtonText: 'Add ID',
 				},
 				default: [],
-				description: 'Unique contact identifiers',
+				description: 'Unique contact identifiers.',
 			},
 			{
 				displayName: 'Custom Data',
 				name: 'customData',
 				type: 'fixedCollection',
-				default: {},
+				description: 'Custom Data',
 				typeOptions: {
 					multipleValues: true,
 				},
@@ -316,14 +318,14 @@ export const dealFields: INodeProperties[] = [
 								type: 'string',
 								required: true,
 								default: '',
-								description: 'Property name',
+								description: 'Property name.'
 							},
 							{
 								displayName: 'Value',
 								name: 'value',
 								type: 'string',
 								default: '',
-								description: 'Property value',
+								description: 'Property value.',
 							},
 						],
 					},
@@ -373,13 +375,14 @@ export const dealFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'ID of deal to update',
+		description: 'Id of deal to update',
 	},
 	{
 		displayName: 'JSON Parameters',
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				resource: [
@@ -413,7 +416,7 @@ export const dealFields: INodeProperties[] = [
 			},
 		},
 
-		description: 'Object of values to set as described <a href="https://github.com/agilecrm/rest-api#1-deals---companies-api">here</a>',
+		description: `Object of values to set as described <a href="https://github.com/agilecrm/rest-api#1-deals---companies-api" target="_blank">here</a>.`,
 	},
 	{
 		displayName: 'Additional Fields',
@@ -441,17 +444,17 @@ export const dealFields: INodeProperties[] = [
 				type: 'number',
 				typeOptions: {
 					minValue: 0,
-					maxValue: 10000,
+					maxValue: 10000
 				},
 				default: '',
-				description: 'Expected Value of deal',
+				description: 'Expected Value of deal.',
 			},
 			{
 				displayName: 'Name',
 				name: 'name',
 				type: 'string',
 				default: '',
-				description: 'Name of deal',
+				description: 'Name of deal.',
 			},
 			{
 				displayName: 'Probability',
@@ -459,10 +462,10 @@ export const dealFields: INodeProperties[] = [
 				type: 'number',
 				typeOptions: {
 					minValue: 0,
-					maxValue: 100,
+					maxValue: 100
 				},
 				default: 50,
-				description: 'Expected Value of deal',
+				description: 'Expected Value of deal.',
 			},
 			{
 				displayName: 'Contact Ids',
@@ -473,13 +476,13 @@ export const dealFields: INodeProperties[] = [
 					multipleValueButtonText: 'Add ID',
 				},
 				default: [],
-				description: 'Unique contact identifiers',
+				description: 'Unique contact identifiers.',
 			},
 			{
 				displayName: 'Custom Data',
 				name: 'customData',
 				type: 'fixedCollection',
-				default: {},
+				description: 'Custom Data',
 				typeOptions: {
 					multipleValues: true,
 				},
@@ -494,19 +497,19 @@ export const dealFields: INodeProperties[] = [
 								type: 'string',
 								required: true,
 								default: '',
-								description: 'Property name',
+								description: 'Property name.'
 							},
 							{
 								displayName: 'Value',
 								name: 'value',
 								type: 'string',
 								default: '',
-								description: 'Property value',
+								description: 'Property value.',
 							},
 						],
 					},
 				],
 			},
-		],
+		]
 	},
-];
+] as INodeProperties[];

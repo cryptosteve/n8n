@@ -1,6 +1,5 @@
+
 export interface IContact {
-	// tslint:disable-next-line: no-any
-	[key: string]: any;
 	LastName?: string;
 	Fax?: string;
 	Email?: string;
@@ -9,7 +8,7 @@ export interface IContact {
 	Jigsaw?: string;
 	OwnerId?: string;
 	AccountId?: string;
-	Birthdate?: string;
+	Birthdate?:string;
 	FirstName?: string;
 	HomePhone?: string;
 	OtherCity?: string;

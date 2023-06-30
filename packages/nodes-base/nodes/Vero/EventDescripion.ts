@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const eventOperations: INodeProperties[] = [
+export const eventOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -16,15 +16,16 @@ export const eventOperations: INodeProperties[] = [
 			{
 				name: 'Track',
 				value: 'track',
-				description: 'Track an event for a specific customer',
+				description: `This endpoint tracks an event for a specific customer.
+				If the customer profile doesn’t exist, Vero will create it.`,
 			},
 		],
 		default: 'track',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const eventFields: INodeProperties[] = [
+export const eventFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                event:track                                     */
@@ -43,7 +44,7 @@ export const eventFields: INodeProperties[] = [
 				],
 				operation: [
 					'track',
-				],
+				]
 			},
 		},
 		description: 'The unique identifier of the customer',
@@ -61,9 +62,10 @@ export const eventFields: INodeProperties[] = [
 				],
 				operation: [
 					'track',
-				],
+				]
 			},
 		},
+		description: 'Email',
 	},
 	{
 		displayName: 'Event Name',
@@ -78,16 +80,17 @@ export const eventFields: INodeProperties[] = [
 				],
 				operation: [
 					'track',
-				],
+				]
 			},
 		},
-		description: 'The name of the event tracked',
+		description: 'The name of the event tracked.',
 	},
 	{
 		displayName: 'JSON Parameters',
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				resource: [
@@ -95,9 +98,9 @@ export const eventFields: INodeProperties[] = [
 				],
 				operation: [
 					'track',
-				],
+				]
 			},
-		},
+		}
 	},
 	{
 		displayName: 'Data',
@@ -132,16 +135,16 @@ export const eventFields: INodeProperties[] = [
 						name: 'key',
 						type: 'string',
 						default: '',
-						description: 'Name of the property to set',
+						description: 'Name of the property to set.',
 					},
 					{
 						displayName: 'Value',
 						name: 'value',
 						type: 'string',
 						default: '',
-						description: 'Value of the property to set',
+						description: 'Value of the property to set.',
 					},
-				],
+				]
 			},
 		],
 	},
@@ -178,16 +181,16 @@ export const eventFields: INodeProperties[] = [
 						name: 'key',
 						type: 'string',
 						default: '',
-						description: 'Name of the property to set',
+						description: 'Name of the property to set.',
 					},
 					{
 						displayName: 'Value',
 						name: 'value',
 						type: 'string',
 						default: '',
-						description: 'Value of the property to set',
+						description: 'Value of the property to set.',
 					},
-				],
+				]
 			},
 		],
 	},
@@ -196,6 +199,7 @@ export const eventFields: INodeProperties[] = [
 		name: 'dataAttributesJson',
 		type: 'json',
 		default: '',
+		required: false,
 		typeOptions: {
 			alwaysOpenEditWindow: true,
 		},
@@ -219,6 +223,7 @@ export const eventFields: INodeProperties[] = [
 		name: 'extraAttributesJson',
 		type: 'json',
 		default: '',
+		required: false,
 		typeOptions: {
 			alwaysOpenEditWindow: true,
 		},
@@ -237,4 +242,4 @@ export const eventFields: INodeProperties[] = [
 			},
 		},
 	},
-];
+] as INodeProperties[];

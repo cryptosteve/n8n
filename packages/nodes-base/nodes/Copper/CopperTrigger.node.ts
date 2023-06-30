@@ -5,8 +5,8 @@ import {
 
 import {
 	IDataObject,
-	INodeType,
 	INodeTypeDescription,
+	INodeType,
 	IWebhookResponseData,
 } from 'n8n-workflow';
 
@@ -19,12 +19,13 @@ export class CopperTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Copper Trigger',
 		name: 'copperTrigger',
-		icon: 'file:copper.svg',
+		icon: 'file:copper.png',
 		group: ['trigger'],
 		version: 1,
 		description: 'Handle Copper events via webhooks',
 		defaults: {
 			name: 'Copper Trigger',
+			color: '#ff2564',
 		},
 		inputs: [],
 		outputs: ['main'],
@@ -32,7 +33,7 @@ export class CopperTrigger implements INodeType {
 			{
 				name: 'copperApi',
 				required: true,
-			},
+			}
 		],
 		webhooks: [
 			{
@@ -75,7 +76,7 @@ export class CopperTrigger implements INodeType {
 						value: 'task',
 					},
 				],
-				description: 'The resource which will fire the event',
+				description: 'The resource which will fire the event.',
 			},
 			{
 				displayName: 'Event',
@@ -100,7 +101,7 @@ export class CopperTrigger implements INodeType {
 						description: 'Any field in the existing entity record is changed',
 					},
 				],
-				description: 'The event to listen to',
+				description: 'The event to listen to.',
 			},
 		],
 	};
@@ -115,7 +116,7 @@ export class CopperTrigger implements INodeType {
 				const endpoint = `/webhooks/${webhookData.webhookId}`;
 				try {
 					await copperApiRequest.call(this, 'GET', endpoint);
-				} catch (error) {
+				} catch (err) {
 					return false;
 				}
 				return true;
@@ -132,9 +133,9 @@ export class CopperTrigger implements INodeType {
 					event,
 				};
 
-				const credentials = await this.getCredentials('copperApi');
+				const credentials = this.getCredentials('copperApi');
 				body.secret = {
-					secret: getAutomaticSecret(credentials),
+					secret: getAutomaticSecret(credentials!),
 				};
 
 				const { id } = await copperApiRequest.call(this, 'POST', endpoint, body);
@@ -146,7 +147,7 @@ export class CopperTrigger implements INodeType {
 				const endpoint = `/webhooks/${webhookData.webhookId}`;
 				try {
 					await copperApiRequest.call(this, 'DELETE', endpoint);
-				} catch (error) {
+				} catch(error) {
 					return false;
 				}
 				delete webhookData.webhookId;
@@ -156,11 +157,11 @@ export class CopperTrigger implements INodeType {
 	};
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
-		const credentials = await this.getCredentials('copperApi');
+		const credentials = this.getCredentials('copperApi');
 		const req = this.getRequestObject();
 
 		// Check if the supplied secret matches. If not ignore request.
-		if (req.body.secret !== getAutomaticSecret(credentials)) {
+		if (req.body.secret !== getAutomaticSecret(credentials!)) {
 			return {};
 		}
 

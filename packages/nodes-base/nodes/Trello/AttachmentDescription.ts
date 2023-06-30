@@ -1,8 +1,6 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from "n8n-workflow";
 
-export const attachmentOperations: INodeProperties[] = [
+export const attachmentOperations = [
 	// ----------------------------------
 	//         attachment
 	// ----------------------------------
@@ -31,21 +29,21 @@ export const attachmentOperations: INodeProperties[] = [
 			{
 				name: 'Get',
 				value: 'get',
-				description: 'Get the data of an attachment',
+				description: 'Get the data of an attachments',
 			},
 			{
 				name: 'Get All',
 				value: 'getAll',
 				description: 'Returns all attachments for the card',
-			},
+			}
 		],
 		default: 'getAll',
 		description: 'The operation to perform.',
 	},
 
-];
+] as INodeProperties[];
 
-export const attachmentFields: INodeProperties[] = [
+export const attachmentFields = [
 
 	// ----------------------------------
 	//         attachment:create
@@ -66,7 +64,7 @@ export const attachmentFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the card to add attachment to',
+		description: 'The ID of the card to add attachment to.',
 	},
 	{
 		displayName: 'Source URL',
@@ -84,7 +82,7 @@ export const attachmentFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The URL of the attachment to add',
+		description: 'The URL of the attachment to add.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -109,14 +107,14 @@ export const attachmentFields: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				placeholder: 'image/png',
-				description: 'The MIME type of the attachment to add',
+				description: 'The MIME type of the attachment to add.',
 			},
 			{
 				displayName: 'Name',
 				name: 'name',
 				type: 'string',
 				default: '',
-				description: 'The name of the attachment to add',
+				description: 'The name of the attachment to add.',
 			},
 		],
 	},
@@ -140,7 +138,7 @@ export const attachmentFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the card that attachment belongs to',
+		description: 'The ID of the card that attachment belongs to.',
 	},
 	{
 		displayName: 'Attachment ID',
@@ -158,7 +156,7 @@ export const attachmentFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the attachment to delete',
+		description: 'The ID of the attachment to delete.',
 	},
 
 	// ----------------------------------
@@ -180,7 +178,7 @@ export const attachmentFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the card to get attachments',
+		description: 'The ID of the card to get attachments.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -228,7 +226,7 @@ export const attachmentFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the card to get attachment',
+		description: 'The ID of the card to get attachment.',
 	},
 	{
 		displayName: 'Attachment ID',
@@ -246,7 +244,7 @@ export const attachmentFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the attachment to get',
+		description: 'The ID of the attachment to get.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -275,4 +273,4 @@ export const attachmentFields: INodeProperties[] = [
 		],
 	},
 
-];
+] as INodeProperties[];

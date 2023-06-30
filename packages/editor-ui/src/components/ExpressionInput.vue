@@ -12,22 +12,23 @@ import 'quill/dist/quill.core.css';
 
 import Quill, { DeltaOperation } from 'quill';
 // @ts-ignore
-import AutoFormat from 'quill-autoformat';
+import AutoFormat, { AutoformatHelperAttribute } from 'quill-autoformat';
 import {
 	NodeParameterValue,
 	Workflow,
+	WorkflowDataProxy,
 } from 'n8n-workflow';
 
 import {
+	IExecutionResponse,
 	IVariableItemSelected,
+	IVariableSelectorOption,
 } from '@/Interface';
-import { genericHelpers } from '@/components/mixins/genericHelpers';
 import { workflowHelpers } from '@/components/mixins/workflowHelpers';
 
 import mixins from 'vue-typed-mixins';
 
 export default mixins(
-	genericHelpers,
 	workflowHelpers,
 )
 	.extend({
@@ -118,14 +119,9 @@ export default mixins(
 			};
 
 			this.editor = new Quill(this.$refs['expression-editor'] as Element, {
-				readOnly: !!this.resolvedValue || this.isReadOnly,
+				readOnly: !!this.resolvedValue,
 				modules: {
 					autoformat: {},
-					keyboard: {
-						bindings: {
-							'list autofill': null,
-						},
-					},
 				},
 			});
 
@@ -231,14 +227,12 @@ export default mixins(
 					this.update();
 				} else {
 					// If no position got found add it to end
-					let newValue = this.getValue();
-					if (newValue === '=' || newValue === '=0') {
-						newValue = `{{${eventData.variable}}}\n`;
-					} else {
-						newValue += ` {{${eventData.variable}}}\n`;
+					let newValue = this.value;
+					if (newValue !== '=') {
+						newValue += ` `;
 					}
-
-					this.$emit('change', newValue, true);
+					newValue += `{{${eventData.variable}}}\n`;
+					this.$emit('change', newValue);
 					if (!this.resolvedValue) {
 						Vue.nextTick(() => {
 							this.initValue();
@@ -260,9 +254,11 @@ export default mixins(
 				// Convert the expression string into a Quill Operations
 				const editorOperations: DeltaOperation[] = [];
 				currentValue.replace(/\{\{(.*?)\}\}/ig, '*%%#_@^$1*%%#_@').split('*%%#_@').forEach((value: string) => {
-					if (value && value.charAt(0) === '^') {
+					if (!value) {
+
+					} else if (value.charAt(0) === '^') {
 						// Is variable
-						let displayValue = `{{${value.slice(1)}}}` as string | number | boolean | null | undefined;
+						let displayValue = `{{${value.slice(1)}}}` as string | number | boolean | null;
 						if (this.resolvedValue) {
 							displayValue = [null, undefined].includes(displayValue as null | undefined) ? '' : displayValue;
 							displayValue = this.resolveParameterString((displayValue as string).toString()) as NodeParameterValue;

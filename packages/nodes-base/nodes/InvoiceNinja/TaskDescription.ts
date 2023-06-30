@@ -1,6 +1,6 @@
-import { INodeProperties } from 'n8n-workflow';
+import { INodeProperties } from "n8n-workflow";
 
-export const taskOperations: INodeProperties[] = [
+export const taskOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -37,9 +37,9 @@ export const taskOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const taskFields: INodeProperties[] = [
+export const taskFields = [
 /* -------------------------------------------------------------------------- */
 /*                                 task:create                               */
 /* -------------------------------------------------------------------------- */
@@ -157,7 +157,6 @@ export const taskFields: INodeProperties[] = [
 		displayName: 'Task ID',
 		name: 'taskId',
 		type: 'string',
-		default: '',
 		required: true,
 		displayOptions: {
 			show: {
@@ -177,7 +176,6 @@ export const taskFields: INodeProperties[] = [
 		displayName: 'Task ID',
 		name: 'taskId',
 		type: 'string',
-		default: '',
 		required: true,
 		displayOptions: {
 			show: {
@@ -239,7 +237,7 @@ export const taskFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -263,7 +261,7 @@ export const taskFields: INodeProperties[] = [
 			maxValue: 60,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -297,4 +295,4 @@ export const taskFields: INodeProperties[] = [
 		],
 	},
 
-];
+] as INodeProperties[];

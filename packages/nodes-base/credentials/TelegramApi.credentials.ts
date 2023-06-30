@@ -1,20 +1,19 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 
 export class TelegramApi implements ICredentialType {
 	name = 'telegramApi';
 	displayName = 'Telegram API';
-	documentationUrl = 'telegram';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Access Token',
 			name: 'accessToken',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
-			description: 'Chat with the <a href="https://telegram.me/botfather">bot father</a> to obtain the access token',
+			description: 'Chat with the <a href="https://telegram.me/botfather">bot father</a> to obtain the access token.',
 		},
 	];
 }

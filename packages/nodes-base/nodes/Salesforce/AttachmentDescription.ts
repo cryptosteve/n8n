@@ -1,8 +1,6 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from 'n8n-workflow';
 
-export const attachmentOperations: INodeProperties[] = [
+export const attachmentOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -38,7 +36,7 @@ export const attachmentOperations: INodeProperties[] = [
 			{
 				name: 'Get Summary',
 				value: 'getSummary',
-				description: 'Returns an overview of attachment\'s metadata',
+				description: `Returns an overview of attachment's metadata.`,
 			},
 			{
 				name: 'Update',
@@ -49,13 +47,13 @@ export const attachmentOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const attachmentFields: INodeProperties[] = [
+export const attachmentFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                attachment:create                           */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                attachment:create                           */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Parent ID',
 		name: 'parentId',
@@ -68,10 +66,11 @@ export const attachmentFields: INodeProperties[] = [
 					'attachment',
 				],
 				operation: [
-					'create',
+					'create'
 				],
 			},
 		},
+		description: '',
 	},
 	{
 		displayName: 'Name',
@@ -85,7 +84,7 @@ export const attachmentFields: INodeProperties[] = [
 					'attachment',
 				],
 				operation: [
-					'create',
+					'create'
 				],
 			},
 		},
@@ -103,12 +102,12 @@ export const attachmentFields: INodeProperties[] = [
 					'attachment',
 				],
 				operation: [
-					'create',
+					'create'
 				],
 			},
 		},
 		placeholder: '',
-		description: 'Name of the binary property which contains the data for the file to be uploaded',
+		description: 'Name of the binary property which contains<br />the data for the file to be uploaded.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -132,14 +131,14 @@ export const attachmentFields: INodeProperties[] = [
 				name: 'description',
 				type: 'string',
 				default: '',
-				description: 'Text description of the Document. Limit: 255 characters.',
+				description: `Text description of the Document. Limit: 255 characters.`,
 			},
 			{
 				displayName: 'Is Private',
 				name: 'isPrivate',
 				type: 'boolean',
 				default: false,
-				description: 'Indicates whether this record is viewable only by the owner and administrators (true) or viewable by all otherwise-allowed users (false)',
+				description: 'Indicates whether this record is viewable only by the owner and administrators (true) or viewable by all otherwise-allowed users (false). ',
 			},
 			{
 				displayName: 'Owner',
@@ -149,14 +148,13 @@ export const attachmentFields: INodeProperties[] = [
 					loadOptionsMethod: 'getUsers',
 				},
 				default: '',
-				description: 'ID of the User who owns the attachment',
+				description: 'ID of the User who owns the attachment.',
 			},
 		],
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 attachment:update           	              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 attachment:update           	              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Attachment ID',
 		name: 'attachmentId',
@@ -170,10 +168,10 @@ export const attachmentFields: INodeProperties[] = [
 				],
 				operation: [
 					'update',
-				],
+				]
 			},
 		},
-		description: 'ID of attachment that needs to be fetched',
+		description: 'Id of attachment that needs to be fetched',
 	},
 	{
 		displayName: 'Update Fields',
@@ -198,21 +196,21 @@ export const attachmentFields: INodeProperties[] = [
 				type: 'string',
 				default: 'data',
 				placeholder: '',
-				description: 'Name of the binary property which contains the data for the file to be uploaded',
+				description: 'Name of the binary property which contains<br />the data for the file to be uploaded.',
 			},
 			{
 				displayName: 'Description',
 				name: 'description',
 				type: 'string',
 				default: '',
-				description: 'Text description of the Document. Limit: 255 characters.',
+				description: `Text description of the Document. Limit: 255 characters.`,
 			},
 			{
 				displayName: 'Is Private',
 				name: 'isPrivate',
 				type: 'boolean',
 				default: false,
-				description: 'Indicates whether this record is viewable only by the owner and administrators (true) or viewable by all otherwise-allowed users (false)',
+				description: 'Indicates whether this record is viewable only by the owner and administrators (true) or viewable by all otherwise-allowed users (false). ',
 			},
 			{
 				displayName: 'Name',
@@ -226,17 +224,17 @@ export const attachmentFields: INodeProperties[] = [
 				name: 'owner',
 				type: 'options',
 				typeOptions: {
-					loadOptionsMethod: 'getUsers',
+					loadOptionsMethod:  'getUsers',
 				},
 				default: '',
-				description: 'ID of the User who owns the attachment',
+				description: 'ID of the User who owns the attachment.',
 			},
 		],
 	},
 
-	/* -------------------------------------------------------------------------- */
-	/*                                  attachment:get                            */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                  attachment:get                            */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Attachment ID',
 		name: 'attachmentId',
@@ -250,15 +248,14 @@ export const attachmentFields: INodeProperties[] = [
 				],
 				operation: [
 					'get',
-				],
+				]
 			},
 		},
-		description: 'ID of attachment that needs to be fetched',
+		description: 'Id of attachment that needs to be fetched',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                  attachment:delete                         */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                  attachment:delete                         */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Attachment ID',
 		name: 'attachmentId',
@@ -272,15 +269,14 @@ export const attachmentFields: INodeProperties[] = [
 				],
 				operation: [
 					'delete',
-				],
+				]
 			},
 		},
-		description: 'ID of attachment that needs to be fetched',
+		description: 'Id of attachment that needs to be fetched',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 attachment:getAll                          */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 attachment:getAll                          */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Return All',
 		name: 'returnAll',
@@ -296,7 +292,7 @@ export const attachmentFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -320,7 +316,7 @@ export const attachmentFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -340,75 +336,12 @@ export const attachmentFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Conditions',
-				name: 'conditionsUi',
-				placeholder: 'Add Condition',
-				type: 'fixedCollection',
-				typeOptions: {
-					multipleValues: true,
-				},
-				description: 'The condition to set',
-				default: {},
-				options: [
-					{
-						name: 'conditionValues',
-						displayName: 'Condition',
-						values: [
-							{
-								displayName: 'Field',
-								name: 'field',
-								type: 'options',
-								typeOptions: {
-									loadOptionsMethod: 'getAtachmentFields',
-								},
-								default: '',
-								description: 'For date, number, or boolean, please use expressions',
-							},
-							{
-								displayName: 'Operation',
-								name: 'operation',
-								type: 'options',
-								options: [
-									{
-										name: '=',
-										value: 'equal',
-									},
-									{
-										name: '>',
-										value: '>',
-									},
-									{
-										name: '<',
-										value: '<',
-									},
-									{
-										name: '>=',
-										value: '>=',
-									},
-									{
-										name: '<=',
-										value: '<=',
-									},
-								],
-								default: 'equal',
-							},
-							{
-								displayName: 'Value',
-								name: 'value',
-								type: 'string',
-								default: '',
-							},
-						],
-					},
-				],
-			},
-			{
 				displayName: 'Fields',
 				name: 'fields',
 				type: 'string',
 				default: '',
 				description: 'Fields to include separated by ,',
 			},
-		],
+		]
 	},
-];
+] as INodeProperties[];

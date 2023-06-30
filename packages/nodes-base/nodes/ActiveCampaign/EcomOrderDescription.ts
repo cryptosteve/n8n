@@ -1,16 +1,8 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from "n8n-workflow";
 
-import {
-	allCurrencies,
-} from './currencies';
+import { allCurrencies } from './currencies';
 
-import {
-	activeCampaignDefaultGetAllProperties,
-} from './GenericFunctions';
-
-export const ecomOrderOperations: INodeProperties[] = [
+export const ecomOrderOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -52,9 +44,9 @@ export const ecomOrderOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const ecomOrderFields: INodeProperties[] = [
+export const ecomOrderFields = [
 	// ----------------------------------
 	//         ecommerceOrder:create
 	// ----------------------------------
@@ -73,7 +65,7 @@ export const ecomOrderFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the order in the external service. ONLY REQUIRED IF EXTERNALCHECKOUTID NOT INCLUDED.',
+		description: 'The id of the order in the external service. ONLY REQUIRED IF EXTERNALCHECKOUTID NOT INCLUDED',
 	},
 	{
 		displayName: 'External checkout ID',
@@ -90,7 +82,7 @@ export const ecomOrderFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the cart in the external service. ONLY REQUIRED IF EXTERNALID IS NOT INCLUDED.',
+		description: 'The id of the cart in the external service. ONLY REQUIRED IF EXTERNALID IS NOT INCLUDED.',
 	},
 	{
 		displayName: 'Order source',
@@ -108,7 +100,7 @@ export const ecomOrderFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The order source code (0 - will not trigger automations, 1 - will trigger automations)',
+		description: 'The order source code (0 - will not trigger automations, 1 - will trigger automations).',
 	},
 	{
 		displayName: 'Customer Email',
@@ -126,7 +118,7 @@ export const ecomOrderFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The email address of the customer who placed the order',
+		description: 'The email address of the customer who placed the order.',
 	},
 	{
 		displayName: 'Total price',
@@ -163,7 +155,7 @@ export const ecomOrderFields: INodeProperties[] = [
 			},
 		},
 		options: allCurrencies,
-		description: 'The currency of the order (3-digit ISO code, e.g., "USD")',
+		description: 'The currency of the order (3-digit ISO code, e.g., "USD").',
 	},
 	{
 		displayName: 'Connection ID',
@@ -181,7 +173,7 @@ export const ecomOrderFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the connection from which this order originated',
+		description: 'The id of the connection from which this order originated.',
 	},
 	{
 		displayName: 'Customer ID',
@@ -199,7 +191,7 @@ export const ecomOrderFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the customer associated with this order',
+		description: 'The id of the customer associated with this order.',
 	},
 	{
 		displayName: 'Creation Date',
@@ -217,7 +209,7 @@ export const ecomOrderFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The date the order was placed',
+		description: 'The date the order was placed.',
 	},
 	{
 		displayName: 'Abandoning Date',
@@ -247,7 +239,7 @@ export const ecomOrderFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'create',
+					'create'
 				],
 				resource: [
 					'ecommerceOrder',
@@ -277,49 +269,49 @@ export const ecomOrderFields: INodeProperties[] = [
 				name: 'quantity',
 				type: 'number',
 				default: 0,
-				description: 'The quantity ordered',
+				description: 'The quantity ordered.',
 			},
 			{
 				displayName: 'Product external ID',
 				name: 'externalid',
 				type: 'string',
 				default: '',
-				description: 'The ID of the product in the external service',
+				description: 'The id of the product in the external service.',
 			},
 			{
 				displayName: 'Product Category',
 				name: 'category',
 				type: 'string',
 				default: '',
-				description: 'The category of the product',
+				description: 'The category of the product.',
 			},
 			{
 				displayName: 'SKU',
 				name: 'sku',
 				type: 'string',
 				default: '',
-				description: 'The SKU for the product',
+				description: 'The SKU for the product.',
 			},
 			{
 				displayName: 'Description',
 				name: 'description',
 				type: 'string',
 				default: '',
-				description: 'The description of the product',
+				description: 'The description of the product.',
 			},
 			{
 				displayName: 'Image URL',
 				name: 'imageUrl',
 				type: 'string',
 				default: '',
-				description: 'An Image URL that displays an image of the product',
+				description: 'An Image URL that displays an image of the product.',
 			},
 			{
 				displayName: 'Product URL',
 				name: 'productUrl',
 				type: 'string',
 				default: '',
-				description: 'A URL linking to the product in your store',
+				description: 'A URL linking to the product in your store.',
 			},
 		],
 	},
@@ -345,7 +337,7 @@ export const ecomOrderFields: INodeProperties[] = [
 				name: 'shippingAmount',
 				type: 'number',
 				default: 0,
-				description: 'The total shipping amount for the order in cents',
+				description: 'The total shipping amount for the order in cents .',
 			},
 
 			{
@@ -353,35 +345,35 @@ export const ecomOrderFields: INodeProperties[] = [
 				name: 'taxAmount',
 				type: 'number',
 				default: 0,
-				description: 'The total tax amount for the order in cents',
+				description: 'The total tax amount for the order in cents.',
 			},
 			{
 				displayName: 'Discount Amount',
 				name: 'discountAmount',
 				type: 'number',
 				default: 0,
-				description: 'The total discount amount for the order in cents',
+				description: 'The total discount amount for the order in cents.',
 			},
 			{
 				displayName: 'Order URL',
 				name: 'orderUrl',
 				type: 'string',
 				default: '',
-				description: 'The URL for the order in the external service',
+				description: 'The URL for the order in the external service.',
 			},
 			{
 				displayName: 'External updated date',
 				name: 'externalUpdatedDate',
 				type: 'dateTime',
 				default: '',
-				description: 'The date the order was updated',
+				description: 'The date the order was updated.',
 			},
 			{
 				displayName: 'Shipping Method',
 				name: 'shippingMethod',
 				type: 'string',
 				default: '',
-				description: 'The shipping method of the order',
+				description: 'The shipping method of the order.',
 			},
 			{
 				displayName: 'Order Number',
@@ -391,7 +383,7 @@ export const ecomOrderFields: INodeProperties[] = [
 				description: 'The order number. This can be different than the externalid.',
 			},
 
-		],
+		]
 	},
 
 	// ----------------------------------
@@ -412,7 +404,7 @@ export const ecomOrderFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the e-commerce order',
+		description: 'The id of the e-commerce order.',
 	},
 
 	{
@@ -437,28 +429,28 @@ export const ecomOrderFields: INodeProperties[] = [
 				name: 'externalid',
 				type: 'string',
 				default: '',
-				description: 'The ID of the order in the external service. ONLY REQUIRED IF EXTERNALCHECKOUTID NOT INCLUDED.',
+				description: 'The id of the order in the external service. ONLY REQUIRED IF EXTERNALCHECKOUTID NOT INCLUDED',
 			},
 			{
 				displayName: 'External checkout ID',
 				name: 'externalcheckoutid',
 				type: 'string',
 				default: '',
-				description: 'The ID of the cart in the external service. ONLY REQUIRED IF EXTERNALID IS NOT INCLUDED.',
+				description: 'The id of the cart in the external service. ONLY REQUIRED IF EXTERNALID IS NOT INCLUDED.',
 			},
 			{
 				displayName: 'Order source',
 				name: 'source',
 				type: 'number',
 				default: 0,
-				description: 'The order source code (0 - will not trigger automations, 1 - will trigger automations)',
+				description: 'The order source code (0 - will not trigger automations, 1 - will trigger automations).',
 			},
 			{
 				displayName: 'Customer Email',
 				name: 'email',
 				type: 'string',
 				default: '',
-				description: 'The email address of the customer who placed the order',
+				description: 'The email address of the customer who placed the order.',
 			},
 			{
 				displayName: 'Total price',
@@ -473,28 +465,28 @@ export const ecomOrderFields: INodeProperties[] = [
 				type: 'options',
 				default: 'eur',
 				options: allCurrencies,
-				description: 'The currency of the order (3-digit ISO code, e.g., "USD")',
+				description: 'The currency of the order (3-digit ISO code, e.g., "USD").',
 			},
 			{
 				displayName: 'Connection ID',
 				name: 'connectionid',
 				type: 'number',
 				default: 0,
-				description: 'The ID of the connection from which this order originated',
+				description: 'The id of the connection from which this order originated.',
 			},
 			{
 				displayName: 'Customer ID',
 				name: 'customerid',
 				type: 'number',
 				default: 0,
-				description: 'The ID of the customer associated with this order',
+				description: 'The id of the customer associated with this order.',
 			},
 			{
 				displayName: 'Creation Date',
 				name: 'externalupdatedDate',
 				type: 'dateTime',
 				default: '',
-				description: 'The date the order was placed',
+				description: 'The date the order was placed.',
 			},
 			{
 				displayName: 'Abandoning Date',
@@ -508,7 +500,7 @@ export const ecomOrderFields: INodeProperties[] = [
 				name: 'shippingAmount',
 				type: 'number',
 				default: 0,
-				description: 'The total shipping amount for the order in cents',
+				description: 'The total shipping amount for the order in cents .',
 			},
 
 			{
@@ -516,35 +508,35 @@ export const ecomOrderFields: INodeProperties[] = [
 				name: 'taxAmount',
 				type: 'number',
 				default: 0,
-				description: 'The total tax amount for the order in cents',
+				description: 'The total tax amount for the order in cents.',
 			},
 			{
 				displayName: 'Discount Amount',
 				name: 'discountAmount',
 				type: 'number',
 				default: 0,
-				description: 'The total discount amount for the order in cents',
+				description: 'The total discount amount for the order in cents.',
 			},
 			{
 				displayName: 'Order URL',
 				name: 'orderUrl',
 				type: 'string',
 				default: '',
-				description: 'The URL for the order in the external service',
+				description: 'The URL for the order in the external service.',
 			},
 			{
 				displayName: 'External updated date',
 				name: 'externalUpdatedDate',
 				type: 'dateTime',
 				default: '',
-				description: 'The date the order was updated',
+				description: 'The date the order was updated.',
 			},
 			{
 				displayName: 'Shipping Method',
 				name: 'shippingMethod',
 				type: 'string',
 				default: '',
-				description: 'The shipping method of the order',
+				description: 'The shipping method of the order.',
 			},
 			{
 				displayName: 'Order Number',
@@ -585,54 +577,54 @@ export const ecomOrderFields: INodeProperties[] = [
 						name: 'quantity',
 						type: 'number',
 						default: 0,
-						description: 'The quantity ordered',
+						description: 'The quantity ordered.',
 					},
 					{
 						displayName: 'Product external ID',
 						name: 'externalid',
 						type: 'string',
 						default: '',
-						description: 'The ID of the product in the external service',
+						description: 'The id of the product in the external service.',
 					},
 					{
 						displayName: 'Product Category',
 						name: 'category',
 						type: 'string',
 						default: '',
-						description: 'The category of the product',
+						description: 'The category of the product.',
 					},
 					{
 						displayName: 'SKU',
 						name: 'sku',
 						type: 'string',
 						default: '',
-						description: 'The SKU for the product',
+						description: 'The SKU for the product.',
 					},
 					{
 						displayName: 'Description',
 						name: 'description',
 						type: 'string',
 						default: '',
-						description: 'The description of the product',
+						description: 'The description of the product.',
 					},
 					{
 						displayName: 'Image URL',
 						name: 'imageUrl',
 						type: 'string',
 						default: '',
-						description: 'An Image URL that displays an image of the product',
+						description: 'An Image URL that displays an image of the product.',
 					},
 					{
 						displayName: 'Product URL',
 						name: 'productUrl',
 						type: 'string',
 						default: '',
-						description: 'A URL linking to the product in your store',
+						description: 'A URL linking to the product in your store.',
 					},
 				],
 			},
 
-		],
+		]
 	},
 
 	// ----------------------------------
@@ -653,7 +645,7 @@ export const ecomOrderFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the e-commerce order',
+		description: 'The id of the e-commerce order.',
 	},
 
 	// ----------------------------------
@@ -674,12 +666,51 @@ export const ecomOrderFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the e-commerce order',
+		description: 'The id of the e-commerce order.',
 	},
 
 	// ----------------------------------
 	//         ecommerceOrder:getAll
 	// ----------------------------------
-	...activeCampaignDefaultGetAllProperties('ecommerceOrder', 'getAll'),
-
-];
+	{
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
+		displayOptions: {
+			show: {
+				operation: [
+					'getAll',
+				],
+				resource: [
+					'ecommerceOrder',
+				],
+			},
+		},
+		default: false,
+		description: 'If all results should be returned or only up to a given limit.',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		displayOptions: {
+			show: {
+				operation: [
+					'getAll',
+				],
+				resource: [
+					'ecommerceOrder',
+				],
+				returnAll: [
+					false,
+				],
+			},
+		},
+		typeOptions: {
+			minValue: 1,
+			maxValue: 500,
+		},
+		default: 100,
+		description: 'How many results to return.',
+	},
+] as INodeProperties[];

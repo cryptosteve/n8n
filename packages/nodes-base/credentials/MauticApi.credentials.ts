@@ -1,30 +1,29 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 export class MauticApi implements ICredentialType {
 	name = 'mauticApi';
 	displayName = 'Mautic API';
-	documentationUrl = 'mautic';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'URL',
 			name: 'url',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 			placeholder: 'https://name.mautic.net',
 		},
 		{
 			displayName: 'Username',
 			name: 'username',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Password',
 			name: 'password',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			typeOptions: {
 				password: true,
 			},

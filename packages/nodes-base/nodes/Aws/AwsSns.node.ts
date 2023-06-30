@@ -1,13 +1,11 @@
 import { IExecuteFunctions } from 'n8n-core';
 import {
-	IDataObject,
-	ILoadOptionsFunctions,
-	INodeExecutionData,
-	INodePropertyOptions,
-	INodeType,
 	INodeTypeDescription,
-	NodeApiError,
-	NodeOperationError,
+	INodeExecutionData,
+	INodeType,
+	INodePropertyOptions,
+	ILoadOptionsFunctions,
+	IDataObject
 } from 'n8n-workflow';
 
 import { awsApiRequestSOAP } from './GenericFunctions';
@@ -16,13 +14,14 @@ export class AwsSns implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'AWS SNS',
 		name: 'awsSns',
-		icon: 'file:sns.svg',
+		icon: 'file:sns.png',
 		group: ['output'],
 		version: 1,
 		subtitle: '={{$parameter["topic"]}}',
 		description: 'Sends data to AWS SNS',
 		defaults: {
 			name: 'AWS SNS',
+			color: '#FF9900',
 		},
 		inputs: ['main'],
 		outputs: ['main'],
@@ -30,7 +29,7 @@ export class AwsSns implements INodeType {
 			{
 				name: 'aws',
 				required: true,
-			},
+			}
 		],
 		properties: [
 			{
@@ -108,7 +107,12 @@ export class AwsSns implements INodeType {
 			// select them easily
 			async getTopics(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
 				const returnData: INodePropertyOptions[] = [];
-				const data = await awsApiRequestSOAP.call(this, 'sns', 'GET', '/?Action=ListTopics');
+				let data;
+				try {
+					data = await awsApiRequestSOAP.call(this, 'sns', 'GET', '/?Action=ListTopics');
+				} catch (err) {
+					throw new Error(`AWS Error: ${err}`);
+				}
 
 				let topics = data.ListTopicsResponse.ListTopicsResult.Topics.member;
 
@@ -129,7 +133,7 @@ export class AwsSns implements INodeType {
 				}
 
 				return returnData;
-			},
+			}
 		},
 	};
 
@@ -139,23 +143,19 @@ export class AwsSns implements INodeType {
 		const returnData: IDataObject[] = [];
 
 		for (let i = 0; i < items.length; i++) {
+			const params = [
+				'TopicArn=' + this.getNodeParameter('topic', i) as string,
+				'Subject=' + this.getNodeParameter('subject', i) as string,
+				'Message=' + this.getNodeParameter('message', i) as string,
+			];
+
+			let responseData;
 			try {
-				const params = [
-					'TopicArn=' + this.getNodeParameter('topic', i) as string,
-					'Subject=' + this.getNodeParameter('subject', i) as string,
-					'Message=' + this.getNodeParameter('message', i) as string,
-				];
-
-
-				const	responseData = await awsApiRequestSOAP.call(this, 'sns', 'GET', '/?Action=Publish&' + params.join('&'));
-				returnData.push({MessageId: responseData.PublishResponse.PublishResult.MessageId} as IDataObject);
-			} catch (error) {
-				if (this.continueOnFail()) {
-					returnData.push({ error: error.message });
-					continue;
-				}
-				throw error;
+				responseData = await awsApiRequestSOAP.call(this, 'sns', 'GET', '/?Action=Publish&' + params.join('&'));
+			} catch (err) {
+				throw new Error(`AWS Error: ${err}`);
 			}
+			returnData.push({MessageId: responseData.PublishResponse.PublishResult.MessageId} as IDataObject);
 		}
 
 		return [this.helpers.returnJsonArray(returnData)];

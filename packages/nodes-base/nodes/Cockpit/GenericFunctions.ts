@@ -3,11 +3,16 @@ import {
 	IExecuteSingleFunctions,
 	ILoadOptionsFunctions,
 } from 'n8n-core';
-import { IDataObject, NodeApiError, NodeOperationError, } from 'n8n-workflow';
+import { IDataObject } from 'n8n-workflow';
 import { OptionsWithUri } from 'request';
 
 export async function cockpitApiRequest(this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions, method: string, resource: string, body: any = {}, uri?: string, option: IDataObject = {}): Promise<any> { // tslint:disable-line:no-any
-	const credentials = await this.getCredentials('cockpitApi');
+	const credentials = this.getCredentials('cockpitApi');
+
+	if (credentials === undefined) {
+		throw new Error('No credentials available.');
+	}
+
 	let options: OptionsWithUri = {
 		headers: {
 			Accept: 'application/json',
@@ -15,11 +20,11 @@ export async function cockpitApiRequest(this: IExecuteFunctions | IExecuteSingle
 		},
 		method,
 		qs: {
-			token: credentials!.accessToken,
+			token: credentials!.accessToken
 		},
 		body,
 		uri: uri || `${credentials!.url}/api${resource}`,
-		json: true,
+		json: true
 	};
 
 	options = Object.assign({}, options, option);
@@ -31,7 +36,12 @@ export async function cockpitApiRequest(this: IExecuteFunctions | IExecuteSingle
 	try {
 		return await this.helpers.request!(options);
 	} catch (error) {
-		throw new NodeApiError(this.getNode(), error);
+		let errorMessage = error.message;
+		if (error.error) {
+			errorMessage = error.error.message || error.error.error;
+		}
+
+		throw new Error(`Cockpit error [${error.statusCode}]: ` + errorMessage);
 	}
 }
 
@@ -40,7 +50,7 @@ export function createDataFromParameters(this: IExecuteFunctions | IExecuteSingl
 
 	if (dataFieldsAreJson) {
 		// Parameters are defined as JSON
-		return JSON.parse(this.getNodeParameter('dataFieldsJson', itemIndex, '{}') as string);
+		return JSON.parse(this.getNodeParameter('dataFieldsJson', itemIndex, {}) as string);
 	}
 
 	// Parameters are defined in UI

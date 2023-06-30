@@ -1,6 +1,6 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 export class TwitterOAuth1Api implements ICredentialType {
@@ -9,30 +9,29 @@ export class TwitterOAuth1Api implements ICredentialType {
 		'oAuth1Api',
 	];
 	displayName = 'Twitter OAuth API';
-	documentationUrl = 'twitter';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Request Token URL',
 			name: 'requestTokenUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://api.twitter.com/oauth/request_token',
 		},
 		{
 			displayName: 'Authorization URL',
 			name: 'authUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://api.twitter.com/oauth/authorize',
 		},
 		{
 			displayName: 'Access Token URL',
 			name: 'accessTokenUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://api.twitter.com/oauth/access_token',
 		},
 		{
 			displayName: 'Signature Method',
 			name: 'signatureMethod',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'HMAC-SHA1',
 		},
 	];

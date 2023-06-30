@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const customerOperations: INodeProperties[] = [
+export const customerOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -42,9 +42,9 @@ export const customerOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const customerFields: INodeProperties[] = [
+export const customerFields = [
 /* -------------------------------------------------------------------------- */
 /*                                customer:create                             */
 /* -------------------------------------------------------------------------- */
@@ -63,7 +63,7 @@ export const customerFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'By default the response only contain the ID to resource. If this option gets activated, it will resolve the data automatically.',
+		description: 'By default the response only contain the ID to resource<br />. If this option gets activated it<br />will resolve the data automatically.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -90,14 +90,14 @@ export const customerFields: INodeProperties[] = [
 					minValue: 1,
 				},
 				default: 1,
-				description: 'Customer’s age',
+				description: `Customer’s age`,
 			},
 			{
 				displayName: 'First Name',
 				name: 'firstName',
 				type: 'string',
 				default: '',
-				description: 'First name of the customer. When defined it must be between 1 and 40 characters.',
+				description: `First name of the customer. When defined it must be between 1 and 40 characters.`,
 			},
 			{
 				displayName: 'Gender',
@@ -118,7 +118,7 @@ export const customerFields: INodeProperties[] = [
 					},
 				],
 				default: '',
-				description: 'Gender of this customer',
+				description: 'Gender of this customer.',
 			},
 			{
 				displayName: 'Job Title',
@@ -139,7 +139,7 @@ export const customerFields: INodeProperties[] = [
 				name: 'location',
 				type: 'string',
 				default: '',
-				description: 'Location of the customer',
+				description: 'Location of the customer.',
 			},
 			{
 				displayName: 'Notes',
@@ -149,12 +149,14 @@ export const customerFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
+				description: `Notes`,
 			},
 			{
 				displayName: 'Organization',
 				name: 'organization',
 				type: 'string',
 				default: '',
+				description: 'Organization',
 			},
 			{
 				displayName: 'Photo Url',
@@ -163,7 +165,7 @@ export const customerFields: INodeProperties[] = [
 				default: '',
 				description: 'URL of the customer’s photo',
 			},
-		],
+		]
 	},
 	{
 		displayName: 'Address',
@@ -205,12 +207,14 @@ export const customerFields: INodeProperties[] = [
 						name: 'city',
 						type: 'string',
 						default: '',
+						description: 'City',
 					},
 					{
 						displayName: 'State',
 						name: 'state',
 						type: 'string',
 						default: '',
+						description: 'State',
 					},
 					{
 						displayName: 'Country',
@@ -220,12 +224,14 @@ export const customerFields: INodeProperties[] = [
 							loadOptionsMethod: 'getCountriesCodes',
 						},
 						default: '',
+						description: 'Country',
 					},
 					{
 						displayName: 'Postal Code',
 						name: 'postalCode',
 						type: 'string',
 						default: '',
+						description: 'Postal code',
 					},
 				],
 			},
@@ -576,7 +582,7 @@ export const customerFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -599,7 +605,7 @@ export const customerFields: INodeProperties[] = [
 			minValue: 1,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -695,7 +701,7 @@ export const customerFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Advanced search <a href="https://developer.helpscout.com/mailbox-api/endpoints/customers/list/#query">Examples</a>',
+				description: 'Advanced search <a href="https://developer.helpscout.com/mailbox-api/endpoints/customers/list/#query">Examples</a>'
 			},
 		],
 	},
@@ -718,6 +724,7 @@ export const customerFields: INodeProperties[] = [
 				],
 			},
 		},
+		description: 'Customer ID',
 	},
 /* -------------------------------------------------------------------------- */
 /*                                customer:update                             */
@@ -737,6 +744,7 @@ export const customerFields: INodeProperties[] = [
 				],
 			},
 		},
+		description: 'Customer ID',
 	},
 	{
 		displayName: 'Update Fields',
@@ -763,14 +771,14 @@ export const customerFields: INodeProperties[] = [
 					minValue: 1,
 				},
 				default: 1,
-				description: 'Customer’s age',
+				description: `Customer’s age`,
 			},
 			{
 				displayName: 'First Name',
 				name: 'firstName',
 				type: 'string',
 				default: '',
-				description: 'First name of the customer. When defined it must be between 1 and 40 characters.',
+				description: `First name of the customer. When defined it must be between 1 and 40 characters.`,
 			},
 			{
 				displayName: 'Gender',
@@ -791,7 +799,7 @@ export const customerFields: INodeProperties[] = [
 					},
 				],
 				default: '',
-				description: 'Gender of this customer',
+				description: 'Gender of this customer.',
 			},
 			{
 				displayName: 'Job Title',
@@ -812,7 +820,7 @@ export const customerFields: INodeProperties[] = [
 				name: 'location',
 				type: 'string',
 				default: '',
-				description: 'Location of the customer',
+				description: 'Location of the customer.',
 			},
 			{
 				displayName: 'Notes',
@@ -822,12 +830,14 @@ export const customerFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
+				description: `Notes`,
 			},
 			{
 				displayName: 'Organization',
 				name: 'organization',
 				type: 'string',
 				default: '',
+				description: 'Organization',
 			},
 			{
 				displayName: 'Photo Url',
@@ -838,4 +848,4 @@ export const customerFields: INodeProperties[] = [
 			},
 		],
 	},
-];
+] as INodeProperties[];

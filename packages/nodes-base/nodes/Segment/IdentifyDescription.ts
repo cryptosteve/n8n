@@ -1,8 +1,6 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from 'n8n-workflow';
 
-export const identifyOperations: INodeProperties[] = [
+export const identifyOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -24,9 +22,9 @@ export const identifyOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const identifyFields: INodeProperties[] = [
+export const identifyFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                identify:create                             */
@@ -46,6 +44,7 @@ export const identifyFields: INodeProperties[] = [
 				],
 			},
 		},
+		required: false,
 	},
 	{
 		displayName: 'Traits',
@@ -53,7 +52,7 @@ export const identifyFields: INodeProperties[] = [
 		placeholder: 'Add Trait',
 		type: 'fixedCollection',
 		typeOptions: {
-			multipleValues: true,
+			multipleValues: false,
 		},
 		displayOptions: {
 			show: {
@@ -72,18 +71,196 @@ export const identifyFields: INodeProperties[] = [
 				displayName: 'Trait',
 				values: [
 					{
-						displayName: 'Key',
-						name: 'key',
+						displayName: 'Email',
+						name: 'email',
 						type: 'string',
 						default: '',
+						description: 'Email address of a user',
 					},
 					{
-						displayName: 'Value',
-						name: 'value',
+						displayName: 'First Name',
+						name: 'firstname',
 						type: 'string',
 						default: '',
+						description: 'First name of a user',
 					},
-				],
+					{
+						displayName: 'Last Name',
+						name: 'lastname',
+						type: 'string',
+						default: '',
+						description: 'Last name of a user',
+					},
+					{
+						displayName: 'Gender',
+						name: 'gender',
+						type: 'string',
+						default: '',
+						description: 'Gender of a user',
+					},
+					{
+						displayName: 'Phone',
+						name: 'phone',
+						type: 'string',
+						default: '',
+						description: 'Phone number of a user',
+					},
+					{
+						displayName: 'Username',
+						name: 'username',
+						type: 'string',
+						default: '',
+						description: 'User’s username',
+					},
+					{
+						displayName: 'Website',
+						name: 'website',
+						type: 'string',
+						default: '',
+						description: 'Website of a user',
+					},
+					{
+						displayName: 'Age',
+						name: 'age',
+						type: 'number',
+						default: 1,
+						description: 'Age of a user',
+					},
+					{
+						displayName: 'Avatar',
+						name: 'avatar',
+						type: 'string',
+						default: '',
+						description: 'URL to an avatar image for the user',
+					},
+					{
+						displayName: 'Birthday',
+						name: 'birthday',
+						type: 'dateTime',
+						default: '',
+						description: 'User’s birthday',
+					},
+					{
+						displayName: 'Created At',
+						name: 'createdAt',
+						type: 'dateTime',
+						default: '',
+						description: 'Date the user’s account was first created',
+					},
+					{
+						displayName: 'Description',
+						name: 'description',
+						type: 'string',
+						typeOptions: {
+							alwaysOpenEditWindow: true,
+						},
+						default: '',
+						description: 'Description of the user',
+					},
+					{
+						displayName: 'ID',
+						name: 'id',
+						type: 'string',
+						default: '',
+						description: 'Unique ID in your database for a user',
+					},
+					{
+						displayName: 'Company',
+						name: 'company',
+						placeholder: 'Add Company',
+						type: 'fixedCollection',
+						typeOptions: {
+							multipleValues: false,
+						},
+						default: {},
+						options: [
+							{
+								name: 'companyUi',
+								displayName: 'Company',
+								values: [
+									{
+										displayName: 'ID',
+										name: 'id',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Name',
+										name: 'name',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Industry',
+										name: 'industry',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Employee Count',
+										name: 'employeeCount',
+										type: 'number',
+										default: 1,
+									},
+									{
+										displayName: 'Plan',
+										name: 'plan',
+										type: 'string',
+										default: '',
+									},
+								]
+							},
+						],
+					},
+					{
+						displayName: 'Address',
+						name: 'address',
+						placeholder: 'Add Address',
+						type: 'fixedCollection',
+						typeOptions: {
+							multipleValues: false,
+						},
+						default: {},
+						options: [
+							{
+								name: 'addressUi',
+								displayName: 'Address',
+								values: [
+									{
+										displayName: 'Street',
+										name: 'street',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'City',
+										name: 'city',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'State',
+										name: 'state',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Postal Code',
+										name: 'postalCode',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Country',
+										name: 'country',
+										type: 'string',
+										default: '',
+									},
+								]
+							},
+						],
+					},
+				]
 			},
 		],
 	},
@@ -115,7 +292,7 @@ export const identifyFields: INodeProperties[] = [
 						displayName: 'Active',
 						name: 'active',
 						type: 'boolean',
-						default: false,
+						default: '',
 						description: 'Whether a user is active',
 					},
 					{
@@ -123,14 +300,14 @@ export const identifyFields: INodeProperties[] = [
 						name: 'ip',
 						type: 'string',
 						default: '',
-						description: 'Current user’s IP address',
+						description: 'Current user’s IP address.',
 					},
 					{
 						displayName: 'Locale',
 						name: 'locate',
 						type: 'string',
 						default: '',
-						description: 'Locale string for the current user, for example en-US',
+						description: 'Locale string for the current user, for example en-US.',
 					},
 					{
 						displayName: 'Page',
@@ -178,7 +355,7 @@ export const identifyFields: INodeProperties[] = [
 										type: 'string',
 										default: '',
 									},
-								],
+								]
 							},
 						],
 					},
@@ -226,7 +403,7 @@ export const identifyFields: INodeProperties[] = [
 										type: 'string',
 										default: '',
 									},
-								],
+								]
 							},
 						],
 					},
@@ -284,7 +461,7 @@ export const identifyFields: INodeProperties[] = [
 							},
 						],
 					},
-				],
+				]
 			},
 		],
 	},
@@ -328,4 +505,4 @@ export const identifyFields: INodeProperties[] = [
 			},
 		],
 	},
-];
+] as INodeProperties[];

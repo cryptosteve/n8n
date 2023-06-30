@@ -4,7 +4,7 @@ import {
 } from 'n8n-core';
 
 import {
-	IDataObject, JsonObject, NodeApiError, NodeOperationError,
+	IDataObject,
 } from 'n8n-workflow';
 
 /**
@@ -17,7 +17,10 @@ import {
  * @returns {Promise<any>}
  */
 export async function moceanApiRequest(this: IHookFunctions | IExecuteFunctions, method: string, endpoint: string, body: IDataObject, query?: IDataObject): Promise<any> { // tslint:disable-line:no-any
-	const credentials = await this.getCredentials('moceanApi');
+	const credentials = this.getCredentials('moceanApi');
+	if (credentials === undefined) {
+		throw new Error('No credentials got returned!');
+	}
 
 	if (query === undefined) {
 		query = {};
@@ -44,6 +47,22 @@ export async function moceanApiRequest(this: IHookFunctions | IExecuteFunctions,
 	try {
 		return await this.helpers.request(options);
 	} catch (error) {
-		throw new NodeApiError(this.getNode(), (error as JsonObject));
+		if (error.statusCode === 401) {
+			// Return a clear error
+			throw new Error('Authentication failed.');
+		}
+
+		if (error.response && error.response.body && error.response.body.message) {
+			// Try to return the error prettier
+			let errorMessage = error.response.body.message;
+			if (error.response.body.more_info) {
+				errorMessage += `errorMessage (${error.response.body.more_info})`;
+			}
+
+			throw new Error(`Mocean error response [${error.statusCode}]: ${errorMessage}`);
+		}
+
+		// If that data does not exist for some reason return the actual error
+		throw error;
 	}
 }

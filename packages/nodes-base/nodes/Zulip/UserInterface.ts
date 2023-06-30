@@ -8,5 +8,4 @@ export interface IUser {
 	email?: string;
 	password?: string;
 	short_name?: string;
-	role?: number;
 }

@@ -1,6 +1,6 @@
 import { OptionsWithUri } from 'request';
 import { IExecuteFunctions } from 'n8n-core';
-import { IDataObject, NodeApiError, NodeOperationError } from 'n8n-workflow';
+import { IDataObject } from 'n8n-workflow';
 
 export interface RundeckCredentials {
 	url: string;
@@ -8,11 +8,19 @@ export interface RundeckCredentials {
 }
 
 export class RundeckApi {
-	private credentials?: RundeckCredentials;
+	private credentials: RundeckCredentials;
 	private executeFunctions: IExecuteFunctions;
 
 
 	constructor(executeFunctions: IExecuteFunctions) {
+
+		const credentials = executeFunctions.getCredentials('rundeckApi');
+
+		if (credentials === undefined) {
+			throw new Error('No credentials got returned!');
+		}
+
+		this.credentials = credentials as unknown as RundeckCredentials;
 		this.executeFunctions = executeFunctions;
 	}
 
@@ -22,32 +30,28 @@ export class RundeckApi {
 		const options: OptionsWithUri = {
 			headers: {
 				'user-agent': 'n8n',
-				'X-Rundeck-Auth-Token': this.credentials?.token,
+				'X-Rundeck-Auth-Token': this.credentials.token,
 			},
 			rejectUnauthorized: false,
 			method,
 			qs: query,
-			uri: this.credentials?.url + endpoint,
+			uri: this.credentials.url + endpoint,
 			body,
-			json: true,
+			json: true
 		};
 
 		try {
 			return await this.executeFunctions.helpers.request!(options);
 		} catch (error) {
-			throw new NodeApiError(this.executeFunctions.getNode(), error);
+			let errorMessage = error.message;
+			if (error.response && error.response.body && error.response.body.message) {
+				errorMessage = error.response.body.message.replace('\n', '');
+			}
+
+			throw Error(`Rundeck Error [${error.statusCode}]: ${errorMessage}`);
 		}
 	}
 
-	async init() {
-		const credentials = await this.executeFunctions.getCredentials('rundeckApi');
-
-		if (credentials === undefined) {
-			throw new NodeOperationError(this.executeFunctions.getNode(), 'No credentials got returned!');
-		}
-
-		this.credentials = credentials as unknown as RundeckCredentials;
-	}
 
 	executeJob(jobId: string, args: IDataObject[]): Promise<IDataObject> {
 
@@ -55,12 +59,12 @@ export class RundeckApi {
 
 		if(args) {
 			for(const arg of args) {
-				params += '-' + arg.name + ' ' + arg.value + ' ';
+				params += "-" + arg.name + " " + arg.value + " ";
 			}
 		}
 
 		const body = {
-			argString: params,
+			argString: params
 		};
 
 		return this.request('POST', `/api/14/job/${jobId}/run`, body, {});

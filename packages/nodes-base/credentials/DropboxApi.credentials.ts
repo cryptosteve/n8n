@@ -1,34 +1,18 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
+
 
 export class DropboxApi implements ICredentialType {
 	name = 'dropboxApi';
 	displayName = 'Dropbox API';
-	documentationUrl = 'dropbox';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Access Token',
 			name: 'accessToken',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
-		},
-		{
-			displayName: 'APP Access Type',
-			name: 'accessType',
-			type: 'options',
-			options: [
-				{
-					name: 'App Folder',
-					value: 'folder',
-				},
-				{
-					name: 'Full Dropbox',
-					value: 'full',
-				},
-			],
-			default: 'full',
 		},
 	];
 }

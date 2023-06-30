@@ -1,43 +1,30 @@
-import {
-	OptionsWithUri,
-} from 'request';
+import { OptionsWithUri } from 'request';
 
 import {
 	IExecuteFunctions,
 	IHookFunctions,
 	ILoadOptionsFunctions,
+	IExecuteSingleFunctions
 } from 'n8n-core';
 
-import {
-	IDataObject, NodeApiError,
-} from 'n8n-workflow';
+import * as _ from 'lodash';
 
-export function FormatDueDatetime(isoString: string): string {
-	// Assuming that the problem with incorrect date format was caused by milliseconds
-	// Replacing the last 5 characters of ISO-formatted string with just Z char
-	return isoString.replace(new RegExp('.000Z$'), 'Z');
-}
+export async function todoistApiRequest(this: IHookFunctions | IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions, resource: string, method: string, body: any = {}, headers?: object): Promise<any> { // tslint:disable-line:no-any
+	const credentials = this.getCredentials('todoistApi');
 
-export async function todoistApiRequest(
-	this:
-		| IHookFunctions
-		| IExecuteFunctions
-		| ILoadOptionsFunctions,
-	method: string,
-	resource: string,
-	body: any = {}, // tslint:disable-line:no-any
-	qs: IDataObject = {},
-): Promise<any> { // tslint:disable-line:no-any
-	const authentication = this.getNodeParameter('authentication', 0, 'apiKey');
+	if (credentials === undefined) {
+		throw new Error('No credentials got returned!');
+	}
+
+	const headerWithAuthentication = Object.assign({}, headers, { Authorization: `Bearer ${credentials.apiKey}` });
 
 	const endpoint = 'api.todoist.com/rest/v1';
 
 	const options: OptionsWithUri = {
-		headers: {},
+		headers: headerWithAuthentication,
 		method,
-		qs,
 		uri: `https://${endpoint}${resource}`,
-		json: true,
+		json: true
 	};
 
 	if (Object.keys(body).length !== 0) {
@@ -45,18 +32,13 @@ export async function todoistApiRequest(
 	}
 
 	try {
-		if (authentication === 'apiKey') {
-			const credentials = await this.getCredentials('todoistApi');
-
-			//@ts-ignore
-			options.headers['Authorization'] = `Bearer ${credentials.apiKey}`;
-			return this.helpers.request!(options);
-		} else {
-			//@ts-ignore
-			return await this.helpers.requestOAuth2.call(this, 'todoistOAuth2Api', options);
-		}
-
+		return await this.helpers.request!(options);
 	} catch (error) {
-		throw new NodeApiError(this.getNode(), error);
+		const errorMessage = error.response.body.message || error.response.body.Message;
+
+		if (errorMessage !== undefined) {
+			throw errorMessage;
+		}
+		throw error.response.body;
 	}
 }

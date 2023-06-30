@@ -1,6 +1,6 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 const scopes = [
@@ -13,36 +13,35 @@ export class KeapOAuth2Api implements ICredentialType {
 		'oAuth2Api',
 	];
 	displayName = 'Keap OAuth2 API';
-	documentationUrl = 'keap';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Authorization URL',
 			name: 'authUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://signin.infusionsoft.com/app/oauth/authorize',
 		},
 		{
 			displayName: 'Access Token URL',
 			name: 'accessTokenUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://api.infusionsoft.com/token',
 		},
 		{
 			displayName: 'Scope',
 			name: 'scope',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: scopes.join(' '),
 		},
 		{
 			displayName: 'Auth URI Query Parameters',
 			name: 'authQueryParameters',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Authentication',
 			name: 'authentication',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'body',
 		},
 	];

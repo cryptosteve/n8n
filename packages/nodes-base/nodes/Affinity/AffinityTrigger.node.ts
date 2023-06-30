@@ -4,11 +4,10 @@ import {
 } from 'n8n-core';
 
 import {
-	IDataObject,
-	INodeType,
 	INodeTypeDescription,
+	INodeType,
 	IWebhookResponseData,
-	NodeOperationError,
+	IDataObject,
 } from 'n8n-workflow';
 
 import {
@@ -27,6 +26,7 @@ export class AffinityTrigger implements INodeType {
 		description: 'Handle Affinity events via webhooks',
 		defaults: {
 			name: 'Affinity-Trigger',
+			color: '#3343df',
 		},
 		inputs: [],
 		outputs: ['main'],
@@ -52,10 +52,10 @@ export class AffinityTrigger implements INodeType {
 				options: [
 					{
 						name: 'file.created',
-						value: 'file.created',
+						value: 'file.deleted',
 					},
 					{
-						name: 'file.deleted',
+						name: 'file.created',
 						value: 'file.deleted',
 					},
 					{
@@ -136,7 +136,7 @@ export class AffinityTrigger implements INodeType {
 					},
 					{
 						name: 'opportunity.deleted',
-						value: 'opportunity.deleted',
+						value: 'organization.deleted',
 					},
 					{
 						name: 'person.created',
@@ -153,7 +153,7 @@ export class AffinityTrigger implements INodeType {
 				],
 				default: [],
 				required: true,
-				description: 'Webhook events that will be enabled for that endpoint',
+				description: 'Webhook events that will be enabled for that endpoint.',
 			},
 		],
 
@@ -187,7 +187,7 @@ export class AffinityTrigger implements INodeType {
 				const webhookUrl = this.getNodeWebhookUrl('default') as string;
 
 				if (webhookUrl.includes('%20')) {
-					throw new NodeOperationError(this.getNode(), 'The name of the Affinity Trigger Node is not allowed to contain any spaces!');
+					throw new Error('The name of the Affinity Trigger Node is not allowed to contain any spaces!');
 				}
 
 				const events = this.getNodeParameter('events') as string[];

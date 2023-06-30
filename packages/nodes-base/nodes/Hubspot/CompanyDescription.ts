@@ -1,8 +1,8 @@
 import {
 	INodeProperties,
-} from 'n8n-workflow';
+ } from 'n8n-workflow';
 
-export const companyOperations: INodeProperties[] = [
+export const companyOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -33,7 +33,7 @@ export const companyOperations: INodeProperties[] = [
 			{
 				name: 'Get All',
 				value: 'getAll',
-				description: 'Get all companies',
+				description: 'Get all company',
 			},
 			{
 				name: 'Get Recently Created',
@@ -59,13 +59,13 @@ export const companyOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const companyFields: INodeProperties[] = [
+export const companyFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                company:create                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                company:create                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Name',
 		name: 'name',
@@ -124,7 +124,7 @@ export const companyFields: INodeProperties[] = [
 				name: 'city',
 				type: 'string',
 				default: '',
-				description: 'The city where the company is located',
+				description: 'The city where the company is located.',
 			},
 			{
 				displayName: 'Close Date',
@@ -138,7 +138,7 @@ export const companyFields: INodeProperties[] = [
 				name: 'companyDomainName',
 				type: 'string',
 				default: '',
-				description: 'The domain name of the company or organization',
+				description: 'The domain name of the company or organization'
 			},
 			{
 				displayName: 'Company Owner',
@@ -155,49 +155,14 @@ export const companyFields: INodeProperties[] = [
 				name: 'countryRegion',
 				type: 'string',
 				default: '',
-				description: 'The country/region in which the company or organization is located',
-			},
-			{
-				displayName: 'Custom Properties',
-				name: 'customPropertiesUi',
-				placeholder: 'Add Custom Property',
-				type: 'fixedCollection',
-				typeOptions: {
-					multipleValues: true,
-				},
-				default: {},
-				options: [
-					{
-						name: 'customPropertiesValues',
-						displayName: 'Custom Property',
-						values: [
-							{
-								displayName: 'Property',
-								name: 'property',
-								type: 'options',
-								typeOptions: {
-									loadOptionsMethod: 'getCompanyCustomProperties',
-								},
-								default: '',
-								description: 'Name of the property',
-							},
-							{
-								displayName: 'Value',
-								name: 'value',
-								type: 'string',
-								default: '',
-								description: 'Value of the property',
-							},
-						],
-					},
-				],
+				description: 'The country/region in which the company or organization is located.'
 			},
 			{
 				displayName: 'Description',
 				name: 'description',
 				type: 'string',
 				default: '',
-				description: 'A short statement about the company\'s mission and goals',
+				description: `A short statement about the company's mission and goals.`,
 			},
 			{
 				displayName: 'Facebook Fans',
@@ -221,17 +186,17 @@ export const companyFields: INodeProperties[] = [
 				name: 'industry',
 				type: 'options',
 				typeOptions: {
-					loadOptionsMethod: 'getCompanyIndustries',
+					loadOptionsMethod: 'getCompanyIndustries'
 				},
 				default: '',
-				description: 'The type of business the company performs',
+				description: 'The type of business the company performs.',
 			},
 			{
 				displayName: 'Is Public',
 				name: 'isPublic',
 				type: 'boolean',
 				default: false,
-				description: 'Indicates that the company is publicly traded',
+				description: 'Indicates that the company is publicly traded.',
 			},
 			{
 				displayName: 'Lead Status',
@@ -241,7 +206,7 @@ export const companyFields: INodeProperties[] = [
 					loadOptionsMethod: 'getCompanyleadStatuses',
 				},
 				default: '',
-				description: 'The company\'s sales, prospecting or outreach status',
+				description: `The company's sales, prospecting or outreach status`,
 			},
 			{
 				displayName: 'Lifecycle Stage',
@@ -292,7 +257,7 @@ export const companyFields: INodeProperties[] = [
 				name: 'phoneNumber',
 				type: 'string',
 				default: '',
-				description: 'A company\'s primary phone number. Powered by HubSpot Insights.',
+				description: `A company's primary phone number. Powered by HubSpot Insights.`,
 			},
 			{
 				displayName: 'Postal Code',
@@ -385,14 +350,14 @@ export const companyFields: INodeProperties[] = [
 					loadOptionsMethod: 'getCompanyTypes',
 				},
 				default: '',
-				description: 'The optional classification of this company record - prospect, partner, etc',
+				description: 'The optional classification of this company record - prospect, partner, etc.',
 			},
 			{
 				displayName: 'Web Technologies',
 				name: 'webTechnologies',
 				type: 'options',
 				typeOptions: {
-					loadOptionsMethod: 'getCompanyWebTechnologies',
+					loadOptionsMethod: 'getCompanyWebTechnologies'
 				},
 				default: '',
 				description: 'The web technologies used by the company or organization. Powered by HubSpot Insights.',
@@ -405,18 +370,17 @@ export const companyFields: INodeProperties[] = [
 				description: 'The main website of the company or organization. This property is used to identify unique companies. Powered by HubSpot Insights.',
 			},
 			{
-				displayName: 'Year Founded',
+				displayName:  'Year Founded',
 				name: 'yearFounded',
 				type: 'string',
 				default: '',
 				description: 'The year the company was created. Powered by HubSpot Insights.',
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 company:update                             */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 company:update                             */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Company ID',
 		name: 'companyId',
@@ -476,7 +440,7 @@ export const companyFields: INodeProperties[] = [
 				name: 'city',
 				type: 'string',
 				default: '',
-				description: 'The city where the company is located',
+				description: 'The city where the company is located.',
 			},
 			{
 				displayName: 'Close Date',
@@ -490,7 +454,7 @@ export const companyFields: INodeProperties[] = [
 				name: 'companyDomainName',
 				type: 'string',
 				default: '',
-				description: 'The domain name of the company or organization',
+				description: 'The domain name of the company or organization'
 			},
 			{
 				displayName: 'Company Owmer',
@@ -507,49 +471,14 @@ export const companyFields: INodeProperties[] = [
 				name: 'countryRegion',
 				type: 'string',
 				default: '',
-				description: 'The country/region in which the company or organization is located',
-			},
-			{
-				displayName: 'Custom Properties',
-				name: 'customPropertiesUi',
-				placeholder: 'Add Custom Property',
-				type: 'fixedCollection',
-				typeOptions: {
-					multipleValues: true,
-				},
-				default: {},
-				options: [
-					{
-						name: 'customPropertiesValues',
-						displayName: 'Custom Property',
-						values: [
-							{
-								displayName: 'Property',
-								name: 'property',
-								type: 'options',
-								typeOptions: {
-									loadOptionsMethod: 'getCompanyCustomProperties',
-								},
-								default: '',
-								description: 'Name of the property',
-							},
-							{
-								displayName: 'Value',
-								name: 'value',
-								type: 'string',
-								default: '',
-								description: 'Value of the property',
-							},
-						],
-					},
-				],
+				description: 'The country/region in which the company or organization is located.'
 			},
 			{
 				displayName: 'Description',
 				name: 'description',
 				type: 'string',
 				default: '',
-				description: 'A short statement about the company\'s mission and goals',
+				description: `A short statement about the company's mission and goals.`,
 			},
 			{
 				displayName: 'Facebook Fans',
@@ -573,17 +502,17 @@ export const companyFields: INodeProperties[] = [
 				name: 'industry',
 				type: 'options',
 				typeOptions: {
-					loadOptionsMethod: 'getCompanyIndustries',
+					loadOptionsMethod: 'getCompanyIndustries'
 				},
 				default: '',
-				description: 'The type of business the company performs',
+				description: 'The type of business the company performs.',
 			},
 			{
 				displayName: 'Is Public',
 				name: 'isPublic',
 				type: 'boolean',
 				default: false,
-				description: 'Indicates that the company is publicly traded',
+				description: 'Indicates that the company is publicly traded.',
 			},
 			{
 				displayName: 'Lead Status',
@@ -593,7 +522,7 @@ export const companyFields: INodeProperties[] = [
 					loadOptionsMethod: 'getCompanyleadStatuses',
 				},
 				default: '',
-				description: 'The company\'s sales, prospecting or outreach status',
+				description: `The company's sales, prospecting or outreach status`,
 			},
 			{
 				displayName: 'Lifecycle Stage',
@@ -650,7 +579,7 @@ export const companyFields: INodeProperties[] = [
 				name: 'phoneNumber',
 				type: 'string',
 				default: '',
-				description: 'A company\'s primary phone number. Powered by HubSpot Insights.',
+				description: `A company's primary phone number. Powered by HubSpot Insights.`,
 			},
 			{
 				displayName: 'Postal Code',
@@ -743,14 +672,14 @@ export const companyFields: INodeProperties[] = [
 					loadOptionsMethod: 'getCompanyTypes',
 				},
 				default: '',
-				description: 'The optional classification of this company record - prospect, partner, etc',
+				description: 'The optional classification of this company record - prospect, partner, etc.',
 			},
 			{
 				displayName: 'Web Technologies',
 				name: 'webTechnologies',
 				type: 'options',
 				typeOptions: {
-					loadOptionsMethod: 'getCompanyWebTechnologies',
+					loadOptionsMethod: 'getCompanyWebTechnologies'
 				},
 				default: '',
 				description: 'The web technologies used by the company or organization. Powered by HubSpot Insights.',
@@ -763,18 +692,17 @@ export const companyFields: INodeProperties[] = [
 				description: 'The main website of the company or organization. This property is used to identify unique companies. Powered by HubSpot Insights.',
 			},
 			{
-				displayName: 'Year Founded',
+				displayName:  'Year Founded',
 				name: 'yearFounded',
 				type: 'string',
 				default: '',
 				description: 'The year the company was created. Powered by HubSpot Insights.',
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                  company:get                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                  company:get                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Company ID',
 		name: 'companyId',
@@ -815,14 +743,13 @@ export const companyFields: INodeProperties[] = [
 				name: 'includeMergeAudits',
 				type: 'boolean',
 				default: false,
-				description: 'Returns any merge history if the company has been previously merged with another company record. Defaults to false.',
+				description: `Returns any merge history if the company has been previously merged with another company record. Defaults to false.`,
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 company:getAll                             */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 company:getAll                             */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Return All',
 		name: 'returnAll',
@@ -838,7 +765,7 @@ export const companyFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -862,7 +789,7 @@ export const companyFields: INodeProperties[] = [
 			maxValue: 250,
 		},
 		default: 100,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -886,7 +813,7 @@ export const companyFields: INodeProperties[] = [
 				name: 'includeMergeAudits',
 				type: 'boolean',
 				default: false,
-				description: 'Returns any merge history if a company has been previously merged with another company record. Defaults to false.',
+				description: `Returns any merge history if a company has been previously merged with another company record. Defaults to false.`,
 			},
 			{
 				displayName: 'Properties',
@@ -895,22 +822,25 @@ export const companyFields: INodeProperties[] = [
 				typeOptions: {
 					loadOptionsMethod: 'getCompanyProperties',
 				},
-				default: [],
-				description: '<p>Used to include specific company properties in the results. By default, the results will only include company ID and will not include the values for any properties for your companies.</p><p>Including this parameter will include the data for the specified property in the results. You can include this parameter multiple times to request multiple properties separated by a comma: <code>,</code>.</p>',
+				default: '',
+				description: `Used to include specific company properties in the results.<br/>
+				By default, the results will only include company ID and will not include the values for any properties for your companys.<br/>
+				Including this parameter will include the data for the specified property in the results.<br/>
+				You can include this parameter multiple times to request multiple properties separed by ,.`,
 			},
 			{
 				displayName: 'Properties With History',
 				name: 'propertiesWithHistory',
 				type: 'string',
 				default: '',
-				description: 'Works similarly to properties=, but this parameter will include the history for the specified property, instead of just including the current value. Use this parameter when you need the full history of changes to a property\'s value.',
+				description: `Works similarly to properties=, but this parameter will include the history for the specified property,<br/>
+				instead of just including the current value. Use this parameter when you need the full history of changes to a property's value.`,
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 company:delete                             */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 company:delete                             */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Company ID',
 		name: 'companyId',
@@ -929,10 +859,9 @@ export const companyFields: INodeProperties[] = [
 		default: '',
 		description: 'Unique identifier for a particular company',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*               company:getRecentlyCreated company:getRecentlyModifie        */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*               company:getRecentlyCreated company:getRecentlyModifie        */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Return All',
 		name: 'returnAll',
@@ -949,7 +878,7 @@ export const companyFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -974,7 +903,7 @@ export const companyFields: INodeProperties[] = [
 			maxValue: 250,
 		},
 		default: 100,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Filters',
@@ -998,21 +927,21 @@ export const companyFields: INodeProperties[] = [
 				name: 'since',
 				type: 'dateTime',
 				default: '',
-				description: 'Only return companys created after timestamp x',
+				description: `Only return companys created after timestamp x`,
 			},
 			{
 				displayName: 'Include Property Versions',
 				name: 'includePropertyVersions',
 				type: 'boolean',
 				default: false,
-				description: 'By default, you will only get data for the most recent version of a property in the "versions" data. If you include this parameter, you will get data for all previous versions.',
+				description: `By default, you will only get data for the most recent version of a property in the "versions" data.<br/>
+				If you include this parameter, you will get data for all previous versions.`,
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                            company:searchByDomain                          */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                            company:searchByDomain                          */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Domain',
 		name: 'domain',
@@ -1045,7 +974,7 @@ export const companyFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -1069,7 +998,7 @@ export const companyFields: INodeProperties[] = [
 			maxValue: 250,
 		},
 		default: 100,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -1095,9 +1024,12 @@ export const companyFields: INodeProperties[] = [
 				typeOptions: {
 					loadOptionsMethod: 'getCompanyProperties',
 				},
-				default: [],
-				description: '<p>Used to include specific company properties in the results. By default, the results will only include company ID and will not include the values for any properties for your company.</p><p>Including this parameter will include the data for the specified property in the results. You can include this parameter multiple times to request multiple properties separated by a comma: <code>,</code>.</p>',
+				default: '',
+				description: `Used to include specific company properties in the results.<br/>
+				By default, the results will only include company ID and will not include the values for any properties for your companys.<br/>
+				Including this parameter will include the data for the specified property in the results.<br/>
+				You can include this parameter multiple times to request multiple properties separed by ,.`,
 			},
-		],
+		]
 	},
-];
+] as INodeProperties[];

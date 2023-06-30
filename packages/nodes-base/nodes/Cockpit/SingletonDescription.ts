@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const singletonOperations: INodeProperties[] = [
+export const singletonOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -16,15 +16,15 @@ export const singletonOperations: INodeProperties[] = [
 			{
 				name: 'Get',
 				value: 'get',
-				description: 'Get a singleton',
+				description: 'Gets a Singleton',
 			},
 		],
 		default: 'get',
 		description: 'The operation to perform.',
-	},
-];
+	}
+] as INodeProperties[];
 
-export const singletonFields: INodeProperties[] = [
+export const singletonFields = [
 	{
 		displayName: 'Singleton',
 		name: 'singleton',
@@ -41,6 +41,6 @@ export const singletonFields: INodeProperties[] = [
 			},
 		},
 		required: true,
-		description: 'Name of the singleton to operate on',
+		description: 'Name of the singleton to operate on.'
 	},
-];
+] as INodeProperties[];

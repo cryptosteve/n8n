@@ -1,6 +1,6 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 export class GoogleOAuth2Api implements ICredentialType {
@@ -9,31 +9,29 @@ export class GoogleOAuth2Api implements ICredentialType {
 		'oAuth2Api',
 	];
 	displayName = 'Google OAuth2 API';
-	documentationUrl = 'google';
-	icon = 'file:Google.svg';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Authorization URL',
 			name: 'authUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://accounts.google.com/o/oauth2/v2/auth',
 		},
 		{
 			displayName: 'Access Token URL',
 			name: 'accessTokenUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://oauth2.googleapis.com/token',
 		},
 		{
 			displayName: 'Auth URI Query Parameters',
 			name: 'authQueryParameters',
-			type: 'hidden',
-			default: 'access_type=offline&prompt=consent',
+			type: 'hidden' as NodePropertyTypes,
+			default: 'access_type=offline',
 		},
 		{
 			displayName: 'Authentication',
 			name: 'authentication',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'body',
 		},
 	];

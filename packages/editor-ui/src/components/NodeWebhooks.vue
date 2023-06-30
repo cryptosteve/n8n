@@ -1,23 +1,26 @@
 <template>
 	<div v-if="webhooksNode.length" class="webhoooks">
-		<div class="clickable headline" :class="{expanded: !isMinimized}" @click="isMinimized=!isMinimized" :title="isMinimized ? $locale.baseText('nodeWebhooks.clickToDisplayWebhookUrls') : $locale.baseText('nodeWebhooks.clickToHideWebhookUrls')">
-			<font-awesome-icon icon="angle-down" class="minimize-button minimize-icon" />
-			{{ $locale.baseText('nodeWebhooks.webhookUrls') }}
+		<div class="clickable headline" :class="{expanded: !isMinimized}" @click="isMinimized=!isMinimized" :title="isMinimized ? 'Click to display Webhook URLs' : 'Click to hide Webhook URLs'">
+			<font-awesome-icon icon="angle-up" class="minimize-button minimize-icon" />
+			Webhook URLs
 		</div>
 		<el-collapse-transition>
 			<div class="node-webhooks" v-if="!isMinimized">
 				<div class="url-selection">
 					<el-row>
-						<el-col :span="24">
+						<el-col :span="10" class="mode-selection-headline">
+							Display URL for:
+						</el-col>
+						<el-col :span="14">
 							<el-radio-group v-model="showUrlFor" size="mini">
-								<el-radio-button label="test">{{ $locale.baseText('nodeWebhooks.testUrl') }}</el-radio-button>
-								<el-radio-button label="production">{{ $locale.baseText('nodeWebhooks.productionUrl') }}</el-radio-button>
+								<el-radio-button label="Production"></el-radio-button>
+								<el-radio-button label="Test"></el-radio-button>
 							</el-radio-group>
 						</el-col>
 					</el-row>
 				</div>
 
-				<n8n-tooltip v-for="(webhook, index) in webhooksNode" :key="index" class="item"  :content="$locale.baseText('nodeWebhooks.clickToCopyWebhookUrls')" placement="left">
+				<el-tooltip v-for="(webhook, index) in webhooksNode" :key="index" class="item" effect="light" content="Click to copy Webhook URL" placement="left">
 					<div class="webhook-wrapper">
 							<div class="http-field">
 								<div class="http-method">
@@ -26,11 +29,11 @@
 							</div>
 							<div class="url-field">
 								<div class="webhook-url left-ellipsis clickable" @click="copyWebhookUrl(webhook)">
-									{{getWebhookUrlDisplay(webhook)}}<br />
+									{{getWebhookUrl(webhook, 'path')}}<br />
 								</div>
 							</div>
 					</div>
-				</n8n-tooltip>
+				</el-tooltip>
 
 			</div>
 		</el-collapse-transition>
@@ -38,13 +41,14 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
+
 import {
-	INodeTypeDescription,
 	IWebhookDescription,
 	NodeHelpers,
+	Workflow,
 } from 'n8n-workflow';
 
-import { WEBHOOK_NODE_TYPE } from '@/constants';
 import { copyPaste } from '@/components/mixins/copyPaste';
 import { showMessage } from '@/components/mixins/showMessage';
 import { workflowHelpers } from '@/components/mixins/workflowHelpers';
@@ -60,12 +64,12 @@ export default mixins(
 		name: 'NodeWebhooks',
 		props: [
 			'node', // NodeUi
-			'nodeType', // INodeTypeDescription
+			'nodeType', // NodeTypeDescription
 		],
 		data () {
 			return {
-				isMinimized: this.nodeType && this.nodeType.name !== WEBHOOK_NODE_TYPE,
-				showUrlFor: 'test',
+				isMinimized: true,
+				showUrlFor: 'Production',
 			};
 		},
 		computed: {
@@ -74,7 +78,7 @@ export default mixins(
 					return [];
 				}
 
-				return (this.nodeType as INodeTypeDescription).webhooks!.filter(webhookData => webhookData.restartWebhook !== true);
+				return this.nodeType.webhooks;
 			},
 		},
 		methods: {
@@ -83,7 +87,8 @@ export default mixins(
 				this.copyToClipboard(webhookUrl);
 
 				this.$showMessage({
-					title: this.$locale.baseText('nodeWebhooks.showMessage.title'),
+					title: 'Copied',
+					message: `The webhook URL got copied!`,
 					type: 'success',
 				});
 			},
@@ -94,31 +99,24 @@ export default mixins(
 				try {
 					return this.resolveExpression(webhookData[key] as string) as string;
 				} catch (e) {
-					return this.$locale.baseText('nodeWebhooks.invalidExpression');
+					return '[INVALID EXPRESSION]';
 				}
 			},
 			getWebhookUrl (webhookData: IWebhookDescription): string {
-				if (webhookData.restartWebhook === true) {
-					return '$resumeWebhookUrl';
-				}
 				let baseUrl = this.$store.getters.getWebhookUrl;
-				if (this.showUrlFor === 'test') {
+				if (this.showUrlFor === 'Test') {
 					baseUrl = this.$store.getters.getWebhookTestUrl;
 				}
 
 				const workflowId = this.$store.getters.workflowId;
 				const path = this.getValue(webhookData, 'path');
-				const isFullPath = this.getValue(webhookData, 'isFullPath') as unknown as boolean || false;
 
-				return NodeHelpers.getNodeWebhookUrl(baseUrl, workflowId, this.node, path, isFullPath);
-			},
-			getWebhookUrlDisplay (webhookData: IWebhookDescription): string {
-				return this.getWebhookUrl(webhookData);
+				return NodeHelpers.getNodeWebhookUrl(baseUrl, workflowId, this.node, path);
 			},
 		},
 		watch: {
 			node () {
-				this.isMinimized = this.nodeType.name !== WEBHOOK_NODE_TYPE;
+				this.isMinimized = true;
 			},
 		},
 	});
@@ -127,14 +125,14 @@ export default mixins(
 <style scoped lang="scss">
 
 .webhoooks {
-	padding-bottom: var(--spacing-xs);
-	margin: var(--spacing-xs) 0;
+	padding: 0.7em;
+	font-size: 0.9em;
+	margin: 0.5em 0;
 	border-bottom: 1px solid #ccc;
 
 	.headline {
 		color: $--color-primary;
 		font-weight: 600;
-		font-size: var(--font-size-2xs);
 	}
 }
 
@@ -153,8 +151,8 @@ export default mixins(
 	margin-left: 5px;
 	text-align: center;
 	border-radius: 2px;
-	font-size: var(--font-size-2xs);
-	font-weight: var(--font-weight-bold);
+	font-size: 0.8em;
+	font-weight: 600;
 	color: #fff;
 }
 
@@ -174,11 +172,11 @@ export default mixins(
 .url-field {
 	display: inline-block;
 	width: calc(100% - 60px);
-	margin-left: 55px;
+	margin-left: 50px;
 }
 
 .url-selection {
-	margin-top: var(--spacing-xs);
+	margin-top: 1em;
 }
 
 .minimize-button {
@@ -204,21 +202,22 @@ export default mixins(
 	position: relative;
 	top: 0;
 	width: 100%;
-	font-size: var(--font-size-2xs);
+	font-size: 0.9em;
 	white-space: normal;
 	overflow: visible;
 	text-overflow: initial;
 	color: #404040;
+	padding: 0.5em;
 	text-align: left;
 	direction: ltr;
 	word-break: break-all;
 }
 
 .webhook-wrapper {
-	line-height: 1.5;
 	position: relative;
-	margin-top: var(--spacing-xs);
+	margin: 1em 0 0.5em 0;
 	background-color: #fff;
+	padding: 2px 0;
 	border-radius: 3px;
 }
 </style>

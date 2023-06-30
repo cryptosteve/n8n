@@ -1,5 +1,10 @@
 import { ITriggerFunctions } from 'n8n-core';
-import { INodeType, INodeTypeDescription, ITriggerResponse } from 'n8n-workflow';
+import {
+	INodeType,
+	INodeTypeDescription,
+	ITriggerResponse,
+} from 'n8n-workflow';
+
 
 export class ClassNameReplace implements INodeType {
 	description: INodeTypeDescription = {
@@ -27,10 +32,12 @@ export class ClassNameReplace implements INodeType {
 				default: 1,
 				description: 'Every how many minutes the workflow should be triggered.',
 			},
-		],
+		]
 	};
 
+
 	async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {
+
 		const interval = this.getNodeParameter('interval', 1) as number;
 
 		if (interval <= 0) {
@@ -41,7 +48,7 @@ export class ClassNameReplace implements INodeType {
 			// Every time the emit function gets called a new workflow
 			// executions gets started with the provided entries.
 			const entry = {
-				exampleKey: 'exampleData',
+				'exampleKey': 'exampleData'
 			};
 			this.emit([this.helpers.returnJsonArray([entry])]);
 		};
@@ -71,5 +78,6 @@ export class ClassNameReplace implements INodeType {
 			closeFunction,
 			manualTriggerFunction,
 		};
+
 	}
 }

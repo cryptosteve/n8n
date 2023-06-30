@@ -1,30 +1,29 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 
 export class RocketchatApi implements ICredentialType {
 	name = 'rocketchatApi';
 	displayName = 'Rocket API';
-	documentationUrl = 'rocketchat';
-	properties: INodeProperties[] = [
+	properties = [
 		{
-			displayName: 'User ID',
+			displayName: 'User Id',
 			name: 'userId',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Auth Key',
 			name: 'authKey',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Domain',
 			name: 'domain',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 			placeholder: 'https://n8n.rocket.chat',
 		},

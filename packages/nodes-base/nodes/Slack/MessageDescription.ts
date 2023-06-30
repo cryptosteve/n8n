@@ -1,8 +1,6 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from 'n8n-workflow';
 
-export const messageOperations: INodeProperties[] = [
+export const messageOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -16,84 +14,26 @@ export const messageOperations: INodeProperties[] = [
 		},
 		options: [
 			{
-				name: 'Delete',
-				value: 'delete',
-				description: 'Deletes a message',
-			},
-			{
-				name: 'Get Permalink',
-				value: 'getPermalink',
-				description: 'Get Permanent Link of a message',
-			},
-			{
 				name: 'Post',
 				value: 'post',
 				description: 'Post a message into a channel',
 			},
 			{
-				name: 'Post (Ephemeral)',
-				value: 'postEphemeral',
-				description: 'Post an ephemeral message to a user in channel',
-			},
-			{
 				name: 'Update',
 				value: 'update',
-				description: 'Updates a message',
+				description: 'Updates a message.',
 			},
 		],
 		default: 'post',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const messageFields: INodeProperties[] = [
+export const messageFields = [
 
-	/* ----------------------------------------------------------------------- */
-	/*                                 message:getPermalink
-	/* ----------------------------------------------------------------------- */
-	{
-		displayName: 'Channel',
-		name: 'channelId',
-		type: 'options',
-		typeOptions: {
-			loadOptionsMethod: 'getChannels',
-		},
-		required: true,
-		default: '',
-		displayOptions: {
-			show: {
-				resource: [
-					'message',
-				],
-				operation: [
-					'getPermalink',
-				],
-			},
-		},
-		description: 'Channel containing the message',
-	},
-	{
-		displayName: 'Timestamp',
-		name: 'timestamp',
-		type: 'string',
-		required: true,
-		default: '',
-		displayOptions: {
-			show: {
-				resource: [
-					'message',
-				],
-				operation: [
-					'getPermalink',
-				],
-			},
-		},
-		description: 'Timestamp of the message to get permanent link',
-	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                          message:post/postEphemeral                        */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                message:post                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channel',
@@ -104,7 +44,6 @@ export const messageFields: INodeProperties[] = [
 			show: {
 				operation: [
 					'post',
-					'postEphemeral',
 				],
 				resource: [
 					'message',
@@ -112,26 +51,7 @@ export const messageFields: INodeProperties[] = [
 			},
 		},
 		required: true,
-		description: 'The channel to send the message to',
-	},
-	{
-		displayName: 'User',
-		name: 'user',
-		type: 'string',
-		default: '',
-		placeholder: 'User ID',
-		displayOptions: {
-			show: {
-				operation: [
-					'postEphemeral',
-				],
-				resource: [
-					'message',
-				],
-			},
-		},
-		required: true,
-		description: 'The user ID to send the message to',
+		description: 'The channel to send the message to.',
 	},
 	{
 		displayName: 'Text',
@@ -145,14 +65,53 @@ export const messageFields: INodeProperties[] = [
 			show: {
 				operation: [
 					'post',
-					'postEphemeral',
 				],
 				resource: [
 					'message',
 				],
 			},
 		},
-		description: 'The text to send',
+		description: 'The text to send.',
+	},
+	{
+		displayName: 'As User',
+		name: 'as_user',
+		type: 'boolean',
+		default: false,
+		displayOptions: {
+			show: {
+				authentication: [
+					'accessToken',
+				],
+				operation: [
+					'post'
+				],
+				resource: [
+					'message',
+				],
+			},
+		},
+		description: 'Post the message as authenticated user instead of bot.',
+	},
+	{
+		displayName: 'User Name',
+		name: 'username',
+		type: 'string',
+		default: '',
+		displayOptions: {
+			show: {
+				as_user: [
+					false,
+				],
+				operation: [
+					'post',
+				],
+				resource: [
+					'message',
+				],
+			},
+		},
+		description: 'Set the bot\'s user name. This field will be ignored if you are using a user token.',
 	},
 	{
 		displayName: 'JSON parameters',
@@ -162,105 +121,13 @@ export const messageFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'post',
-					'postEphemeral',
+					'post'
 				],
 				resource: [
 					'message',
 				],
 			},
 		},
-	},
-	{
-		displayName: 'Options',
-		name: 'otherOptions',
-		type: 'collection',
-		displayOptions: {
-			show: {
-				operation: [
-					'post',
-					'postEphemeral',
-				],
-				resource: [
-					'message',
-				],
-			},
-		},
-		default: {},
-		description: 'Other options to set',
-		placeholder: 'Add options',
-		options: [
-			{
-				displayName: 'Icon Emoji',
-				name: 'icon_emoji',
-				type: 'string',
-				default: '',
-				description: 'Emoji to use as the icon for this message. Overrides icon_url.',
-			},
-			{
-				displayName: 'Icon URL',
-				name: 'icon_url',
-				type: 'string',
-				default: '',
-				description: 'URL to an image to use as the icon for this message',
-			},
-			{
-				displayName: 'Link Names',
-				name: 'link_names',
-				type: 'boolean',
-				default: false,
-				description: 'Find and link channel names and usernames',
-			},
-			{
-				displayName: 'Make Reply',
-				name: 'thread_ts',
-				type: 'string',
-				default: '',
-				description: 'Provide another message\'s ts value to make this message a reply',
-			},
-			{
-				displayName: 'Markdown',
-				name: 'mrkdwn',
-				type: 'boolean',
-				default: true,
-				description: 'Use Slack Markdown parsing',
-			},
-			{
-				displayName: 'Reply Broadcast',
-				name: 'reply_broadcast',
-				type: 'boolean',
-				default: false,
-				description: 'Used in conjunction with thread_ts and indicates whether reply should be made visible to everyone in the channel or conversation',
-			},
-			{
-				displayName: 'Unfurl Links',
-				name: 'unfurl_links',
-				type: 'boolean',
-				default: false,
-				description: 'Pass true to enable unfurling of primarily text-based content',
-			},
-			{
-				displayName: 'Unfurl Media',
-				name: 'unfurl_media',
-				type: 'boolean',
-				default: true,
-				description: 'Pass false to disable unfurling of media content',
-			},
-			{
-				displayName: 'Send as User',
-				name: 'sendAsUser',
-				type: 'string',
-				displayOptions: {
-					show: {
-						'/authentication': [
-							'accessToken',
-						],
-					},
-				},
-				default: '',
-				description: 'The message will be sent from this username (i.e. as if this individual sent the message).',
-			},
-		],
 	},
 	{
 		displayName: 'Attachments',
@@ -274,7 +141,6 @@ export const messageFields: INodeProperties[] = [
 			show: {
 				operation: [
 					'post',
-					'postEphemeral',
 				],
 				resource: [
 					'message',
@@ -293,7 +159,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Required plain-text summary of the attachment',
+				description: 'Required plain-text summary of the attachment.',
 			},
 			{
 				displayName: 'Text',
@@ -303,7 +169,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Text to send',
+				description: 'Text to send.',
 			},
 			{
 				displayName: 'Title',
@@ -313,7 +179,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Title of the message',
+				description: 'Title of the message.',
 			},
 			{
 				displayName: 'Title Link',
@@ -323,14 +189,14 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Link of the title',
+				description: 'Link of the title.',
 			},
 			{
 				displayName: 'Color',
 				name: 'color',
 				type: 'color',
 				default: '#ff0000',
-				description: 'Color of the line left of text',
+				description: 'Color of the line left of text.',
 			},
 			{
 				displayName: 'Pretext',
@@ -340,14 +206,14 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Text which appears before the message block',
+				description: 'Text which appears before the message block.',
 			},
 			{
 				displayName: 'Author Name',
 				name: 'author_name',
 				type: 'string',
 				default: '',
-				description: 'Name that should appear',
+				description: 'Name that should appear.',
 			},
 			{
 				displayName: 'Author Link',
@@ -357,7 +223,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Link for the author',
+				description: 'Link for the author.',
 			},
 			{
 				displayName: 'Author Icon',
@@ -367,7 +233,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Icon which should appear for the user',
+				description: 'Icon which should appear for the user.',
 			},
 			{
 				displayName: 'Image URL',
@@ -377,7 +243,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'URL of image',
+				description: 'URL of image.',
 			},
 			{
 				displayName: 'Thumbnail URL',
@@ -387,7 +253,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'URL of thumbnail',
+				description: 'URL of thumbnail.',
 			},
 			{
 				displayName: 'Footer',
@@ -397,7 +263,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Text of footer to add',
+				description: 'Text of footer to add.',
 			},
 			{
 				displayName: 'Footer Icon',
@@ -407,20 +273,20 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Icon which should appear next to footer',
+				description: 'Icon which should appear next to footer.',
 			},
 			{
 				displayName: 'Timestamp',
 				name: 'ts',
 				type: 'dateTime',
 				default: '',
-				description: 'Time message relates to',
+				description: 'Time message relates to.',
 			},
 			{
 				displayName: 'Fields',
 				name: 'fields',
 				placeholder: 'Add Fields',
-				description: 'Fields to add to message',
+				description: 'Fields to add to message.',
 				type: 'fixedCollection',
 				typeOptions: {
 					multipleValues: true,
@@ -436,32 +302,133 @@ export const messageFields: INodeProperties[] = [
 								name: 'title',
 								type: 'string',
 								default: '',
-								description: 'Title of the item',
+								description: 'Title of the item.',
 							},
 							{
 								displayName: 'Value',
 								name: 'value',
 								type: 'string',
 								default: '',
-								description: 'Value of the item',
+								description: 'Value of the item.',
 							},
 							{
 								displayName: 'Short',
 								name: 'short',
 								type: 'boolean',
 								default: true,
-								description: 'If items can be displayed next to each other',
+								description: 'If items can be displayed next to each other.',
 							},
-						],
+						]
 					},
 				],
+			}
+		],
+	},
+	{
+		displayName: 'Other Options',
+		name: 'otherOptions',
+		type: 'collection',
+		displayOptions: {
+			show: {
+				operation: [
+					'post'
+				],
+				resource: [
+					'message',
+				],
+			},
+		},
+		default: {},
+		description: 'Other options to set',
+		placeholder: 'Add options',
+		options: [
+			{
+				displayName: 'Icon Emoji',
+				name: 'icon_emoji',
+				type: 'string',
+				displayOptions: {
+					show: {
+						'/as_user': [
+							false
+						],
+						'/operation': [
+							'post'
+						],
+						'/resource': [
+							'message',
+						],
+					},
+				},
+				default: '',
+				description: 'Emoji to use as the icon for this message. Overrides icon_url.',
+			},
+			{
+				displayName: 'Icon URL',
+				name: 'icon_url',
+				type: 'string',
+				displayOptions: {
+					show: {
+						'/as_user': [
+							false
+						],
+						'/operation': [
+							'post'
+						],
+						'/resource': [
+							'message',
+						],
+					},
+				},
+				default: '',
+				description: 'URL to an image to use as the icon for this message.',
+			},
+			{
+				displayName: 'Make Reply',
+				name: 'thread_ts',
+				type: 'string',
+				default: '',
+				description: 'Provide another message\'s ts value to make this message a reply.',
+			},
+			{
+				displayName: 'Unfurl Links',
+				name: 'unfurl_links',
+				type: 'boolean',
+				default: false,
+				description: 'Pass true to enable unfurling of primarily text-based content.',
+			},
+			{
+				displayName: 'Unfurl Media',
+				name: 'unfurl_media',
+				type: 'boolean',
+				default: true,
+				description: 'Pass false to disable unfurling of media content.',
+			},
+			{
+				displayName: 'Markdown',
+				name: 'mrkdwn',
+				type: 'boolean',
+				default: true,
+				description: 'Use Slack Markdown parsing.',
+			},
+			{
+				displayName: 'Reply Broadcast',
+				name: 'reply_broadcast',
+				type: 'boolean',
+				default: false,
+				description: 'Used in conjunction with thread_ts and indicates whether reply should be made visible to everyone in the channel or conversation.',
+			},
+			{
+				displayName: 'Link Names',
+				name: 'link_names',
+				type: 'boolean',
+				default: false,
+				description: 'Find and link channel names and usernames.',
 			},
 		],
 	},
-
-	/* ----------------------------------------------------------------------- */
-	/*                                 message:update                          */
-	/* ----------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------- */
+/*                                 message:update                          */
+/* ----------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -478,15 +445,16 @@ export const messageFields: INodeProperties[] = [
 				],
 				operation: [
 					'update',
-				],
+				]
 			},
 		},
-		description: 'Channel containing the message to be updated',
+		description: 'Channel containing the message to be updated.',
 	},
 	{
 		displayName: 'Text',
 		name: 'text',
 		type: 'string',
+		required: true,
 		default: '',
 		displayOptions: {
 			show: {
@@ -495,10 +463,10 @@ export const messageFields: INodeProperties[] = [
 				],
 				operation: [
 					'update',
-				],
+				]
 			},
 		},
-		description: 'New text for the message, using the default formatting rules. It\'s not required when presenting attachments.',
+		description: `New text for the message, using the default formatting rules. It's not required when presenting attachments.`,
 	},
 	{
 		displayName: 'TS',
@@ -513,26 +481,10 @@ export const messageFields: INodeProperties[] = [
 				],
 				operation: [
 					'update',
-				],
+				]
 			},
 		},
-		description: 'Timestamp of the message to be updated',
-	},
-	{
-		displayName: 'JSON parameters',
-		name: 'jsonParameters',
-		type: 'boolean',
-		default: false,
-		displayOptions: {
-			show: {
-				operation: [
-					'update',
-				],
-				resource: [
-					'message',
-				],
-			},
-		},
+		description: `Timestamp of the message to be updated.`,
 	},
 	{
 		displayName: 'Update Fields',
@@ -556,7 +508,7 @@ export const messageFields: INodeProperties[] = [
 				name: 'link_names',
 				type: 'boolean',
 				default: false,
-				description: 'Find and link channel names and usernames',
+				description: 'Find and link channel names and usernames.',
 			},
 			{
 				displayName: 'Parse',
@@ -582,52 +534,6 @@ export const messageFields: INodeProperties[] = [
 		],
 	},
 	{
-		displayName: 'Attachments',
-		name: 'attachmentsJson',
-		type: 'json',
-		default: '',
-		typeOptions: {
-			alwaysOpenEditWindow: true,
-		},
-		displayOptions: {
-			show: {
-				resource: [
-					'message',
-				],
-				operation: [
-					'update',
-				],
-				jsonParameters: [
-					true,
-				],
-			},
-		},
-		description: 'The attachments to add',
-	},
-	{
-		displayName: 'Blocks',
-		name: 'blocksJson',
-		type: 'json',
-		default: '',
-		typeOptions: {
-			alwaysOpenEditWindow: true,
-		},
-		displayOptions: {
-			show: {
-				resource: [
-					'message',
-				],
-				operation: [
-					'update',
-				],
-				jsonParameters: [
-					true,
-				],
-			},
-		},
-		description: 'The blocks to add',
-	},
-	{
 		displayName: 'Blocks',
 		name: 'blocksUi',
 		type: 'fixedCollection',
@@ -638,7 +544,7 @@ export const messageFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'post',
+					'post'
 				],
 				resource: [
 					'message',
@@ -684,7 +590,10 @@ export const messageFields: INodeProperties[] = [
 							},
 						},
 						default: '',
-						description: 'A string acting as a unique identifier for a block. You can use this block_id when you receive an interaction payload to identify the source of the action. If not specified, a block_id will be generated. Maximum length for this field is 255 characters.',
+						description: `A string acting as a unique identifier for a block.</br>
+								You can use this block_id when you receive an interaction payload to</br>
+								identify the source of the action. If not specified, a block_id will be generated.</br>
+								Maximum length for this field is 255 characters.`,
 					},
 					{
 						displayName: 'Elements',
@@ -732,7 +641,7 @@ export const messageFields: INodeProperties[] = [
 											},
 										},
 										default: '',
-										description: 'The text for the block',
+										description: 'The text for the block.',
 									},
 									{
 										displayName: 'Emoji',
@@ -746,7 +655,7 @@ export const messageFields: INodeProperties[] = [
 											},
 										},
 										default: false,
-										description: 'Indicates whether emojis in a text field should be escaped into the colon emoji format',
+										description: 'Indicates whether emojis in a text field should be escaped into the colon emoji format.',
 									},
 									{
 										displayName: 'Action ID',
@@ -760,7 +669,9 @@ export const messageFields: INodeProperties[] = [
 											},
 										},
 										default: '',
-										description: 'An identifier for this action. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids used elsewhere by your app.',
+										description: `An identifier for this action. You can use this when you receive an interaction</br>
+												payload to identify the source of the action. Should be unique among all other action_ids used</br>
+												elsewhere by your app. `,
 									},
 									{
 										displayName: 'URL',
@@ -774,7 +685,9 @@ export const messageFields: INodeProperties[] = [
 											},
 										},
 										default: '',
-										description: 'A URL to load in the user\'s browser when the button is clicked. Maximum length for this field is 3000 characters. If you\'re using url, you\'ll still receive an interaction payload and will need to send an acknowledgement response.',
+										description: `A URL to load in the user's browser when the button is clicked.</br>
+												Maximum length for this field is 3000 characters. If you're using url, you'll still</br>
+												receive an interaction payload and will need to send an acknowledgement response.`,
 									},
 									{
 										displayName: 'Value',
@@ -788,7 +701,7 @@ export const messageFields: INodeProperties[] = [
 											},
 										},
 										default: '',
-										description: 'The value to send along with the interaction payload',
+										description: 'The value to send along with the interaction payload.',
 									},
 									{
 										displayName: 'Style',
@@ -816,7 +729,7 @@ export const messageFields: INodeProperties[] = [
 											},
 										],
 										default: 'default',
-										description: 'Decorates buttons with alternative visual color schemes',
+										description: 'Decorates buttons with alternative visual color schemes.',
 									},
 									{
 										displayName: 'Confirm',
@@ -851,7 +764,7 @@ export const messageFields: INodeProperties[] = [
 																		name: 'text',
 																		type: 'string',
 																		default: '',
-																		description: 'Text of the title',
+																		description: 'Text of the title.',
 																	},
 																	{
 																		displayName: 'Emoji',
@@ -863,7 +776,7 @@ export const messageFields: INodeProperties[] = [
 																],
 															},
 														],
-														description: 'Defines the dialog\'s title',
+														description: `Defines the dialog's title.`,
 													},
 													{
 														displayName: 'Text',
@@ -896,7 +809,7 @@ export const messageFields: INodeProperties[] = [
 																],
 															},
 														],
-														description: 'Defines the explanatory text that appears in the confirm dialog',
+														description: `Defines the explanatory text that appears in the confirm dialog.`,
 													},
 													{
 														displayName: 'Confirm',
@@ -917,7 +830,7 @@ export const messageFields: INodeProperties[] = [
 																		name: 'text',
 																		type: 'string',
 																		default: '',
-																		description: 'Defines the explanatory text that appears in the confirm dialog',
+																		description: `Defines the explanatory text that appears in the confirm dialog.`,
 																	},
 																	{
 																		displayName: 'Emoji',
@@ -983,12 +896,12 @@ export const messageFields: INodeProperties[] = [
 															},
 														],
 														default: 'default',
-														description: 'Defines the color scheme applied to the confirm button',
+														description: 'Defines the color scheme applied to the confirm button.',
 													},
 												],
 											},
 										],
-										description: 'Defines an optional confirmation dialog after the button is clicked',
+										description: 'Defines an optional confirmation dialog after the button is clicked.',
 									},
 								],
 							},
@@ -1006,7 +919,10 @@ export const messageFields: INodeProperties[] = [
 							},
 						},
 						default: '',
-						description: 'A string acting as a unique identifier for a block. You can use this block_id when you receive an interaction payload to identify the source of the action. If not specified, a block_id will be generated. Maximum length for this field is 255 characters.',
+						description: `A string acting as a unique identifier for a block.</br>
+								You can use this block_id when you receive an interaction payload to</br>
+								identify the source of the action. If not specified, a block_id will be generated.</br>
+								Maximum length for this field is 255 characters.`,
 					},
 					{
 						displayName: 'Text',
@@ -1035,7 +951,7 @@ export const messageFields: INodeProperties[] = [
 										type: 'options',
 										options: [
 											{
-												name: 'Markdown',
+												name: 'Markdowm',
 												value: 'mrkwdn',
 											},
 											{
@@ -1044,7 +960,7 @@ export const messageFields: INodeProperties[] = [
 											},
 										],
 										default: 'mrkwdn',
-										description: 'The formatting to use for this text object',
+										description: 'The formatting to use for this text object.',
 									},
 									{
 										displayName: 'Text',
@@ -1079,7 +995,7 @@ export const messageFields: INodeProperties[] = [
 										},
 										type: 'boolean',
 										default: false,
-										description: 'When set to false (as is default) URLs will be auto-converted into links, conversation names will be link-ified, and certain mentions will be automatically parsed',
+										description: 'When set to false (as is default) URLs will be auto-converted into links, conversation names will be link-ified, and certain mentions will be automatically parsed. ',
 									},
 								],
 							},
@@ -1113,7 +1029,7 @@ export const messageFields: INodeProperties[] = [
 										type: 'options',
 										options: [
 											{
-												name: 'Markdown',
+												name: 'Markdowm',
 												value: 'mrkwdn',
 											},
 											{
@@ -1122,7 +1038,7 @@ export const messageFields: INodeProperties[] = [
 											},
 										],
 										default: 'mrkwdn',
-										description: 'The formatting to use for this text object',
+										description: 'The formatting to use for this text object.',
 									},
 									{
 										displayName: 'Text',
@@ -1157,12 +1073,14 @@ export const messageFields: INodeProperties[] = [
 										},
 										type: 'boolean',
 										default: false,
-										description: 'When set to false (as is default) URLs will be auto-converted into links, conversation names will be link-ified, and certain mentions will be automatically parsed',
+										description: 'When set to false (as is default) URLs will be auto-converted into links, conversation names will be link-ified, and certain mentions will be automatically parsed. ',
 									},
 								],
 							},
 						],
-						description: 'An array of text objects. Any text objects included with fields will be rendered in a compact format that allows for 2 columns of side-by-side text. Maximum number of items is 10.',
+						description: `An array of text objects. Any text objects included with</br>
+								fields will be rendered in a compact format that allows for 2 columns of</br>
+								side-by-side text. Maximum number of items is 10.`,
 					},
 					{
 						displayName: 'Accessory',
@@ -1210,7 +1128,7 @@ export const messageFields: INodeProperties[] = [
 										},
 										type: 'string',
 										default: '',
-										description: 'The text for the block',
+										description: 'The text for the block.',
 									},
 									{
 										displayName: 'Emoji',
@@ -1224,7 +1142,7 @@ export const messageFields: INodeProperties[] = [
 										},
 										type: 'boolean',
 										default: false,
-										description: 'Indicates whether emojis in a text field should be escaped into the colon emoji format',
+										description: 'Indicates whether emojis in a text field should be escaped into the colon emoji format.',
 									},
 									{
 										displayName: 'Action ID',
@@ -1238,7 +1156,9 @@ export const messageFields: INodeProperties[] = [
 										},
 										type: 'string',
 										default: '',
-										description: 'An identifier for this action. You can use this when you receive an interaction payload to identify the source of the action. Should be unique among all other action_ids used elsewhere by your app.',
+										description: `An identifier for this action. You can use this when you receive an interaction</br>
+												payload to identify the source of the action. Should be unique among all other action_ids used</br>
+												elsewhere by your app. `,
 									},
 									{
 										displayName: 'URL',
@@ -1252,7 +1172,9 @@ export const messageFields: INodeProperties[] = [
 										},
 										type: 'string',
 										default: '',
-										description: 'A URL to load in the user\'s browser when the button is clicked. Maximum length for this field is 3000 characters. If you\'re using url, you\'ll still receive an interaction payload and will need to send an acknowledgement response.',
+										description: `A URL to load in the user's browser when the button is clicked.</br>
+												Maximum length for this field is 3000 characters. If you're using url, you'll still</br>
+												receive an interaction payload and will need to send an acknowledgement response.`,
 									},
 									{
 										displayName: 'Value',
@@ -1266,7 +1188,7 @@ export const messageFields: INodeProperties[] = [
 										},
 										type: 'string',
 										default: '',
-										description: 'The value to send along with the interaction payload',
+										description: 'The value to send along with the interaction payload.',
 									},
 									{
 										displayName: 'Style',
@@ -1294,7 +1216,7 @@ export const messageFields: INodeProperties[] = [
 											},
 										],
 										default: 'default',
-										description: 'Decorates buttons with alternative visual color schemes',
+										description: 'Decorates buttons with alternative visual color schemes.',
 									},
 									{
 										displayName: 'Confirm',
@@ -1336,7 +1258,7 @@ export const messageFields: INodeProperties[] = [
 																		name: 'text',
 																		type: 'string',
 																		default: '',
-																		description: 'Text of the title',
+																		description: 'Text of the title.',
 																	},
 																	{
 																		displayName: 'Emoji',
@@ -1348,7 +1270,7 @@ export const messageFields: INodeProperties[] = [
 																],
 															},
 														],
-														description: 'Defines an optional confirmation dialog after the button is clicked',
+														description: 'Defines an optional confirmation dialog after the button is clicked.',
 													},
 													{
 														displayName: 'Text',
@@ -1381,7 +1303,7 @@ export const messageFields: INodeProperties[] = [
 																],
 															},
 														],
-														description: 'Defines the explanatory text that appears in the confirm dialog',
+														description: `Defines the explanatory text that appears in the confirm dialog.`,
 													},
 													{
 														displayName: 'Confirm',
@@ -1402,7 +1324,7 @@ export const messageFields: INodeProperties[] = [
 																		name: 'text',
 																		type: 'string',
 																		default: '',
-																		description: 'Defines the explanatory text that appears in the confirm dialog',
+																		description: `Defines the explanatory text that appears in the confirm dialog.`,
 																	},
 																	{
 																		displayName: 'Emoji',
@@ -1414,7 +1336,7 @@ export const messageFields: INodeProperties[] = [
 																],
 															},
 														],
-														description: 'Defines the explanatory text that appears in the confirm dialog',
+														description: `Defines the explanatory text that appears in the confirm dialog.`,
 													},
 													{
 														displayName: 'Deny',
@@ -1468,12 +1390,12 @@ export const messageFields: INodeProperties[] = [
 															},
 														],
 														default: 'default',
-														description: 'Defines the color scheme applied to the confirm button',
+														description: 'Defines the color scheme applied to the confirm button.',
 													},
 												],
 											},
 										],
-										description: 'Defines an optional confirmation dialog after the button is clicked',
+										description: 'Defines an optional confirmation dialog after the button is clicked.',
 									},
 								],
 							},
@@ -1488,6 +1410,7 @@ export const messageFields: INodeProperties[] = [
 		name: 'attachmentsJson',
 		type: 'json',
 		default: '',
+		required: false,
 		typeOptions: {
 			alwaysOpenEditWindow: true,
 		},
@@ -1511,6 +1434,7 @@ export const messageFields: INodeProperties[] = [
 		name: 'blocksJson',
 		type: 'json',
 		default: '',
+		required: false,
 		typeOptions: {
 			alwaysOpenEditWindow: true,
 		},
@@ -1543,7 +1467,7 @@ export const messageFields: INodeProperties[] = [
 					false,
 				],
 				operation: [
-					'update',
+					'update'
 				],
 				resource: [
 					'message',
@@ -1562,7 +1486,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Required plain-text summary of the attachment',
+				description: 'Required plain-text summary of the attachment.',
 			},
 			{
 				displayName: 'Text',
@@ -1572,7 +1496,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Text to send',
+				description: 'Text to send.',
 			},
 			{
 				displayName: 'Title',
@@ -1582,7 +1506,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Title of the message',
+				description: 'Title of the message.',
 			},
 			{
 				displayName: 'Title Link',
@@ -1592,14 +1516,14 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Link of the title',
+				description: 'Link of the title.',
 			},
 			{
 				displayName: 'Color',
 				name: 'color',
 				type: 'color',
 				default: '#ff0000',
-				description: 'Color of the line left of text',
+				description: 'Color of the line left of text.',
 			},
 			{
 				displayName: 'Pretext',
@@ -1609,14 +1533,14 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Text which appears before the message block',
+				description: 'Text which appears before the message block.',
 			},
 			{
 				displayName: 'Author Name',
 				name: 'author_name',
 				type: 'string',
 				default: '',
-				description: 'Name that should appear',
+				description: 'Name that should appear.',
 			},
 			{
 				displayName: 'Author Link',
@@ -1626,7 +1550,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Link for the author',
+				description: 'Link for the author.',
 			},
 			{
 				displayName: 'Author Icon',
@@ -1636,7 +1560,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Icon which should appear for the user',
+				description: 'Icon which should appear for the user.',
 			},
 			{
 				displayName: 'Image URL',
@@ -1646,7 +1570,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'URL of image',
+				description: 'URL of image.',
 			},
 			{
 				displayName: 'Thumbnail URL',
@@ -1656,7 +1580,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'URL of thumbnail',
+				description: 'URL of thumbnail.',
 			},
 			{
 				displayName: 'Footer',
@@ -1666,7 +1590,7 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Text of footer to add',
+				description: 'Text of footer to add.',
 			},
 			{
 				displayName: 'Footer Icon',
@@ -1676,20 +1600,20 @@ export const messageFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Icon which should appear next to footer',
+				description: 'Icon which should appear next to footer.',
 			},
 			{
 				displayName: 'Timestamp',
 				name: 'ts',
 				type: 'dateTime',
 				default: '',
-				description: 'Time message relates to',
+				description: 'Time message relates to.',
 			},
 			{
 				displayName: 'Fields',
 				name: 'fields',
 				placeholder: 'Add Fields',
-				description: 'Fields to add to message',
+				description: 'Fields to add to message.',
 				type: 'fixedCollection',
 				typeOptions: {
 					multipleValues: true,
@@ -1705,69 +1629,26 @@ export const messageFields: INodeProperties[] = [
 								name: 'title',
 								type: 'string',
 								default: '',
-								description: 'Title of the item',
+								description: 'Title of the item.',
 							},
 							{
 								displayName: 'Value',
 								name: 'value',
 								type: 'string',
 								default: '',
-								description: 'Value of the item',
+								description: 'Value of the item.',
 							},
 							{
 								displayName: 'Short',
 								name: 'short',
 								type: 'boolean',
 								default: true,
-								description: 'If items can be displayed next to each other',
+								description: 'If items can be displayed next to each other.',
 							},
-						],
+						]
 					},
 				],
-			},
+			}
 		],
 	},
-
-	/* ----------------------------------------------------------------------- */
-	/*                                 message:delete
-	/* ----------------------------------------------------------------------- */
-	{
-		displayName: 'Channel',
-		name: 'channelId',
-		type: 'options',
-		typeOptions: {
-			loadOptionsMethod: 'getChannels',
-		},
-		required: true,
-		default: '',
-		displayOptions: {
-			show: {
-				resource: [
-					'message',
-				],
-				operation: [
-					'delete',
-				],
-			},
-		},
-		description: 'Channel containing the message to be deleted',
-	},
-	{
-		displayName: 'Timestamp',
-		name: 'timestamp',
-		type: 'string',
-		required: true,
-		default: '',
-		displayOptions: {
-			show: {
-				resource: [
-					'message',
-				],
-				operation: [
-					'delete',
-				],
-			},
-		},
-		description: 'Timestamp of the message to be deleted',
-	},
-];
+] as INodeProperties[];

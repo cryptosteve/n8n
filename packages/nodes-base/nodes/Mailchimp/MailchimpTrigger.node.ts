@@ -1,32 +1,31 @@
 import {
 	IHookFunctions,
 	IWebhookFunctions,
-} from 'n8n-core';
+  } from 'n8n-core';
 
-import {
+  import {
 	IDataObject,
+	INodeTypeDescription,
+	INodeType,
+	IWebhookResponseData,
 	ILoadOptionsFunctions,
 	INodePropertyOptions,
-	INodeType,
-	INodeTypeDescription,
-	IWebhookResponseData,
-	NodeApiError,
-	NodeOperationError,
-} from 'n8n-workflow';
-import {
+  } from 'n8n-workflow';
+  import {
 	mailchimpApiRequest,
-} from './GenericFunctions';
+ } from './GenericFunctions';
 
 export class MailchimpTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Mailchimp Trigger',
 		name: 'mailchimpTrigger',
-		icon: 'file:mailchimp.svg',
+		icon: 'file:mailchimp.png',
 		group: ['trigger'],
 		version: 1,
 		description: 'Handle Mailchimp events via webhooks',
 		defaults: {
-			name: 'Mailchimp Trigger',
+		name: 'Mailchimp Trigger',
+		color: '#32325d',
 		},
 		inputs: [],
 		outputs: ['main'],
@@ -66,7 +65,7 @@ export class MailchimpTrigger implements INodeType {
 				httpMethod: 'POST',
 				reponseMode: 'onReceived',
 				path: 'webhook',
-			},
+			}
 		],
 		properties: [
 			{
@@ -92,9 +91,9 @@ export class MailchimpTrigger implements INodeType {
 				type: 'options',
 				required: true,
 				default: '',
-				description: 'The list that is gonna fire the event',
+				description: 'The list that is gonna fire the event.',
 				typeOptions: {
-					loadOptionsMethod: 'getLists',
+					loadOptionsMethod: 'getLists'
 				},
 				options: [],
 			},
@@ -104,37 +103,37 @@ export class MailchimpTrigger implements INodeType {
 				type: 'multiOptions',
 				required: true,
 				default: [],
-				description: 'The events that can trigger the webhook and whether they are enabled',
+				description: 'The events that can trigger the webhook and whether they are enabled.',
 				options: [
 					{
 						name: 'Subscribe',
 						value: 'subscribe',
-						description: 'Whether the webhook is triggered when a list subscriber is added',
+						description: 'Whether the webhook is triggered when a list subscriber is added.',
 					},
 					{
 						name: 'Unsubscribe',
 						value: 'unsubscribe',
-						description: 'Whether the webhook is triggered when a list member unsubscribes',
+						description: 'Whether the webhook is triggered when a list member unsubscribes.',
 					},
 					{
 						name: 'Profile Updated',
 						value: 'profile',
-						description: 'Whether the webhook is triggered when a subscriber\'s profile is updated',
+						description: `Whether the webhook is triggered when a subscriber's profile is updated.`,
 					},
 					{
 						name: 'Cleaned',
 						value: 'cleaned',
-						description: 'Whether the webhook is triggered when a subscriber\'s email address is cleaned from the list',
+						description: `Whether the webhook is triggered when a subscriber's email address is cleaned from the list.`,
 					},
 					{
 						name: 'Email Address Updated',
 						value: 'upemail',
-						description: 'Whether the webhook is triggered when a subscriber\'s email address is changed',
+						description: `Whether the webhook is triggered when a subscriber's email address is changed.`,
 					},
 					{
 						name: 'Campaign Sent',
 						value: 'campaign',
-						description: 'Whether the webhook is triggered when a campaign is sent or cancelled',
+						description: `Whether the webhook is triggered when a campaign is sent or cancelled.`,
 					},
 				],
 			},
@@ -144,25 +143,25 @@ export class MailchimpTrigger implements INodeType {
 				type: 'multiOptions',
 				required: true,
 				default: [],
-				description: 'The possible sources of any events that can trigger the webhook and whether they are enabled',
+				description: 'The possible sources of any events that can trigger the webhook and whether they are enabled.',
 				options: [
 					{
 						name: 'User',
 						value: 'user',
-						description: 'Whether the webhook is triggered by subscriber-initiated actions',
+						description: 'Whether the webhook is triggered by subscriber-initiated actions.',
 					},
 					{
 						name: 'Admin',
 						value: 'admin',
-						description: 'Whether the webhook is triggered by admin-initiated actions in the web interface',
+						description: 'Whether the webhook is triggered by admin-initiated actions in the web interface.',
 					},
 					{
 						name: 'API',
 						value: 'api',
-						description: 'Whether the webhook is triggered by actions initiated via the API',
+						description: `Whether the webhook is triggered by actions initiated via the API.`,
 					},
 				],
-			},
+			}
 		],
 	};
 
@@ -176,8 +175,8 @@ export class MailchimpTrigger implements INodeType {
 				try {
 					response = await mailchimpApiRequest.call(this, '/lists', 'GET');
 					lists = response.lists;
-				} catch (error) {
-					throw new NodeApiError(this.getNode(), error);
+				} catch (err) {
+					throw new Error(`Mailchimp Error: ${err}`);
 				}
 				for (const list of lists) {
 					const listName = list.name;
@@ -206,11 +205,11 @@ export class MailchimpTrigger implements INodeType {
 				const endpoint = `/lists/${listId}/webhooks/${webhookData.webhookId}`;
 				try {
 					await mailchimpApiRequest.call(this, endpoint, 'GET');
-				} catch (error) {
-					if (error.statusCode === 404) {
+				} catch (err) {
+					if (err.statusCode === 404) {
 						return false;
 					}
-					throw new NodeApiError(this.getNode(), error);
+					throw new Error(`Mailchimp Error: ${err}`);
 				}
 				return true;
 			},
@@ -237,8 +236,8 @@ export class MailchimpTrigger implements INodeType {
 				const endpoint = `/lists/${listId}/webhooks`;
 				try {
 					webhook = await mailchimpApiRequest.call(this, endpoint, 'POST', body);
-				} catch (error) {
-					throw error;
+				} catch (e) {
+					throw e;
 				}
 				if (webhook.id === undefined) {
 					return false;
@@ -257,7 +256,7 @@ export class MailchimpTrigger implements INodeType {
 					const endpoint = `/lists/${listId}/webhooks/${webhookData.webhookId}`;
 					try {
 						await mailchimpApiRequest.call(this, endpoint, 'DELETE', {});
-					} catch (error) {
+					} catch (e) {
 						return false;
 					}
 					delete webhookData.webhookId;
@@ -286,13 +285,13 @@ export class MailchimpTrigger implements INodeType {
 		}
 		// @ts-ignore
 		if (!webhookData.events.includes(req.body.type)
-			// @ts-ignore
-			&& !webhookData.sources.includes(req.body.type)) {
+		// @ts-ignore
+		&& !webhookData.sources.includes(req.body.type)) {
 			return {};
 		}
 		return {
 			workflowData: [
-				this.helpers.returnJsonArray(req.body),
+				this.helpers.returnJsonArray(req.body)
 			],
 		};
 	}

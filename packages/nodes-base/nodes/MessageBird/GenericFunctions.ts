@@ -8,7 +8,7 @@ import {
 } from 'n8n-core';
 
 import {
-	IDataObject, NodeApiError, NodeOperationError,
+	IDataObject,
 } from 'n8n-workflow';
 
 /**
@@ -27,7 +27,10 @@ export async function messageBirdApiRequest(
 	body: IDataObject,
 	query: IDataObject = {},
 ): Promise<any> { // tslint:disable-line:no-any
-	const credentials = await this.getCredentials('messageBirdApi');
+	const credentials = this.getCredentials('messageBirdApi');
+	if (credentials === undefined) {
+		throw new Error('No credentials returned!');
+	}
 
 	const options: OptionsWithUri = {
 		headers: {
@@ -40,12 +43,22 @@ export async function messageBirdApiRequest(
 		uri: `https://rest.messagebird.com${resource}`,
 		json: true,
 	};
+
 	try {
-		if (Object.keys(body).length === 0) {
-			delete options.body;
-		}
 		return await this.helpers.request(options);
 	} catch (error) {
-		throw new NodeApiError(this.getNode(), error);
+		if (error.statusCode === 401) {
+			throw new Error('The Message Bird credentials are not valid!');
+		}
+
+		if (error.response && error.response.body && error.response.body.errors) {
+			// Try to return the error prettier
+			const errorMessage = error.response.body.errors.map((e: IDataObject) => e.description);
+
+			throw new Error(`MessageBird Error response [${error.statusCode}]: ${errorMessage.join('|')}`);
+		}
+
+		// If that data does not exist for some reason return the actual error
+		throw error;
 	}
 }

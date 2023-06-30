@@ -1,6 +1,14 @@
-import { IWebhookFunctions } from 'n8n-core';
+import {
+	IWebhookFunctions,
+} from 'n8n-core';
 
-import { IDataObject, INodeTypeDescription, INodeType, IWebhookResponseData } from 'n8n-workflow';
+import {
+	IDataObject,
+	INodeTypeDescription,
+	INodeType,
+	IWebhookResponseData,
+} from 'n8n-workflow';
+
 
 export class ClassNameReplace implements INodeType {
 	description: INodeTypeDescription = {
@@ -19,7 +27,7 @@ export class ClassNameReplace implements INodeType {
 			{
 				name: 'default',
 				httpMethod: 'POST',
-				responseMode: 'onReceived',
+				reponseMode: 'onReceived',
 				// Each webhook property can either be hardcoded
 				// like the above ones or referenced from a parameter
 				// like the "path" property bellow
@@ -39,18 +47,24 @@ export class ClassNameReplace implements INodeType {
 		],
 	};
 
+
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
+
 		// The data to return and so start the workflow with
 		const returnData: IDataObject[] = [];
-		returnData.push({
-			headers: this.getHeaderData(),
-			params: this.getParamsData(),
-			query: this.getQueryData(),
-			body: this.getBodyData(),
-		});
+		returnData.push(
+			{
+				body: this.getBodyData(),
+				headers: this.getHeaderData(),
+				query: this.getQueryData(),
+			}
+		);
 
 		return {
-			workflowData: [this.helpers.returnJsonArray(returnData)],
+			workflowData: [
+				this.helpers.returnJsonArray(returnData)
+			],
 		};
+
 	}
 }

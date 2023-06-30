@@ -5,8 +5,8 @@ import {
 
 import {
 	IDataObject,
-	INodeType,
 	INodeTypeDescription,
+	INodeType,
 	IWebhookResponseData,
 } from 'n8n-workflow';
 
@@ -18,12 +18,13 @@ export class MailjetTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Mailjet Trigger',
 		name: 'mailjetTrigger',
-		icon: 'file:mailjet.svg',
+		icon: 'file:mailjet.png',
 		group: ['trigger'],
 		version: 1,
 		description: 'Handle Mailjet events via webhooks',
 		defaults: {
 			name: 'Mailjet Trigger',
+			color: '#ff9f48',
 		},
 		inputs: [],
 		outputs: ['main'],
@@ -74,7 +75,7 @@ export class MailjetTrigger implements INodeType {
 						value: 'unsub',
 					},
 				],
-				description: 'Determines which resource events the webhook is triggered for',
+				description: 'Determines which resource events the webhook is triggered for.',
 			},
 		],
 

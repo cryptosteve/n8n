@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const companyOperations: INodeProperties[] = [
+export const companyOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -42,9 +42,9 @@ export const companyOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const companyFields: INodeProperties[] = [
+export const companyFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                company:create                              */
@@ -101,7 +101,7 @@ export const companyFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'If the data should include the fields details',
+		description: `If the data should include the fields details`,
 	},
 	{
 		displayName: 'Additional Fields',
@@ -243,6 +243,7 @@ export const companyFields: INodeProperties[] = [
 				],
 			},
 		},
+		description: 'company ID',
 	},
 	{
 		displayName: 'RAW Data',
@@ -259,7 +260,7 @@ export const companyFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'If the data should include the fields details',
+		description: `If the data should include the fields details`,
 	},
 	{
 		displayName: 'Update Fields',
@@ -417,6 +418,7 @@ export const companyFields: INodeProperties[] = [
 				],
 			},
 		},
+		description: 'company ID',
 	},
 	{
 		displayName: 'RAW Data',
@@ -433,7 +435,7 @@ export const companyFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'If the data should include the fields details',
+		description: `If the data should include the fields details`,
 	},
 /* -------------------------------------------------------------------------- */
 /*                                 company:getAll                             */
@@ -453,7 +455,7 @@ export const companyFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -477,13 +479,14 @@ export const companyFields: INodeProperties[] = [
 			maxValue: 25,
 		},
 		default: 10,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'JSON Parameters',
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				operation: [
@@ -517,14 +520,14 @@ export const companyFields: INodeProperties[] = [
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Comma-separated list of fields to return',
+				description: 'Comma separated list of fields to return.',
 			},
 			{
 				displayName: 'Sort By',
 				name: 'sortBy',
 				type: 'string',
 				default: '',
-				description: 'The field to sort by',
+				description: 'The field to sort by.',
 			},
 			{
 				displayName: 'Sort Order',
@@ -541,7 +544,8 @@ export const companyFields: INodeProperties[] = [
 					},
 				],
 				default: 'desc',
-			},
+				description: 'Sort order',
+			}
 		],
 	},
 	{
@@ -682,19 +686,19 @@ export const companyFields: INodeProperties[] = [
 											},
 										],
 										default: 'EQUALS',
-										description: 'Value of the property to set',
+										description: 'Value of the property to set.',
 									},
 									{
 										displayName: 'Value',
 										name: 'value',
 										type: 'string',
 										default: '',
-									},
-								],
+									}
+								]
 							},
 						],
 					},
-				],
+				]
 			},
 		],
 	},
@@ -719,4 +723,4 @@ export const companyFields: INodeProperties[] = [
 		},
 		description: 'If more than one company add them separated by ,',
 	},
-];
+] as INodeProperties[];

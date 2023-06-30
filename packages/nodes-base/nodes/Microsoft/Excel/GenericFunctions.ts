@@ -5,7 +5,7 @@ import {
 	ILoadOptionsFunctions,
 } from 'n8n-core';
 import {
-	IDataObject, NodeApiError
+	IDataObject
 } from 'n8n-workflow';
 
 export async function microsoftApiRequest(this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions, method: string, resource: string, body: any = {}, qs: IDataObject = {}, uri?: string, headers: IDataObject = {}): Promise<any> { // tslint:disable-line:no-any
@@ -17,7 +17,7 @@ export async function microsoftApiRequest(this: IExecuteFunctions | IExecuteSing
 		body,
 		qs,
 		uri: uri || `https://graph.microsoft.com/v1.0/me${resource}`,
-		json: true,
+		json: true
 	};
 	try {
 		if (Object.keys(headers).length !== 0) {
@@ -26,7 +26,11 @@ export async function microsoftApiRequest(this: IExecuteFunctions | IExecuteSing
 		//@ts-ignore
 		return await this.helpers.requestOAuth2.call(this, 'microsoftExcelOAuth2Api', options);
 	} catch (error) {
-		throw new NodeApiError(this.getNode(), error);
+		if (error.response && error.response.body && error.response.body.error && error.response.body.error.message) {
+			// Try to return the error prettier
+			throw new Error(`Microsoft error response [${error.statusCode}]: ${error.response.body.error.message}`);
+		}
+		throw error;
 	}
 }
 

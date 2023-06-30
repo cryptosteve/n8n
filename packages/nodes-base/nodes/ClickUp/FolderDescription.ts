@@ -1,8 +1,8 @@
 import {
 	INodeProperties,
-} from 'n8n-workflow';
+ } from 'n8n-workflow';
 
-export const folderOperations: INodeProperties[] = [
+export const folderOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -44,13 +44,13 @@ export const folderOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const folderFields: INodeProperties[] = [
+export const folderFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                folder:create                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                folder:create                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Team ID',
 		name: 'team',
@@ -90,7 +90,7 @@ export const folderFields: INodeProperties[] = [
 			loadOptionsMethod: 'getSpaces',
 			loadOptionsDependsOn: [
 				'team',
-			],
+			]
 		},
 		required: true,
 	},
@@ -111,10 +111,9 @@ export const folderFields: INodeProperties[] = [
 		},
 		required: true,
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                folder:delete                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                folder:delete                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Team ID',
 		name: 'team',
@@ -154,7 +153,7 @@ export const folderFields: INodeProperties[] = [
 			loadOptionsMethod: 'getSpaces',
 			loadOptionsDependsOn: [
 				'team',
-			],
+			]
 		},
 		required: true,
 	},
@@ -181,10 +180,9 @@ export const folderFields: INodeProperties[] = [
 		},
 		required: true,
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                folder:get                                  */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                folder:get                                  */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Team ID',
 		name: 'team',
@@ -224,7 +222,7 @@ export const folderFields: INodeProperties[] = [
 			loadOptionsMethod: 'getSpaces',
 			loadOptionsDependsOn: [
 				'team',
-			],
+			]
 		},
 		required: true,
 	},
@@ -251,10 +249,9 @@ export const folderFields: INodeProperties[] = [
 		},
 		required: true,
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                folder:getAll                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                folder:getAll                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Team ID',
 		name: 'team',
@@ -294,7 +291,7 @@ export const folderFields: INodeProperties[] = [
 			loadOptionsMethod: 'getSpaces',
 			loadOptionsDependsOn: [
 				'team',
-			],
+			]
 		},
 		required: true,
 	},
@@ -317,7 +314,7 @@ export const folderFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Filters',
@@ -344,10 +341,9 @@ export const folderFields: INodeProperties[] = [
 			},
 		],
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                folder:update                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                folder:update                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Team ID',
 		name: 'team',
@@ -387,7 +383,7 @@ export const folderFields: INodeProperties[] = [
 			loadOptionsMethod: 'getSpaces',
 			loadOptionsDependsOn: [
 				'team',
-			],
+			]
 		},
 		required: true,
 	},
@@ -439,4 +435,4 @@ export const folderFields: INodeProperties[] = [
 			},
 		],
 	},
-];
+] as INodeProperties[];

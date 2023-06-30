@@ -1,5 +1,4 @@
-import {
-	MigrationInterface, QueryRunner } from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 import * as config from '../../../../config';
 
@@ -7,9 +6,9 @@ export class InitialMigration1587669153312 implements MigrationInterface {
 	name = 'InitialMigration1587669153312';
 
 	async up(queryRunner: QueryRunner): Promise<void> {
-		let tablePrefix = config.getEnv('database.tablePrefix');
+		let tablePrefix = config.get('database.tablePrefix');
 		const tablePrefixIndex = tablePrefix;
-		const schema = config.getEnv('database.postgresdb.schema');
+		const schema = config.get('database.postgresdb.schema');
 		if (schema) {
 			tablePrefix = schema + '.' + tablePrefix;
 		}
@@ -22,9 +21,9 @@ export class InitialMigration1587669153312 implements MigrationInterface {
 	}
 
 	async down(queryRunner: QueryRunner): Promise<void> {
-		let tablePrefix = config.getEnv('database.tablePrefix');
+		let tablePrefix = config.get('database.tablePrefix');
 		const tablePrefixIndex = tablePrefix;
-		const schema = config.getEnv('database.postgresdb.schema');
+		const schema = config.get('database.postgresdb.schema');
 		if (schema) {
 			tablePrefix = schema + '.' + tablePrefix;
 		}

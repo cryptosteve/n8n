@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const companyOperations: INodeProperties[] = [
+export const companyOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -14,26 +14,26 @@ export const companyOperations: INodeProperties[] = [
 		},
 		options: [
 			{
-				name: 'Autocomplete',
-				value: 'autocomplete',
-				description: 'Auto-complete company names and retrieve logo and domain',
-			},
-			{
 				name: 'Enrich',
 				value: 'enrich',
-				description: 'Look up person and company data based on an email or domain',
+				description: 'Lets you look up person and company data based on an email or domain',
+			},
+			{
+				name: 'Autocomplete',
+				value: 'autocomplete',
+				description: 'Lets you auto-complete company names and retreive logo and domain',
 			},
 		],
 		default: 'enrich',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const companyFields: INodeProperties[] = [
+export const companyFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                 company:enrich                         */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 company:enrich                         */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Domain',
 		name: 'domain',
@@ -50,7 +50,7 @@ export const companyFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The domain to look up',
+		description: 'The domain to look up.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -74,51 +74,50 @@ export const companyFields: INodeProperties[] = [
 				name: 'companyName',
 				type: 'string',
 				default: '',
-				description: 'The name of the company',
+				description: 'The name of the company.',
 			},
 			{
 				displayName: 'Facebook',
 				name: 'facebook',
 				type: 'string',
 				default: '',
-				description: 'The Facebook URL for the company',
+				description: 'The Facebook URL for the company.',
 			},
 			{
 				displayName: 'Linkedin',
 				name: 'linkedin',
 				type: 'string',
 				default: '',
-				description: 'The LinkedIn URL for the company',
+				description: 'The LinkedIn URL for the company.',
 			},
 			{
 				displayName: 'Twitter',
 				name: 'twitter',
 				type: 'string',
 				default: '',
-				description: 'The Twitter handle for the company',
+				description: 'The Twitter handle for the company.',
 			},
 		],
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 company:autocomplete                       */
-	/* -------------------------------------------------------------------------- */
-	{
-		displayName: 'Name',
-		name: 'name',
-		type: 'string',
-		default: '',
-		required: true,
-		displayOptions: {
-			show: {
-				resource: [
-					'company',
-				],
-				operation: [
-					'autocomplete',
-				],
-			},
+/* -------------------------------------------------------------------------- */
+/*                                 company:autocomplete                       */
+/* -------------------------------------------------------------------------- */
+{
+	displayName: 'Name',
+	name: 'name',
+	type: 'string',
+	default: '',
+	required: true,
+	displayOptions: {
+		show: {
+			resource: [
+				'company',
+			],
+			operation: [
+				'autocomplete',
+			],
 		},
-		description: 'Name is the partial name of the company',
 	},
-];
+	description: 'Name is the partial name of the company.',
+},
+] as INodeProperties[];

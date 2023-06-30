@@ -1,25 +1,18 @@
 import {
-	IAuthenticateBearer,
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
+
 
 export class AsanaApi implements ICredentialType {
 	name = 'asanaApi';
 	displayName = 'Asana API';
-	documentationUrl = 'asana';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Access Token',
 			name: 'accessToken',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 	];
-
-	authenticate = {
-		type: 'bearer',
-		properties: {},
-	} as IAuthenticateBearer;
-
 }

@@ -1,18 +1,17 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 
 export class VeroApi implements ICredentialType {
 	name = 'veroApi';
 	displayName = 'Vero API';
-	documentationUrl = 'vero';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Auth Token',
 			name: 'authToken',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 	];

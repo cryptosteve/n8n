@@ -4,7 +4,6 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
-	NodeOperationError,
 } from 'n8n-workflow';
 import { RundeckApi } from './RundeckApi';
 
@@ -19,6 +18,7 @@ export class Rundeck implements INodeType {
 		description: 'Manage Rundeck API',
 		defaults: {
 			name: 'Rundeck',
+			color: '#F73F39',
 		},
 		inputs: ['main'],
 		outputs: ['main'],
@@ -26,7 +26,7 @@ export class Rundeck implements INodeType {
 			{
 				name: 'rundeckApi',
 				required: true,
-			},
+			}
 		],
 		properties: [
 			{
@@ -50,7 +50,7 @@ export class Rundeck implements INodeType {
 					{
 						name: 'Execute',
 						value: 'execute',
-						description: 'Execute a job',
+						description: 'Executes job',
 					},
 					{
 						name: 'Get Metadata',
@@ -82,7 +82,7 @@ export class Rundeck implements INodeType {
 				default: '',
 				placeholder: 'Rundeck Job Id',
 				required: true,
-				description: 'The job ID to execute',
+				description: 'The job Id to execute.',
 			},
 			{
 				displayName: 'Arguments',
@@ -120,7 +120,7 @@ export class Rundeck implements INodeType {
 								type: 'string',
 								default: '',
 							},
-						],
+						]
 					},
 				],
 			},
@@ -146,7 +146,7 @@ export class Rundeck implements INodeType {
 				default: '',
 				placeholder: 'Rundeck Job Id',
 				required: true,
-				description: 'The job ID to get metadata off',
+				description: 'The job Id to get metadata off.',
 			},
 		],
 
@@ -158,15 +158,13 @@ export class Rundeck implements INodeType {
 		// Input data
 		const items = this.getInputData();
 		const returnData: IDataObject[] = [];
-		const length = items.length;
+		const length = items.length as unknown as number;
 
 		const operation = this.getNodeParameter('operation', 0) as string;
 		const resource = this.getNodeParameter('resource', 0) as string;
-		const rundeckApi = new RundeckApi(this);
-		await rundeckApi.init();
-
 
 		for (let i = 0; i < length; i++) {
+			const rundeckApi = new RundeckApi(this);
 
 			if (resource === 'job') {
 				if (operation === 'execute') {
@@ -187,10 +185,10 @@ export class Rundeck implements INodeType {
 
 					returnData.push(response);
 				} else {
-					throw new NodeOperationError(this.getNode(), `The operation "${operation}" is not supported!`);
+					throw new Error(`The operation "${operation}" is not supported!`);
 				}
 			} else {
-				throw new NodeOperationError(this.getNode(), `The resource "${resource}" is not supported!`);
+				throw new Error(`The resource "${resource}" is not supported!`);
 			}
 		}
 

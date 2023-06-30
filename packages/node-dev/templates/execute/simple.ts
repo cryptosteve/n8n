@@ -1,5 +1,10 @@
 import { IExecuteFunctions } from 'n8n-core';
-import { INodeExecutionData, INodeType, INodeTypeDescription } from 'n8n-workflow';
+import {
+	INodeExecutionData,
+	INodeType,
+	INodeTypeDescription,
+} from 'n8n-workflow';
+
 
 export class ClassNameReplace implements INodeType {
 	description: INodeTypeDescription = {
@@ -24,11 +29,13 @@ export class ClassNameReplace implements INodeType {
 				default: '',
 				placeholder: 'Placeholder value',
 				description: 'The description text',
-			},
-		],
+			}
+		]
 	};
 
+
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
+
 		const items = this.getInputData();
 
 		let item: INodeExecutionData;
@@ -41,9 +48,10 @@ export class ClassNameReplace implements INodeType {
 			myString = this.getNodeParameter('myString', itemIndex, '') as string;
 			item = items[itemIndex];
 
-			item.json.myString = myString;
+			item.json['myString'] = myString;
 		}
 
 		return this.prepareOutputData(items);
+
 	}
 }

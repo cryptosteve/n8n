@@ -2,7 +2,7 @@ import {
 	INodeProperties,
  } from 'n8n-workflow';
 
-export const ecommerceProductOperations: INodeProperties[] = [
+export const ecommerceProductOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -39,9 +39,9 @@ export const ecommerceProductOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const ecommerceProductFields: INodeProperties[] = [
+export const ecommerceProductFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                 ecommerceProduct:create                    */
@@ -182,7 +182,7 @@ export const ecommerceProductFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -206,7 +206,7 @@ export const ecommerceProductFields: INodeProperties[] = [
 			maxValue: 200,
 		},
 		default: 100,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Filters',
@@ -233,4 +233,4 @@ export const ecommerceProductFields: INodeProperties[] = [
 			},
 		],
 	},
-];
+] as INodeProperties[];

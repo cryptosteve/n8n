@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const smsOperations: INodeProperties[] = [
+export const smsOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -22,9 +22,9 @@ export const smsOperations: INodeProperties[] = [
 		default: 'send',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const smsFields: INodeProperties[] = [
+export const smsFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                sms:send                                    */
@@ -42,7 +42,7 @@ export const smsFields: INodeProperties[] = [
 				],
 				operation: [
 					'send',
-				],
+				]
 			},
 		},
 		description: 'Customizable sender name. Should be between 3 and 11 characters in length, only alphanumeric characters are allowed.',
@@ -60,7 +60,7 @@ export const smsFields: INodeProperties[] = [
 				],
 				operation: [
 					'send',
-				],
+				]
 			},
 		},
 		description: 'Message recipient. Should be between 3 and 15 characters in length. The number always starts with a plus sign followed by a country code, followed by the number. Phone numbers are expected to comply with the E.164 format.',
@@ -81,8 +81,8 @@ export const smsFields: INodeProperties[] = [
 				],
 				operation: [
 					'send',
-				],
+				]
 			},
 		},
 	},
-];
+] as INodeProperties[];

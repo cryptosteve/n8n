@@ -1,41 +1,39 @@
 <template>
 	<div @keydown.stop class="duplicate-parameter">
-		<n8n-input-label
-			:label="$locale.nodeText().inputLabelDisplayName(parameter, path)"
-			:tooltipText="$locale.nodeText().inputLabelDescription(parameter, path)"
-			:underline="true"
-			:labelHoverableOnly="true"
-			size="small"
-		>
 
-			<div v-for="(value, index) in values" :key="index" class="duplicate-parameter-item" :class="parameter.type">
-				<div class="delete-item clickable" v-if="!isReadOnly">
-					<font-awesome-icon icon="trash" :title="$locale.baseText('multipleParameter.deleteItem')" @click="deleteItem(index)" />
-					<div v-if="sortable">
-						<font-awesome-icon v-if="index !== 0" icon="angle-up" class="clickable" :title="$locale.baseText('multipleParameter.moveUp')" @click="moveOptionUp(index)" />
-						<font-awesome-icon v-if="index !== (values.length -1)" icon="angle-down" class="clickable" :title="$locale.baseText('multipleParameter.moveDown')" @click="moveOptionDown(index)" />
-					</div>
-				</div>
-				<div v-if="parameter.type === 'collection'">
-					<collection-parameter :parameter="parameter" :values="value" :nodeValues="nodeValues" :path="getPath(index)" :hideDelete="hideDelete" @valueChanged="valueChanged" />
-				</div>
-				<div v-else>
-					<parameter-input class="duplicate-parameter-input-item" :parameter="parameter" :value="value" :displayOptions="true" :path="getPath(index)" @valueChanged="valueChanged" inputSize="small" :isReadOnly="isReadOnly" />
-				</div>
+		<div class="parameter-name">
+			{{parameter.displayName}}:
+			<el-tooltip class="parameter-info" placement="top" v-if="parameter.description" effect="light">
+				<div slot="content" v-html="parameter.description"></div>
+				<font-awesome-icon icon="question-circle" />
+			</el-tooltip>
+		</div>
+
+		<div v-for="(value, index) in values" :key="index" class="duplicate-parameter-item" :class="parameter.type">
+			<div class="delete-item clickable" v-if="!isReadOnly" title="Delete Item" @click="deleteItem(index)">
+				<font-awesome-icon icon="trash" />
 			</div>
-
-			<div class="add-item-wrapper">
-				<div v-if="values && Object.keys(values).length === 0 || isReadOnly" class="no-items-exist">
-					<n8n-text size="small">{{ $locale.baseText('multipleParameter.currentlyNoItemsExist') }}</n8n-text>
-				</div>
-				<n8n-button v-if="!isReadOnly" fullWidth @click="addItem()" :label="addButtonText" />
+			<div v-if="parameter.type === 'collection'">
+				<collection-parameter :parameter="parameter" :values="value" :nodeValues="nodeValues" :path="getPath(index)" :hideDelete="hideDelete" @valueChanged="valueChanged" />
 			</div>
+			<div v-else>
+				<parameter-input class="duplicate-parameter-input-item" :parameter="parameter" :value="value" :displayOptions="true" :path="getPath(index)" @valueChanged="valueChanged" />
+			</div>
+		</div>
 
-		</n8n-input-label>
+		<div class="add-item-wrapper">
+			<div v-if="values && Object.keys(values).length === 0 || isReadOnly" class="no-items-exist">
+				Currently no items exist
+			</div>
+			<el-button v-if="!isReadOnly" size="small" class="add-item" @click="addItem()">{{ addButtonText }}</el-button>
+		</div>
+
 	</div>
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
+
 import {
 	IUpdateInformation,
 } from '@/Interface';
@@ -64,20 +62,10 @@ export default mixins(genericHelpers)
 		],
 		computed: {
 			addButtonText (): string {
-				if (
-					!this.parameter.typeOptions ||
-					(this.parameter.typeOptions && !this.parameter.typeOptions.multipleValueButtonText)
-				) {
-					return this.$locale.baseText('multipleParameter.addItem');
-				}
-
-				return this.$locale.nodeText().multipleValueButtonText(this.parameter);
+				return (this.parameter.typeOptions && this.parameter.typeOptions.multipleValueButtonText) ? this.parameter.typeOptions.multipleValueButtonText : 'Add item';
 			},
 			hideDelete (): boolean {
 				return this.parameter.options.length === 1;
-			},
-			sortable (): string {
-				return this.parameter.typeOptions && this.parameter.typeOptions.sortable;
 			},
 		},
 		methods: {
@@ -109,26 +97,6 @@ export default mixins(genericHelpers)
 			getPath (index?: number): string {
 				return this.path + (index !== undefined ? `[${index}]` : '');
 			},
-			moveOptionDown (index: number) {
-				this.values.splice(index + 1, 0, this.values.splice(index, 1)[0]);
-
-				const parameterData = {
-					name: this.path,
-					value: this.values,
-				};
-
-				this.$emit('valueChanged', parameterData);
-			},
-			moveOptionUp (index: number) {
-				this.values.splice(index - 1, 0, this.values.splice(index, 1)[0]);
-
-				const parameterData = {
-					name: this.path,
-					value: this.values,
-				};
-
-				this.$emit('valueChanged', parameterData);
-			},
 			valueChanged (parameterData: IUpdateInformation) {
 				this.$emit('valueChanged', parameterData);
 			},
@@ -139,7 +107,15 @@ export default mixins(genericHelpers)
 <style scoped lang="scss">
 
 .duplicate-parameter-item ~.add-item-wrapper {
-	margin-top: var(--spacing-xs);
+	margin: 1.5em 0 0em 0em;
+}
+
+.add-item-wrapper {
+	margin: 0.5em 0 0em 2em;
+}
+
+.add-item {
+	width: 100%;
 }
 
 .delete-item {
@@ -149,16 +125,23 @@ export default mixins(genericHelpers)
 	top: .3em;
 	z-index: 999;
 	color: #f56c6c;
-	width: 15px;
-	font-size: var(--font-size-2xs);
 
 	:hover {
 		color: #ff0000;
 	}
 }
 
+.duplicate-parameter {
+	margin-top: 0.5em;
+	.parameter-name {
+		border-bottom: 1px solid #999;
+	}
+}
+
 ::v-deep .duplicate-parameter-item {
 	position: relative;
+	margin-top: 0.5em;
+	padding-top: 0.5em;
 
 	.multi > .delete-item{
 		top: 0.1em;
@@ -172,12 +155,12 @@ export default mixins(genericHelpers)
 ::v-deep .duplicate-parameter-item + .duplicate-parameter-item {
 	.collection-parameter-wrapper {
 		border-top: 1px dashed #999;
-		margin-top: var(--spacing-xs);
+		padding-top: 0.5em;
 	}
 }
 
 .no-items-exist {
-	margin: var(--spacing-xs) 0;
+	margin: 0 0 1em 0;
 }
 </style>
 

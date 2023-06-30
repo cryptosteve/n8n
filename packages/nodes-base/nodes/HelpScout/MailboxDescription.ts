@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const mailboxOperations: INodeProperties[] = [
+export const mailboxOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -27,9 +27,9 @@ export const mailboxOperations: INodeProperties[] = [
 		default: 'get',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const mailboxFields: INodeProperties[] = [
+export const mailboxFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                mailbox:get                                 */
@@ -69,7 +69,7 @@ export const mailboxFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -92,6 +92,6 @@ export const mailboxFields: INodeProperties[] = [
 			minValue: 1,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
-];
+] as INodeProperties[];

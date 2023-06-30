@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const postOperations: INodeProperties[] = [
+export const postOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -42,9 +42,9 @@ export const postOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const postFields: INodeProperties[] = [
+export const postFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                post:create                                 */
@@ -62,7 +62,7 @@ export const postFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-				],
+				]
 			},
 		},
 		description: 'The title for the post',
@@ -85,16 +85,6 @@ export const postFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Author ID',
-				name: 'authorId',
-				type: 'options',
-				typeOptions: {
-					loadOptionsMethod: 'getAuthors',
-				},
-				default: '',
-				description: 'The ID for the author of the object',
-			},
-			{
 				displayName: 'Content',
 				name: 'content',
 				type: 'string',
@@ -109,14 +99,14 @@ export const postFields: INodeProperties[] = [
 				name: 'slug',
 				type: 'string',
 				default: '',
-				description: 'An alphanumeric identifier for the object unique to its type',
+				description: 'An alphanumeric identifier for the object unique to its type.',
 			},
 			{
 				displayName: 'Password',
 				name: 'password',
 				type: 'string',
 				default: '',
-				description: 'A password to protect access to the content and excerpt',
+				description: 'A password to protect access to the content and excerpt.',
 			},
 			{
 				displayName: 'Status',
@@ -145,7 +135,7 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: 'draft',
-				description: 'A named status for the post',
+				description: 'A named status for the post.',
 			},
 			{
 				displayName: 'Comment Status',
@@ -162,7 +152,7 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: 'open',
-				description: 'Whether or not comments are open on the post',
+				description: 'Whether or not comments are open on the post.',
 			},
 			{
 				displayName: 'Ping Status',
@@ -179,7 +169,7 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: 'open',
-				description: 'If the a message should be send to announce the post',
+				description: 'If the a message should be send to announce the post.',
 			},
 			{
 				displayName: 'Format',
@@ -228,14 +218,14 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: 'standard',
-				description: 'Whether or not comments are open on the post',
+				description: 'Whether or not comments are open on the post.',
 			},
 			{
 				displayName: 'Sticky',
 				name: 'sticky',
 				type: 'boolean',
 				default: false,
-				description: 'Whether or not the object should be treated as sticky',
+				description: 'Whether or not the object should be treated as sticky.',
 			},
 			{
 				displayName: 'Categories',
@@ -245,7 +235,7 @@ export const postFields: INodeProperties[] = [
 					loadOptionsMethod: 'getCategories',
 				},
 				default: [],
-				description: 'The terms assigned to the object in the category taxonomy',
+				description: 'The terms assigned to the object in the category taxonomy.',
 			},
 			{
 				displayName: 'Tags',
@@ -255,9 +245,9 @@ export const postFields: INodeProperties[] = [
 					loadOptionsMethod: 'getTags',
 				},
 				default: [],
-				description: 'The terms assigned to the object in the post_tag taxonomy',
+				description: 'The terms assigned to the object in the post_tag taxonomy.',
 			},
-		],
+		]
 	},
 /* -------------------------------------------------------------------------- */
 /*                                 post:update                                */
@@ -275,10 +265,10 @@ export const postFields: INodeProperties[] = [
 				],
 				operation: [
 					'update',
-				],
+				]
 			},
 		},
-		description: 'Unique identifier for the object',
+		description: 'Unique identifier for the object.',
 	},
 	{
 		displayName: 'Update Fields',
@@ -297,16 +287,6 @@ export const postFields: INodeProperties[] = [
 			},
 		},
 		options: [
-			{
-				displayName: 'Author ID',
-				name: 'authorId',
-				type: 'options',
-				typeOptions: {
-					loadOptionsMethod: 'getAuthors',
-				},
-				default: '',
-				description: 'The ID for the author of the object',
-			},
 			{
 				displayName: 'Title',
 				name: 'title',
@@ -329,14 +309,14 @@ export const postFields: INodeProperties[] = [
 				name: 'slug',
 				type: 'string',
 				default: '',
-				description: 'An alphanumeric identifier for the object unique to its type',
+				description: 'An alphanumeric identifier for the object unique to its type.',
 			},
 			{
 				displayName: 'Password',
 				name: 'password',
 				type: 'string',
 				default: '',
-				description: 'A password to protect access to the content and excerpt',
+				description: 'A password to protect access to the content and excerpt.',
 			},
 			{
 				displayName: 'Status',
@@ -365,7 +345,7 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: 'draft',
-				description: 'A named status for the post',
+				description: 'A named status for the post.',
 			},
 			{
 				displayName: 'Comment Status',
@@ -382,7 +362,7 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: 'open',
-				description: 'Whether or not comments are open on the post',
+				description: 'Whether or not comments are open on the post.',
 			},
 			{
 				displayName: 'Ping Status',
@@ -399,7 +379,7 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: 'open',
-				description: 'Whether or not comments are open on the post',
+				description: 'Whether or not comments are open on the post.',
 			},
 			{
 				displayName: 'Format',
@@ -448,14 +428,14 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: 'standard',
-				description: 'The format of the post',
+				description: 'The format of the post.',
 			},
 			{
 				displayName: 'Sticky',
 				name: 'sticky',
 				type: 'boolean',
 				default: false,
-				description: 'Whether or not the object should be treated as sticky',
+				description: 'Whether or not the object should be treated as sticky.',
 			},
 			{
 				displayName: 'Categories',
@@ -465,7 +445,7 @@ export const postFields: INodeProperties[] = [
 					loadOptionsMethod: 'getCategories',
 				},
 				default: [],
-				description: 'The terms assigned to the object in the category taxonomy',
+				description: 'The terms assigned to the object in the category taxonomy.',
 			},
 			{
 				displayName: 'Tags',
@@ -475,9 +455,9 @@ export const postFields: INodeProperties[] = [
 					loadOptionsMethod: 'getTags',
 				},
 				default: [],
-				description: 'The terms assigned to the object in the post_tag taxonomy',
+				description: 'The terms assigned to the object in the post_tag taxonomy.',
 			},
-		],
+		]
 	},
 /* -------------------------------------------------------------------------- */
 /*                                  post:get                                  */
@@ -495,10 +475,10 @@ export const postFields: INodeProperties[] = [
 				],
 				operation: [
 					'get',
-				],
+				]
 			},
 		},
-		description: 'Unique identifier for the object',
+		description: 'Unique identifier for the object.',
 	},
 	{
 		displayName: 'Options',
@@ -522,7 +502,7 @@ export const postFields: INodeProperties[] = [
 				name: 'password',
 				type: 'string',
 				default: '',
-				description: 'The password for the post if it is password protected',
+				description: 'The password for the post if it is password protected.',
 			},
 			{
 				displayName: 'Context',
@@ -543,9 +523,9 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: 'view',
-				description: 'Scope under which the request is made; determines fields present in response',
+				description: 'Scope under which the request is made; determines fields present in response.',
 			},
-		],
+		]
 	},
 /* -------------------------------------------------------------------------- */
 /*                                   post:getAll                              */
@@ -565,7 +545,7 @@ export const postFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -589,7 +569,7 @@ export const postFields: INodeProperties[] = [
 			maxValue: 10,
 		},
 		default: 5,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -609,40 +589,6 @@ export const postFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'After',
-				name: 'after',
-				type: 'dateTime',
-				default: '',
-				description: 'Limit response to posts published after a given ISO8601 compliant date',
-			},
-			{
-				displayName: 'Author',
-				name: 'author',
-				type: 'multiOptions',
-				default: [],
-				typeOptions: {
-					loadOptionsMethod: 'getAuthors',
-				},
-				description: 'Limit result set to posts assigned to specific authors',
-			},
-			{
-				displayName: 'Before',
-				name: 'before',
-				type: 'dateTime',
-				default: '',
-				description: 'Limit response to posts published before a given ISO8601 compliant date',
-			},
-			{
-				displayName: 'Categories',
-				name: 'categories',
-				type: 'multiOptions',
-				default: [],
-				typeOptions: {
-					loadOptionsMethod: 'getCategories',
-				},
-				description: 'Limit result set to all items that have the specified term assigned in the categories taxonomy',
-			},
-			{
 				displayName: 'Context',
 				name: 'context',
 				type: 'options',
@@ -661,44 +607,7 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: 'view',
-				description: 'Scope under which the request is made; determines fields present in response',
-			},
-			{
-				displayName: 'Exclude Categories',
-				name: 'excludedCategories',
-				type: 'multiOptions',
-				default: [],
-				typeOptions: {
-					loadOptionsMethod: 'getCategories',
-				},
-				description: 'Limit result set to all items except those that have the specified term assigned in the categories taxonomy',
-			},
-			{
-				displayName: 'Exclude Tags',
-				name: 'excludedTags',
-				type: 'multiOptions',
-				default: [],
-				typeOptions: {
-					loadOptionsMethod: 'getTags',
-				},
-				description: 'Limit result set to all items except those that have the specified term assigned in the tags taxonomy',
-			},
-			{
-				displayName: 'Order',
-				name: 'order',
-				type: 'options',
-				options: [
-					{
-						name: 'ASC',
-						value: 'asc',
-					},
-					{
-						name: 'DESC',
-						value: 'desc',
-					},
-				],
-				default: 'desc',
-				description: 'Order sort attribute ascending or descending',
+				description: 'Scope under which the request is made; determines fields present in response.',
 			},
 			{
 				displayName: 'Order By',
@@ -747,50 +656,75 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: 'id',
-				description: 'Sort collection by object attribute',
+				description: 'Sort collection by object attribute.',
+			},
+			{
+				displayName: 'Order',
+				name: 'order',
+				type: 'options',
+				options: [
+					{
+						name: 'ASC',
+						value: 'asc',
+					},
+					{
+						name: 'DESC',
+						value: 'desc',
+					},
+				],
+				default: 'desc',
+				description: 'Order sort attribute ascending or descending.',
 			},
 			{
 				displayName: 'Search',
 				name: 'search',
 				type: 'string',
 				default: '',
-				description: 'Limit results to those matching a string',
+				description: 'Limit results to those matching a string.',
 			},
 			{
-				displayName: 'Status',
-				name: 'status',
-				type: 'options',
-				options: [
-					{
-						name: 'Draft',
-						value: 'draft',
-					},
-					{
-						name: 'Future',
-						value: 'future',
-					},
-					{
-						name: 'Pending',
-						value: 'pending',
-					},
-					{
-						name: 'Private',
-						value: 'private',
-					},
-					{
-						name: 'Publish',
-						value: 'publish',
-					},
-				],
-				default: 'publish',
-				description: 'The status of the post',
+				displayName: 'After',
+				name: 'after',
+				type: 'dateTime',
+				default: '',
+				description: 'Limit response to posts published after a given ISO8601 compliant date.',
 			},
 			{
-				displayName: 'Sticky',
-				name: 'sticky',
-				type: 'boolean',
-				default: false,
-				description: 'Limit result set to items that are sticky',
+				displayName: 'Before',
+				name: 'before',
+				type: 'dateTime',
+				default: '',
+				description: 'Limit response to posts published before a given ISO8601 compliant date.',
+			},
+			{
+				displayName: 'Author',
+				name: 'author',
+				type: 'multiOptions',
+				default: [],
+				typeOptions: {
+					loadOptionsMethod: 'getAuthors',
+				},
+				description: 'Limit result set to posts assigned to specific authors.',
+			},
+			{
+				displayName: 'Categories',
+				name: 'categories',
+				type: 'multiOptions',
+				default: [],
+				typeOptions: {
+					loadOptionsMethod: 'getCategories',
+				},
+				description: 'Limit result set to all items that have the specified term assigned in the categories taxonomy.',
+			},
+			{
+				displayName: 'Exclude Categories',
+				name: 'excludedCategories',
+				type: 'multiOptions',
+				default: [],
+				typeOptions: {
+					loadOptionsMethod: 'getCategories',
+				},
+				description: 'Limit result set to all items except those that have the specified term assigned in the categories taxonomy.',
 			},
 			{
 				displayName: 'Tags',
@@ -800,9 +734,27 @@ export const postFields: INodeProperties[] = [
 				typeOptions: {
 					loadOptionsMethod: 'getTags',
 				},
-				description: 'Limit result set to all items that have the specified term assigned in the tags taxonomy',
+				description: 'Limit result set to all items that have the specified term assigned in the tags taxonomy.',
 			},
-		],
+			{
+				displayName: 'Exclude Tags',
+				name: 'excludedTags',
+				type: 'multiOptions',
+				default: [],
+				typeOptions: {
+					loadOptionsMethod: 'getTags',
+				},
+				description: 'Limit result set to all items except those that have the specified term assigned in the tags taxonomy.',
+			},
+			{
+				displayName: 'Sticky',
+				name: 'sticky',
+				type: 'boolean',
+				default: false,
+				description: 'Limit result set to items that are sticky.',
+			},
+
+		]
 	},
 /* -------------------------------------------------------------------------- */
 /*                                 post:delete                                */
@@ -820,10 +772,10 @@ export const postFields: INodeProperties[] = [
 				],
 				operation: [
 					'delete',
-				],
+				]
 			},
 		},
-		description: 'Unique identifier for the object',
+		description: 'Unique identifier for the object.',
 	},
 	{
 		displayName: 'Options',
@@ -847,8 +799,8 @@ export const postFields: INodeProperties[] = [
 				name: 'force',
 				type: 'boolean',
 				default: false,
-				description: 'Whether to bypass trash and force deletion',
+				description: 'Whether to bypass trash and force deletion.',
 			},
-		],
+		]
 	},
-];
+] as INodeProperties[];

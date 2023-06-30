@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const tableOperations: INodeProperties[] = [
+export const tableOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -16,7 +16,7 @@ export const tableOperations: INodeProperties[] = [
 			{
 				name: 'Add Row',
 				value: 'addRow',
-				description: 'Adds rows to the end of the table',
+				description: 'Adds rows to the end of the table'
 			},
 			{
 				name: 'Get Columns',
@@ -31,15 +31,15 @@ export const tableOperations: INodeProperties[] = [
 			{
 				name: 'Lookup',
 				value: 'lookup',
-				description: 'Looks for a specific column value and then returns the matching row',
+				description: 'Looks for a specific column value and then returns the matching row'
 			},
 		],
 		default: 'addRow',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const tableFields: INodeProperties[] = [
+export const tableFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                 table:addRow                               */
@@ -134,7 +134,8 @@ export const tableFields: INodeProperties[] = [
 				typeOptions: {
 					minValue: 0,
 				},
-				description: 'Specifies the relative position of the new row. If not defined, the addition happens at the end. Any rows below the inserted row are shifted downwards. Zero-indexed',
+				description: `Specifies the relative position of the new row. If not defined,</br>
+				 the addition happens at the end. Any rows below the inserted row are shifted downwards. Zero-indexed`,
 			},
 		],
 	},
@@ -221,7 +222,7 @@ export const tableFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -245,7 +246,7 @@ export const tableFields: INodeProperties[] = [
 			maxValue: 500,
 		},
 		default: 100,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'RAW Data',
@@ -262,7 +263,7 @@ export const tableFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'If the data should be returned RAW instead of parsed into keys according to their header',
+		description: 'If the data should be returned RAW instead of parsed into keys according to their header.',
 	},
 	{
 		displayName: 'Data Property',
@@ -272,7 +273,7 @@ export const tableFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'getRows',
+					'getRows'
 				],
 				resource: [
 					'table',
@@ -282,7 +283,7 @@ export const tableFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The name of the property into which to write the RAW data',
+		description: 'The name of the property into which to write the RAW data.',
 	},
 	{
 		displayName: 'Filters',
@@ -309,9 +310,9 @@ export const tableFields: INodeProperties[] = [
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Fields the response will containt. Multiple can be added separated by ,.',
+				description: `Fields the response will containt. Multiple can be added separated by ,.`,
 			},
-		],
+		]
 	},
 /* -------------------------------------------------------------------------- */
 /*                                 table:getColumns                           */
@@ -396,7 +397,7 @@ export const tableFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -420,7 +421,7 @@ export const tableFields: INodeProperties[] = [
 			maxValue: 500,
 		},
 		default: 100,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'RAW Data',
@@ -437,7 +438,7 @@ export const tableFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'If the data should be returned RAW instead of parsed into keys according to their header',
+		description: 'If the data should be returned RAW instead of parsed into keys according to their header.',
 	},
 	{
 		displayName: 'Data Property',
@@ -447,7 +448,7 @@ export const tableFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'getColumns',
+					'getColumns'
 				],
 				resource: [
 					'table',
@@ -457,7 +458,7 @@ export const tableFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The name of the property into which to write the RAW data',
+		description: 'The name of the property into which to write the RAW data.',
 	},
 	{
 		displayName: 'Filters',
@@ -474,7 +475,7 @@ export const tableFields: INodeProperties[] = [
 					'table',
 				],
 				rawData: [
-					true,
+					true
 				],
 			},
 		},
@@ -484,9 +485,9 @@ export const tableFields: INodeProperties[] = [
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Fields the response will containt. Multiple can be added separated by ,.',
+				description: `Fields the response will containt. Multiple can be added separated by ,.`,
 			},
-		],
+		]
 	},
 /* -------------------------------------------------------------------------- */
 /*                                 table:lookup                               */
@@ -570,11 +571,11 @@ export const tableFields: INodeProperties[] = [
 					'table',
 				],
 				operation: [
-					'lookup',
+					'lookup'
 				],
 			},
 		},
-		description: 'The name of the column in which to look for value',
+		description: 'The name of the column in which to look for value.',
 	},
 	{
 		displayName: 'Lookup Value',
@@ -589,11 +590,11 @@ export const tableFields: INodeProperties[] = [
 					'table',
 				],
 				operation: [
-					'lookup',
+					'lookup'
 				],
 			},
 		},
-		description: 'The value to look for in column',
+		description: 'The value to look for in column.',
 	},
 	{
 		displayName: 'Options',
@@ -620,5 +621,5 @@ export const tableFields: INodeProperties[] = [
 				description: 'By default only the first result gets returned. If options gets set all found matches get returned.',
 			},
 		],
-	},
-];
+	}
+] as INodeProperties[];

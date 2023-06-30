@@ -1,30 +1,29 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 
 export class TrelloApi implements ICredentialType {
 	name = 'trelloApi';
 	displayName = 'Trello API';
-	documentationUrl = 'trello';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'API Key',
 			name: 'apiKey',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'API Token',
 			name: 'apiToken',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'OAuth Secret',
 			name: 'oauthSecret',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 	];

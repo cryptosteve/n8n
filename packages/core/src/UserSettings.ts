@@ -1,30 +1,26 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-use-before-define */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import fs from 'fs';
-import path from 'path';
-import { createHash, randomBytes } from 'crypto';
-// eslint-disable-next-line import/no-cycle
 import {
 	ENCRYPTION_KEY_ENV_OVERWRITE,
 	EXTENSIONS_SUBDIRECTORY,
-	IUserSettings,
-	RESPONSE_ERROR_MESSAGES,
 	USER_FOLDER_ENV_OVERWRITE,
 	USER_SETTINGS_FILE_NAME,
 	USER_SETTINGS_SUBFOLDER,
+	IUserSettings,
 } from '.';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { promisify } = require('util');
 
+import * as fs from 'fs';
+import * as path from 'path';
+import { randomBytes } from 'crypto';
+const { promisify } = require('util');
 const fsAccess = promisify(fs.access);
 const fsReadFile = promisify(fs.readFile);
 const fsMkdir = promisify(fs.mkdir);
 const fsWriteFile = promisify(fs.writeFile);
 
-let settingsCache: IUserSettings | undefined;
+
+
+let settingsCache: IUserSettings | undefined = undefined;
+
 
 /**
  * Creates the user settings if they do not exist yet
@@ -38,33 +34,21 @@ export async function prepareUserSettings(): Promise<IUserSettings> {
 	if (userSettings !== undefined) {
 		// Settings already exist, check if they contain the encryptionKey
 		if (userSettings.encryptionKey !== undefined) {
-			// Key already exists
-			if (userSettings.instanceId === undefined) {
-				userSettings.instanceId = await generateInstanceId(userSettings.encryptionKey);
-				settingsCache = userSettings;
-			}
-
+			// Key already exists so return
 			return userSettings;
 		}
 	} else {
 		userSettings = {};
 	}
 
-	if (process.env[ENCRYPTION_KEY_ENV_OVERWRITE] !== undefined) {
-		// Use the encryption key which got set via environment
-		userSettings.encryptionKey = process.env[ENCRYPTION_KEY_ENV_OVERWRITE];
-	} else {
-		// Generate a new encryption key
-		userSettings.encryptionKey = randomBytes(24).toString('base64');
-	}
+	// Settings and/or key do not exist. So generate a new encryption key
+	userSettings.encryptionKey = randomBytes(24).toString('base64');
 
-	userSettings.instanceId = await generateInstanceId(userSettings.encryptionKey);
-
-	// eslint-disable-next-line no-console
-	console.log(`UserSettings were generated and saved to: ${settingsPath}`);
+	console.log(`UserSettings got generated and saved to: ${settingsPath}`);
 
 	return writeUserSettings(userSettings, settingsPath);
 }
+
 
 /**
  * Returns the encryption key which is used to encrypt
@@ -73,50 +57,24 @@ export async function prepareUserSettings(): Promise<IUserSettings> {
  * @export
  * @returns
  */
-
-export async function getEncryptionKey(): Promise<string> {
+export async function getEncryptionKey() {
 	if (process.env[ENCRYPTION_KEY_ENV_OVERWRITE] !== undefined) {
-		return process.env[ENCRYPTION_KEY_ENV_OVERWRITE] as string;
+		return process.env[ENCRYPTION_KEY_ENV_OVERWRITE];
 	}
 
 	const userSettings = await getUserSettings();
 
-	if (userSettings === undefined || userSettings.encryptionKey === undefined) {
-		throw new Error(RESPONSE_ERROR_MESSAGES.NO_ENCRYPTION_KEY);
+	if (userSettings === undefined) {
+		return undefined;
+	}
+
+	if (userSettings.encryptionKey === undefined) {
+		return undefined;
 	}
 
 	return userSettings.encryptionKey;
 }
 
-/**
- * Returns the instance ID
- *
- * @export
- * @returns
- */
-export async function getInstanceId(): Promise<string> {
-	const userSettings = await getUserSettings();
-
-	if (userSettings === undefined) {
-		return '';
-	}
-
-	if (userSettings.instanceId === undefined) {
-		return '';
-	}
-
-	return userSettings.instanceId;
-}
-
-async function generateInstanceId(key?: string) {
-	const hash = key
-		? createHash('sha256')
-				.update(key.slice(Math.round(key.length / 2)))
-				.digest('hex')
-		: undefined;
-
-	return hash;
-}
 
 /**
  * Adds/Overwrite the given settings in the currently
@@ -127,10 +85,7 @@ async function generateInstanceId(key?: string) {
  * @param {string} [settingsPath] Optional settings file path
  * @returns {Promise<IUserSettings>}
  */
-export async function addToUserSettings(
-	addSettings: IUserSettings,
-	settingsPath?: string,
-): Promise<IUserSettings> {
+export async function addToUserSettings(addSettings: IUserSettings, settingsPath?: string): Promise<IUserSettings> {
 	if (settingsPath === undefined) {
 		settingsPath = getUserSettingsPath();
 	}
@@ -147,6 +102,7 @@ export async function addToUserSettings(
 	return writeUserSettings(userSettings, settingsPath);
 }
 
+
 /**
  * Writes a user settings file
  *
@@ -155,10 +111,7 @@ export async function addToUserSettings(
  * @param {string} [settingsPath] Optional settings file path
  * @returns {Promise<IUserSettings>}
  */
-export async function writeUserSettings(
-	userSettings: IUserSettings,
-	settingsPath?: string,
-): Promise<IUserSettings> {
+export async function writeUserSettings(userSettings: IUserSettings, settingsPath?: string): Promise<IUserSettings> {
 	if (settingsPath === undefined) {
 		settingsPath = getUserSettingsPath();
 	}
@@ -175,16 +128,12 @@ export async function writeUserSettings(
 		await fsMkdir(path.dirname(settingsPath));
 	}
 
-	const settingsToWrite = { ...userSettings };
-	if (settingsToWrite.instanceId !== undefined) {
-		delete settingsToWrite.instanceId;
-	}
-
-	await fsWriteFile(settingsPath, JSON.stringify(settingsToWrite, null, '\t'));
+	await fsWriteFile(settingsPath, JSON.stringify(userSettings, null, '\t'));
 	settingsCache = JSON.parse(JSON.stringify(userSettings));
 
 	return userSettings;
 }
+
 
 /**
  * Returns the content of the user settings
@@ -192,10 +141,7 @@ export async function writeUserSettings(
  * @export
  * @returns {UserSettings}
  */
-export async function getUserSettings(
-	settingsPath?: string,
-	ignoreCache?: boolean,
-): Promise<IUserSettings | undefined> {
+export async function getUserSettings(settingsPath?: string, ignoreCache?: boolean): Promise<IUserSettings | undefined> {
 	if (settingsCache !== undefined && ignoreCache !== true) {
 		return settingsCache;
 	}
@@ -216,13 +162,12 @@ export async function getUserSettings(
 	try {
 		settingsCache = JSON.parse(settingsFile);
 	} catch (error) {
-		throw new Error(
-			`Error parsing n8n-config file "${settingsPath}". It does not seem to be valid JSON.`,
-		);
+		throw new Error(`Error parsing n8n-config file "${settingsPath}". It does not seem to be valid JSON.`);
 	}
 
 	return settingsCache as IUserSettings;
 }
+
 
 /**
  * Returns the path to the user settings
@@ -235,6 +180,8 @@ export function getUserSettingsPath(): string {
 
 	return path.join(n8nFolder, USER_SETTINGS_FILE_NAME);
 }
+
+
 
 /**
  * Retruns the path to the n8n folder in which all n8n
@@ -254,6 +201,7 @@ export function getUserN8nFolderPath(): string {
 	return path.join(userFolder, USER_SETTINGS_SUBFOLDER);
 }
 
+
 /**
  * Returns the path to the n8n user folder with the custom
  * extensions like nodes and credentials
@@ -264,6 +212,7 @@ export function getUserN8nFolderPath(): string {
 export function getUserN8nFolderCustomExtensionPath(): string {
 	return path.join(getUserN8nFolderPath(), EXTENSIONS_SUBDIRECTORY);
 }
+
 
 /**
  * Returns the home folder path of the user if

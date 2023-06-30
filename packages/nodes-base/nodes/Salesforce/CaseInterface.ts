@@ -16,7 +16,6 @@ export interface ICase {
 	SuppliedEmail?: string;
 	SuppliedPhone?: string;
 	SuppliedCompany?: string;
-	RecordTypeId?: string;
 }
 
 export interface ICaseComment {

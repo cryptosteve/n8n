@@ -1,55 +1,164 @@
-import { IEndpointOptions, INodeUi, XYPosition } from '@/Interface';
+import { IConnectionsUi, IEndpointOptions, INodeUi, XYPositon } from '@/Interface';
 
 import mixins from 'vue-typed-mixins';
 
-import { deviceSupportHelpers } from '@/components/mixins/deviceSupportHelpers';
 import { nodeIndex } from '@/components/mixins/nodeIndex';
-import { NODE_NAME_PREFIX, NO_OP_NODE_TYPE, STICKY_NODE_TYPE } from '@/constants';
-import * as CanvasHelpers from '@/views/canvasHelpers';
-import { Endpoint } from 'jsplumb';
+import { NODE_NAME_PREFIX } from '@/constants';
 
-import {
-	INodeTypeDescription,
-} from 'n8n-workflow';
-import { getStyleTokenValue } from '../helpers';
-
-export const nodeBase = mixins(
-	deviceSupportHelpers,
-	nodeIndex,
-).extend({
+export const nodeBase = mixins(nodeIndex).extend({
 	mounted () {
 		// Initialize the node
 		if (this.data !== null) {
 			this.__addNode(this.data);
 		}
 	},
+	data () {
+		return {
+		};
+	},
 	computed: {
 		data (): INodeUi {
-			return this.$store.getters.getNodeByName(this.name);
+			return this.$store.getters.nodeByName(this.name);
 		},
-		nodeId (): string {
+		hasIssues (): boolean {
+			if (this.data.issues !== undefined && Object.keys(this.data.issues).length) {
+				return true;
+			}
+			return false;
+		},
+		isMacOs (): boolean {
+			return /(ipad|iphone|ipod|mac)/i.test(navigator.platform);
+		},
+		nodeName (): string {
 			return NODE_NAME_PREFIX + this.nodeIndex;
 		},
 		nodeIndex (): string {
 			return this.$store.getters.getNodeIndex(this.data.name).toString();
 		},
+		nodePosition (): object {
+			const returnStyles: {
+				[key: string]: string;
+			} = {
+				left: this.data.position[0] + 'px',
+				top: this.data.position[1] + 'px',
+			};
+
+			return returnStyles;
+		},
+		nodeStyle (): object {
+			const returnStyles: {
+				[key: string]: string;
+			} = {
+				'border-color': this.data.color as string,
+			};
+
+			return returnStyles;
+		},
 	},
 	props: [
 		'name',
+		'nodeId',
 		'instance',
 		'isReadOnly',
-		'isActive',
-		'hideActions',
 	],
 	methods: {
-		__addInputEndpoints (node: INodeUi, nodeTypeData: INodeTypeDescription) {
+		__addNode (node: INodeUi) {
+			// TODO: Later move the node-connection definitions to a special file
+
+			let nodeTypeData = this.$store.getters.nodeType(node.type);
+
+			const nodeConnectors: IConnectionsUi = {
+				main: {
+					input: {
+						uuid: '-input',
+						maxConnections: -1,
+						endpoint: 'Rectangle',
+						endpointStyle: {
+							width: nodeTypeData && nodeTypeData.outputs.length > 2 ? 9 : 10,
+							height: nodeTypeData && nodeTypeData.outputs.length > 2 ? 18 : 24,
+							fill: '#777',
+							stroke: '#777',
+							lineWidth: 0,
+						},
+						dragAllowedWhenFull: true,
+					},
+					output: {
+						uuid: '-output',
+						maxConnections: -1,
+						endpoint: 'Dot',
+						endpointStyle: {
+							radius: nodeTypeData && nodeTypeData.outputs.length > 2 ? 7 : 11,
+							fill: '#555',
+							outlineStroke: 'none',
+						},
+						dragAllowedWhenFull: true,
+					},
+				},
+			};
+
+			if (!nodeTypeData) {
+				// If node type is not know use by default the base.noOp data to display it
+				nodeTypeData = this.$store.getters.nodeType('n8n-nodes-base.noOp');
+			}
+
+			const anchorPositions: {
+				[key: string]: {
+					[key: number]: string[] | number[][];
+				}
+			} = {
+				input: {
+					1: [
+						'Left',
+					],
+					2: [
+						[0, 0.3, -1, 0],
+						[0, 0.7, -1, 0],
+					],
+					3: [
+						[0, 0.25, -1, 0],
+						[0, 0.5, -1, 0],
+						[0, 0.75, -1, 0],
+					],
+					4: [
+						[0, 0.2, -1, 0],
+						[0, 0.4, -1, 0],
+						[0, 0.6, -1, 0],
+						[0, 0.8, -1, 0],
+					],
+				},
+				output: {
+					1: [
+						'Right',
+					],
+					2: [
+						[1, 0.3, 1, 0],
+						[1, 0.7, 1, 0],
+					],
+					3: [
+						[1, 0.25, 1, 0],
+						[1, 0.5, 1, 0],
+						[1, 0.75, 1, 0],
+					],
+					4: [
+						[1, 0.2, 1, 0],
+						[1, 0.4, 1, 0],
+						[1, 0.6, 1, 0],
+						[1, 0.8, 1, 0],
+					],
+				},
+			};
+
 			// Add Inputs
-			let index;
-			const indexData: {
+			let index, inputData, anchorPosition;
+			let newEndpointData: IEndpointOptions;
+			let indexData: {
 				[key: string]: number;
 			} = {};
 
-			nodeTypeData.inputs.forEach((inputName: string, i: number) => {
+			nodeTypeData.inputs.forEach((inputName: string) => {
+				// @ts-ignore
+				inputData = nodeConnectors[inputName].input;
+
 				// Increment the index for inputs with current name
 				if (indexData.hasOwnProperty(inputName)) {
 					indexData[inputName]++;
@@ -59,25 +168,22 @@ export const nodeBase = mixins(
 				index = indexData[inputName];
 
 				// Get the position of the anchor depending on how many it has
-				const anchorPosition = CanvasHelpers.ANCHOR_POSITIONS.input[nodeTypeData.inputs.length][index];
+				anchorPosition = anchorPositions.input[nodeTypeData.inputs.length][index];
 
-				const newEndpointData: IEndpointOptions = {
-					uuid: CanvasHelpers.getInputEndpointUUID(this.nodeIndex, index),
+				newEndpointData = {
+					uuid: `${this.nodeIndex}` + inputData.uuid + index,
 					anchor: anchorPosition,
-					maxConnections: -1,
-					endpoint: 'Rectangle',
-					endpointStyle: CanvasHelpers.getInputEndpointStyle(nodeTypeData, '--color-foreground-xdark'),
-					endpointHoverStyle: CanvasHelpers.getInputEndpointStyle(nodeTypeData, '--color-primary'),
+					maxConnections: inputData.maxConnections,
+					endpoint: inputData.endpoint,
+					endpointStyle: inputData.endpointStyle,
 					isSource: false,
-					isTarget: !this.isReadOnly && nodeTypeData.inputs.length > 1, // only enabled for nodes with multiple inputs.. otherwise attachment handled by connectionDrag event in NodeView,
+					isTarget: !this.isReadOnly,
 					parameters: {
 						nodeIndex: this.nodeIndex,
 						type: inputName,
 						index,
 					},
-					enabled: !this.isReadOnly, // enabled in default case to allow dragging
-					cssClass: 'rect-input-endpoint',
-					dragAllowedWhenFull: true,
+					dragAllowedWhenFull: inputData.dragAllowedWhenFull,
 					dropOptions: {
 						tolerance: 'touch',
 						hoverClass: 'dropHover',
@@ -87,17 +193,19 @@ export const nodeBase = mixins(
 				if (nodeTypeData.inputNames) {
 					// Apply input names if they got set
 					newEndpointData.overlays = [
-						CanvasHelpers.getInputNameOverlay(nodeTypeData.inputNames[index]),
+						['Label',
+							{
+								id: 'input-name-label',
+								location: [-2, 0.5],
+								label: nodeTypeData.inputNames[index],
+								cssClass: 'node-input-endpoint-label',
+								visible: true,
+							},
+						],
 					];
 				}
 
-				const endpoint: Endpoint = this.instance.addEndpoint(this.nodeId, newEndpointData);
-				endpoint.__meta = {
-					nodeName: node.name,
-					nodeId: this.nodeId,
-					index: i,
-					totalEndpoints: nodeTypeData.inputs.length,
-				};
+				this.instance.addEndpoint(this.nodeName, newEndpointData);
 
 				// TODO: Activate again if it makes sense. Currently makes problems when removing
 				//       connection on which the input has a name. It does not get hidden because
@@ -107,17 +215,15 @@ export const nodeBase = mixins(
 
 				// if (index === 0 && inputName === 'main') {
 				// 	// Make the first main-input the default one to connect to when connection gets dropped on node
-				// 	this.instance.makeTarget(this.nodeId, newEndpointData);
+				// 	this.instance.makeTarget(this.nodeName, newEndpointData);
 				// }
 			});
-		},
-		__addOutputEndpoints(node: INodeUi, nodeTypeData: INodeTypeDescription) {
-			let index;
-			const indexData: {
-				[key: string]: number;
-			} = {};
 
-			nodeTypeData.outputs.forEach((inputName: string, i: number) => {
+			// Add Outputs
+			indexData = {};
+			nodeTypeData.outputs.forEach((inputName: string) => {
+				inputData = nodeConnectors[inputName].output;
+
 				// Increment the index for outputs with current name
 				if (indexData.hasOwnProperty(inputName)) {
 					indexData[inputName]++;
@@ -127,109 +233,56 @@ export const nodeBase = mixins(
 				index = indexData[inputName];
 
 				// Get the position of the anchor depending on how many it has
-				const anchorPosition = CanvasHelpers.ANCHOR_POSITIONS.output[nodeTypeData.outputs.length][index];
+				anchorPosition = anchorPositions.output[nodeTypeData.outputs.length][index];
 
-				const newEndpointData: IEndpointOptions = {
-					uuid: CanvasHelpers.getOutputEndpointUUID(this.nodeIndex, index),
+				newEndpointData = {
+					uuid: `${this.nodeIndex}` + inputData.uuid + index,
 					anchor: anchorPosition,
-					maxConnections: -1,
-					endpoint: 'Dot',
-					endpointStyle: CanvasHelpers.getOutputEndpointStyle(nodeTypeData, '--color-foreground-xdark'),
-					endpointHoverStyle: CanvasHelpers.getOutputEndpointStyle(nodeTypeData, '--color-primary'),
-					isSource: true,
+					maxConnections: inputData.maxConnections,
+					endpoint: inputData.endpoint,
+					endpointStyle: inputData.endpointStyle,
+					isSource: !this.isReadOnly,
 					isTarget: false,
-					enabled: !this.isReadOnly,
 					parameters: {
 						nodeIndex: this.nodeIndex,
 						type: inputName,
 						index,
 					},
-					cssClass: 'dot-output-endpoint',
-					dragAllowedWhenFull: false,
+					dragAllowedWhenFull: inputData.dragAllowedWhenFull,
 					dragProxy: ['Rectangle', { width: 1, height: 1, strokeWidth: 0 }],
 				};
 
 				if (nodeTypeData.outputNames) {
 					// Apply output names if they got set
 					newEndpointData.overlays = [
-						CanvasHelpers.getOutputNameOverlay(nodeTypeData.outputNames[index]),
+						['Label',
+							{
+								id: 'output-name-label',
+								location: [1.75, 0.5],
+								label: nodeTypeData.outputNames[index],
+								cssClass: 'node-output-endpoint-label',
+								visible: true,
+							},
+						],
 					];
 				}
 
-				const endpoint: Endpoint = this.instance.addEndpoint(this.nodeId, {...newEndpointData});
-				endpoint.__meta = {
-					nodeName: node.name,
-					nodeId: this.nodeId,
-					index: i,
-					totalEndpoints: nodeTypeData.outputs.length,
-				};
-
-				if (!this.isReadOnly) {
-					const plusEndpointData: IEndpointOptions = {
-						uuid: CanvasHelpers.getOutputEndpointUUID(this.nodeIndex, index),
-						anchor: anchorPosition,
-						maxConnections: -1,
-						endpoint: 'N8nPlus',
-						isSource: true,
-						isTarget: false,
-						enabled: !this.isReadOnly,
-						endpointStyle: {
-							fill: getStyleTokenValue('--color-xdark'),
-							outlineStroke: 'none',
-							hover: false,
-							showOutputLabel: nodeTypeData.outputs.length === 1,
-							size: nodeTypeData.outputs.length >= 3 ? 'small' : 'medium',
-							hoverMessage: this.$locale.baseText('nodeBase.clickToAddNodeOrDragToConnect'),
-						},
-						endpointHoverStyle: {
-							fill: getStyleTokenValue('--color-primary'),
-							outlineStroke: 'none',
-							hover: true, // hack to distinguish hover state
-						},
-						parameters: {
-							nodeIndex: this.nodeIndex,
-							type: inputName,
-							index,
-						},
-						cssClass: 'plus-draggable-endpoint',
-						dragAllowedWhenFull: false,
-						dragProxy: ['Rectangle', { width: 1, height: 1, strokeWidth: 0 }],
-					};
-
-					const plusEndpoint: Endpoint = this.instance.addEndpoint(this.nodeId, plusEndpointData);
-					plusEndpoint.__meta = {
-						nodeName: node.name,
-						nodeId: this.nodeId,
-						index: i,
-						totalEndpoints: nodeTypeData.outputs.length,
-					};
-				}
+				this.instance.addEndpoint(this.nodeName, newEndpointData);
 			});
-		},
-		__makeInstanceDraggable(node: INodeUi) {
+
 			// TODO: This caused problems with displaying old information
 			//       https://github.com/jsplumb/katavorio/wiki
 			//       https://jsplumb.github.io/jsplumb/home.html
 			// Make nodes draggable
-			this.instance.draggable(this.nodeId, {
-				grid: [CanvasHelpers.GRID_SIZE, CanvasHelpers.GRID_SIZE],
+			this.instance.draggable(this.nodeName, {
+				grid: [10, 10],
 				start: (params: { e: MouseEvent }) => {
 					if (this.isReadOnly === true) {
 						// Do not allow to move nodes in readOnly mode
 						return false;
 					}
-					// @ts-ignore
-					this.dragging = true;
 
-					const isSelected = this.$store.getters.isNodeSelected(this.data.name);
-					const nodeName = this.data.name;
-					if (this.data.type === STICKY_NODE_TYPE && !isSelected) {
-						setTimeout(() => {
-							this.$emit('nodeSelected', nodeName, false, true);
-						}, 0);
-					}
-
-					if (params.e && !isSelected) {
+					if (params.e && !this.$store.getters.isNodeSelected(this.data.name)) {
 						// Only the node which gets dragged directly gets an event, for all others it is
 						// undefined. So check if the currently dragged node is selected and if not clear
 						// the drag-selection.
@@ -241,8 +294,6 @@ export const nodeBase = mixins(
 					return true;
 				},
 				stop: (params: { e: MouseEvent }) => {
-					// @ts-ignore
-					this.dragging = false;
 					if (this.$store.getters.isActionActive('dragActive')) {
 						const moveNodes = this.$store.getters.getSelectedNodes.slice();
 						const selectedNodeNames = moveNodes.map((node: INodeUi) => node.name);
@@ -256,7 +307,7 @@ export const nodeBase = mixins(
 						// even though "start" and "drag" gets called for all. So lets do for now
 						// some dirty DOM query to get the new positions till I have more time to
 						// create a proper solution
-						let newNodePositon: XYPosition;
+						let newNodePositon: XYPositon;
 						moveNodes.forEach((node: INodeUi) => {
 							const nodeElement = `node-${this.getNodeIndex(node.name)}`;
 							const element = document.getElementById(nodeElement);
@@ -279,53 +330,32 @@ export const nodeBase = mixins(
 
 							this.$store.commit('updateNodeProperties', updateInformation);
 						});
-
-						this.$emit('moved', node);
 					}
 				},
 				filter: '.node-description, .node-description .node-name, .node-description .node-subtitle',
 			});
-		},
-		__addNode (node: INodeUi) {
-			let nodeTypeData = this.$store.getters.nodeType(node.type, node.typeVersion) as INodeTypeDescription | null;
-			if (!nodeTypeData) {
-				// If node type is not know use by default the base.noOp data to display it
-				nodeTypeData = this.$store.getters.nodeType(NO_OP_NODE_TYPE) as INodeTypeDescription;
-			}
 
-			this.__addInputEndpoints(node, nodeTypeData);
-			this.__addOutputEndpoints(node, nodeTypeData);
-			this.__makeInstanceDraggable(node);
 		},
-		touchEnd(e: MouseEvent) {
-			if (this.isTouchDevice) {
-				if (this.$store.getters.isActionActive('dragActive')) {
-					this.$store.commit('removeActiveAction', 'dragActive');
-				}
+
+		isCtrlKeyPressed (e: MouseEvent | KeyboardEvent): boolean {
+			if (this.isMacOs) {
+				return e.metaKey;
 			}
+			return e.ctrlKey;
 		},
+
 		mouseLeftClick (e: MouseEvent) {
-			// @ts-ignore
-			const path = e.path || (e.composedPath && e.composedPath());
-			for (let index = 0; index < path.length; index++) {
-				if (path[index].className && typeof path[index].className === 'string' && path[index].className.includes('no-select-on-click')) {
-					return;
+			if (this.$store.getters.isActionActive('dragActive')) {
+				this.$store.commit('removeActiveAction', 'dragActive');
+			} else {
+				if (this.isCtrlKeyPressed(e) === false) {
+					this.$emit('deselectAllNodes');
 				}
-			}
 
-			if (!this.isTouchDevice) {
-				if (this.$store.getters.isActionActive('dragActive')) {
-					this.$store.commit('removeActiveAction', 'dragActive');
+				if (this.$store.getters.isNodeSelected(this.data.name)) {
+					this.$emit('deselectNode', this.name);
 				} else {
-					if (this.isCtrlKeyPressed(e) === false) {
-						this.$emit('deselectAllNodes');
-					}
-
-					if (this.$store.getters.isNodeSelected(this.data.name)) {
-						this.$emit('deselectNode', this.name);
-					} else {
-						this.$emit('nodeSelected', this.name);
-					}
+					this.$emit('nodeSelected', this.name);
 				}
 			}
 		},

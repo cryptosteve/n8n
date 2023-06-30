@@ -1,39 +1,37 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 export class ShopifyApi implements ICredentialType {
 	name = 'shopifyApi';
 	displayName = 'Shopify API';
-	documentationUrl = 'shopify';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'API Key',
 			name: 'apiKey',
 			required: true,
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Password',
 			name: 'password',
 			required: true,
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Shop Subdomain',
 			name: 'shopSubdomain',
 			required: true,
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
-			description: 'Only the subdomain without .myshopify.com',
 		},
 		{
 			displayName: 'Shared Secret',
 			name: 'sharedSecret',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 	];

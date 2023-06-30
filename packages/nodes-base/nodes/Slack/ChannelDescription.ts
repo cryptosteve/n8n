@@ -1,8 +1,6 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from 'n8n-workflow';
 
-export const channelOperations: INodeProperties[] = [
+export const channelOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -18,12 +16,12 @@ export const channelOperations: INodeProperties[] = [
 			{
 				name: 'Archive',
 				value: 'archive',
-				description: 'Archives a conversation',
+				description: 'Archives a conversation.',
 			},
 			{
 				name: 'Close',
 				value: 'close',
-				description: 'Closes a direct message or multi-person direct message',
+				description: 'Closes a direct message or multi-person direct message.',
 			},
 			{
 				name: 'Create',
@@ -33,17 +31,17 @@ export const channelOperations: INodeProperties[] = [
 			{
 				name: 'Get',
 				value: 'get',
-				description: 'Get information about a channel',
+				description: 'Get information about a channel.',
 			},
 			{
 				name: 'Get All',
 				value: 'getAll',
-				description: 'Get all channels in a Slack team',
+				description: 'Get all channels in a Slack team.',
 			},
 			{
 				name: 'History',
 				value: 'history',
-				description: 'Get a conversation\'s history of messages and events',
+				description: `Get a conversation's history of messages and events.`,
 			},
 			{
 				name: 'Invite',
@@ -53,32 +51,27 @@ export const channelOperations: INodeProperties[] = [
 			{
 				name: 'Join',
 				value: 'join',
-				description: 'Joins an existing conversation',
+				description: 'Joins an existing conversation.',
 			},
 			{
 				name: 'Kick',
 				value: 'kick',
-				description: 'Removes a user from a channel',
+				description: 'Removes a user from a channel.',
 			},
 			{
 				name: 'Leave',
 				value: 'leave',
-				description: 'Leaves a conversation',
-			},
-			{
-				name: 'Member',
-				value: 'member',
-				description: 'List members of a conversation',
+				description: 'Leaves a conversation.',
 			},
 			{
 				name: 'Open',
 				value: 'open',
-				description: 'Opens or resumes a direct message or multi-person direct message',
+				description: 'Opens or resumes a direct message or multi-person direct message.',
 			},
 			{
 				name: 'Rename',
 				value: 'rename',
-				description: 'Renames a conversation',
+				description: 'Renames a conversation.',
 			},
 			{
 				name: 'Replies',
@@ -88,29 +81,29 @@ export const channelOperations: INodeProperties[] = [
 			{
 				name: 'Set Purpose',
 				value: 'setPurpose',
-				description: 'Sets the purpose for a conversation',
+				description: 'Sets the purpose for a conversation.',
 			},
 			{
 				name: 'Set Topic',
 				value: 'setTopic',
-				description: 'Sets the topic for a conversation',
+				description: 'Sets the topic for a conversation.',
 			},
 			{
 				name: 'Unarchive',
 				value: 'unarchive',
-				description: 'Unarchives a conversation',
+				description: 'Unarchives a conversation.',
 			},
 		],
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const channelFields: INodeProperties[] = [
+export const channelFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                channel:archive                             */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                channel:archive                             */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -121,7 +114,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'archive',
+					'archive'
 				],
 				resource: [
 					'channel',
@@ -130,12 +123,11 @@ export const channelFields: INodeProperties[] = [
 		},
 		default: '',
 		required: true,
-		description: 'The name of the channel to archive',
+		description: 'The name of the channel to archive.',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                channel:close                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                channel:close                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -146,7 +138,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'close',
+					'close'
 				],
 				resource: [
 					'channel',
@@ -155,12 +147,11 @@ export const channelFields: INodeProperties[] = [
 		},
 		default: '',
 		required: true,
-		description: 'The name of the channel to close',
+		description: 'The name of the channel to close.',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                channel:create                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                channel:create                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -170,7 +161,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'create',
+					'create'
 				],
 				resource: [
 					'channel',
@@ -178,7 +169,7 @@ export const channelFields: INodeProperties[] = [
 			},
 		},
 		required: true,
-		description: 'The name of the channel to create',
+		description: 'The name of the channel to create.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -204,12 +195,21 @@ export const channelFields: INodeProperties[] = [
 				default: false,
 				description: 'Create a private channel instead of a public one',
 			},
-		],
+			{
+				displayName: 'Users',
+				name: 'users',
+				type: 'multiOptions',
+				typeOptions: {
+					loadOptionsMethod: 'getUsers',
+				},
+				default: [],
+				description: `Required for workspace apps. A list of between 1 and 30 human users that will be added to the newly-created conversation`,
+			},
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 channel:invite                             */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 channel:invite                             */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -221,7 +221,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'invite',
+					'invite'
 				],
 				resource: [
 					'channel',
@@ -229,20 +229,20 @@ export const channelFields: INodeProperties[] = [
 			},
 		},
 		required: true,
-		description: 'The ID of the channel to invite user to',
+		description: 'The ID of the channel to invite user to.',
 	},
 	{
-		displayName: 'User IDs',
-		name: 'userIds',
-		type: 'multiOptions',
+		displayName: 'User ID',
+		name: 'userId',
+		type: 'options',
 		typeOptions: {
 			loadOptionsMethod: 'getUsers',
 		},
-		default: [],
+		default: '',
 		displayOptions: {
 			show: {
 				operation: [
-					'invite',
+					'invite'
 				],
 				resource: [
 					'channel',
@@ -250,12 +250,11 @@ export const channelFields: INodeProperties[] = [
 			},
 		},
 		required: true,
-		description: 'The ID of the user to invite into channel',
+		description: 'The ID of the user to invite into channel.',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                  channel:get                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                  channel:get                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -264,7 +263,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'get',
+					'get'
 				],
 				resource: [
 					'channel',
@@ -297,12 +296,11 @@ export const channelFields: INodeProperties[] = [
 				type: 'boolean',
 				default: false,
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                  channel:kick                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                  channel:kick                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -315,7 +313,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'kick',
+					'kick'
 				],
 				resource: [
 					'channel',
@@ -323,7 +321,7 @@ export const channelFields: INodeProperties[] = [
 			},
 		},
 		required: true,
-		description: 'The name of the channel to create',
+		description: 'The name of the channel to create.',
 	},
 	{
 		displayName: 'User',
@@ -335,7 +333,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'kick',
+					'kick'
 				],
 				resource: [
 					'channel',
@@ -344,10 +342,9 @@ export const channelFields: INodeProperties[] = [
 		},
 		default: '',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                  channel:join                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                  channel:join                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -360,7 +357,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'join',
+					'join'
 				],
 				resource: [
 					'channel',
@@ -369,10 +366,9 @@ export const channelFields: INodeProperties[] = [
 		},
 		required: true,
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 channel:getAll                             */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 channel:getAll                             */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Return All',
 		name: 'returnAll',
@@ -388,7 +384,7 @@ export const channelFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -412,7 +408,7 @@ export const channelFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Filters',
@@ -445,30 +441,29 @@ export const channelFields: INodeProperties[] = [
 				options: [
 					{
 						name: 'Public Channel',
-						value: 'public_channel',
+						value: 'public_channel'
 					},
 					{
 						name: 'Private Channel',
-						value: 'private_channel',
+						value: 'private_channel'
 					},
 					{
 						name: 'mpim',
-						value: 'mpim',
+						value: 'mpim'
 					},
 					{
 						name: 'im',
-						value: 'im',
+						value: 'im'
 					},
 				],
 				default: ['public_channel'],
 				description: 'Mix and match channel types',
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 channel:history                            */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 channel:history                            */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -481,7 +476,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'history',
+					'history'
 				],
 				resource: [
 					'channel',
@@ -489,7 +484,7 @@ export const channelFields: INodeProperties[] = [
 			},
 		},
 		required: true,
-		description: 'The name of the channel to create',
+		description: 'The name of the channel to create.',
 	},
 	{
 		displayName: 'Return All',
@@ -506,7 +501,7 @@ export const channelFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -530,7 +525,7 @@ export const channelFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Filters',
@@ -554,28 +549,27 @@ export const channelFields: INodeProperties[] = [
 				name: 'inclusive',
 				type: 'boolean',
 				default: false,
-				description: 'Include messages with latest or oldest timestamp in results only when either timestamp is specified',
+				description: 'Include messages with latest or oldest timestamp in results only when either timestamp is specified.',
 			},
 			{
 				displayName: 'Latest',
 				name: 'latest',
 				type: 'dateTime',
 				default: '',
-				description: 'End of time range of messages to include in results',
+				description: 'End of time range of messages to include in results.',
 			},
 			{
 				displayName: 'Oldest',
 				name: 'oldest',
 				type: 'dateTime',
 				default: '',
-				description: 'Start of time range of messages to include in results',
+				description: 'Start of time range of messages to include in results.',
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                channel:leave                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                channel:leave                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -586,7 +580,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'leave',
+					'leave'
 				],
 				resource: [
 					'channel',
@@ -595,91 +589,11 @@ export const channelFields: INodeProperties[] = [
 		},
 		default: '',
 		required: true,
-		description: 'The name of the channel to leave',
+		description: 'The name of the channel to leave.',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                  channel:member                            */
-	/* -------------------------------------------------------------------------- */
-	{
-		displayName: 'Channel',
-		name: 'channelId',
-		type: 'options',
-		typeOptions: {
-			loadOptionsMethod: 'getChannels',
-		},
-		default: '',
-		displayOptions: {
-			show: {
-				operation: [
-					'member',
-				],
-				resource: [
-					'channel',
-				],
-			},
-		},
-		required: true,
-	},
-	{
-		displayName: 'Return All',
-		name: 'returnAll',
-		type: 'boolean',
-		displayOptions: {
-			show: {
-				resource: [
-					'channel',
-				],
-				operation: [
-					'member',
-				],
-			},
-		},
-		default: false,
-		description: 'Whether to return all results or only up to a given limit',
-	},
-	{
-		displayName: 'Limit',
-		name: 'limit',
-		type: 'number',
-		description: 'Max number of results to return',
-		default: 100,
-		placeholder: 'Limit',
-		displayOptions: {
-			show: {
-				operation: [
-					'member',
-				],
-				resource: [
-					'channel',
-				],
-				returnAll: [
-					false,
-				],
-			},
-		},
-	},
-	{
-		displayName: 'Resolve Data',
-		name: 'resolveData',
-		type: 'boolean',
-		default: false,
-		displayOptions: {
-			show: {
-				resource: [
-					'channel',
-				],
-				operation: [
-					'member',
-				],
-			},
-		},
-		description: 'By default the response only contain the ID to resource. If this option gets activated, it will resolve the data automatically.',
-	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                channel:open                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                channel:open                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Options',
 		name: 'options',
@@ -702,14 +616,14 @@ export const channelFields: INodeProperties[] = [
 				name: 'channelId',
 				type: 'string',
 				default: '',
-				description: 'Resume a conversation by supplying an im or mpim\'s ID. Or provide the users field instead.',
+				description: `Resume a conversation by supplying an im or mpim's ID. Or provide the users field instead`,
 			},
 			{
 				displayName: 'Return IM',
 				name: 'returnIm',
 				type: 'boolean',
 				default: false,
-				description: 'Boolean, indicates you want the full IM channel definition in the response',
+				description: 'Boolean, indicates you want the full IM channel definition in the response.',
 			},
 			{
 				displayName: 'Users',
@@ -719,14 +633,13 @@ export const channelFields: INodeProperties[] = [
 					loadOptionsMethod: 'getUsers',
 				},
 				default: [],
-				description: 'If only one user is included, this creates a 1:1 DM. The ordering of the users is preserved whenever a multi-person direct message is returned. Supply a channel when not supplying users.',
+				description: `If only one user is included, this creates a 1:1 DM. The ordering of the users is preserved whenever a multi-person direct message is returned. Supply a channel when not supplying users.`,
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                channel:rename                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                channel:rename                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -737,7 +650,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'rename',
+					'rename'
 				],
 				resource: [
 					'channel',
@@ -746,7 +659,7 @@ export const channelFields: INodeProperties[] = [
 		},
 		default: '',
 		required: true,
-		description: 'The name of the channel to rename',
+		description: 'The name of the channel to rename.',
 	},
 	{
 		displayName: 'Name',
@@ -755,7 +668,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'rename',
+					'rename'
 				],
 				resource: [
 					'channel',
@@ -764,12 +677,11 @@ export const channelFields: INodeProperties[] = [
 		},
 		default: '',
 		required: true,
-		description: 'New name for conversation',
+		description: 'New name for conversation.',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 channel:replies                            */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 channel:replies                            */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -782,7 +694,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'replies',
+					'replies'
 				],
 				resource: [
 					'channel',
@@ -790,7 +702,7 @@ export const channelFields: INodeProperties[] = [
 			},
 		},
 		required: true,
-		description: 'The name of the channel to create',
+		description: 'The name of the channel to create.',
 	},
 	{
 		displayName: 'TS',
@@ -800,7 +712,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'replies',
+					'replies'
 				],
 				resource: [
 					'channel',
@@ -808,7 +720,7 @@ export const channelFields: INodeProperties[] = [
 			},
 		},
 		required: true,
-		description: 'Unique identifier of a thread\'s parent message',
+		description: `Unique identifier of a thread's parent message.`,
 	},
 	{
 		displayName: 'Return All',
@@ -825,7 +737,7 @@ export const channelFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -849,7 +761,7 @@ export const channelFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Filters',
@@ -873,28 +785,27 @@ export const channelFields: INodeProperties[] = [
 				name: 'inclusive',
 				type: 'boolean',
 				default: false,
-				description: 'Include messages with latest or oldest timestamp in results only when either timestamp is specified',
+				description: 'Include messages with latest or oldest timestamp in results only when either timestamp is specified.',
 			},
 			{
 				displayName: 'Latest',
 				name: 'latest',
 				type: 'string',
 				default: '',
-				description: 'End of time range of messages to include in results',
+				description: 'End of time range of messages to include in results.',
 			},
 			{
 				displayName: 'Oldest',
 				name: 'oldest',
 				type: 'string',
 				default: '',
-				description: 'Start of time range of messages to include in results',
+				description: 'Start of time range of messages to include in results.',
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                channel:setPurpose                          */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                channel:setPurpose                          */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -905,7 +816,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'setPurpose',
+					'setPurpose'
 				],
 				resource: [
 					'channel',
@@ -923,7 +834,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'setPurpose',
+					'setPurpose'
 				],
 				resource: [
 					'channel',
@@ -934,10 +845,9 @@ export const channelFields: INodeProperties[] = [
 		required: true,
 		description: 'A new, specialer purpose',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                channel:setTopic                            */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                channel:setTopic                            */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -948,7 +858,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'setTopic',
+					'setTopic'
 				],
 				resource: [
 					'channel',
@@ -966,7 +876,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'setTopic',
+					'setTopic'
 				],
 				resource: [
 					'channel',
@@ -977,10 +887,9 @@ export const channelFields: INodeProperties[] = [
 		required: true,
 		description: 'The new topic string. Does not support formatting or linkification.',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                channel:unarchive                           */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                channel:unarchive                           */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Channel',
 		name: 'channelId',
@@ -991,7 +900,7 @@ export const channelFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'unarchive',
+					'unarchive'
 				],
 				resource: [
 					'channel',
@@ -1000,6 +909,6 @@ export const channelFields: INodeProperties[] = [
 		},
 		default: '',
 		required: true,
-		description: 'The ID of the channel to unarchive',
+		description: 'The ID of the channel to unarchive.',
 	},
-];
+] as INodeProperties[];

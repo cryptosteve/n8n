@@ -1,8 +1,6 @@
-import { 
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from 'n8n-workflow';
 
-export const emailOperations: INodeProperties[] = [
+export const emailOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -27,14 +25,15 @@ export const emailOperations: INodeProperties[] = [
 			},
 		],
 		default: 'send',
+		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const emailFields: INodeProperties[] = [
+export const emailFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                email:send                                  */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                email:send                                  */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'From Email',
 		name: 'fromEmail',
@@ -48,7 +47,7 @@ export const emailFields: INodeProperties[] = [
 				],
 				operation: [
 					'send',
-				],
+				]
 			},
 		},
 		placeholder: 'admin@example.com',
@@ -58,7 +57,6 @@ export const emailFields: INodeProperties[] = [
 		displayName: 'To Email',
 		name: 'toEmail',
 		type: 'string',
-		default: '',
 		required: true,
 		placeholder: 'info@example.com',
 		description: 'Email address of the recipient. Multiple ones can be separated by comma.',
@@ -69,7 +67,7 @@ export const emailFields: INodeProperties[] = [
 				],
 				operation: [
 					'send',
-				],
+				]
 			},
 		},
 	},
@@ -79,7 +77,7 @@ export const emailFields: INodeProperties[] = [
 		type: 'string',
 		default: '',
 		placeholder: 'My subject line',
-		description: 'Subject line of the email',
+		description: 'Subject line of the email.',
 	},
 	{
 		displayName: 'Text',
@@ -95,11 +93,11 @@ export const emailFields: INodeProperties[] = [
 				],
 				operation: [
 					'send',
-				],
+				]
 			},
 		},
 		default: '',
-		description: 'Plain text message of email',
+		description: 'Plain text message of email.',
 	},
 	{
 		displayName: 'HTML',
@@ -115,27 +113,11 @@ export const emailFields: INodeProperties[] = [
 				],
 				operation: [
 					'send',
-				],
+				]
 			},
 		},
 		default: '',
-		description: 'HTML text message of email',
-	},
-	{
-		displayName: 'JSON Parameters',
-		name: 'jsonParameters',
-		type: 'boolean',
-		default: false,
-		displayOptions: {
-			show: {
-				resource: [
-					'email',
-				],
-				operation: [
-					'send',
-				],
-			},
-		},
+		description: 'HTML text message of email.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -181,17 +163,10 @@ export const emailFields: INodeProperties[] = [
 				default: 2,
 			},
 			{
-				displayName: 'Reply To',
-				name: 'replyTo',
-				type: 'string',
-				description: 'The reply-to email address. Multiple ones can be separated by comma.',
-				default: '',
-			},
-			{
 				displayName: 'Template Language',
 				name: 'templateLanguage',
 				type: 'boolean',
-				default: false,
+				default: true,
 			},
 			{
 				displayName: 'Track Clicks',
@@ -214,7 +189,7 @@ export const emailFields: INodeProperties[] = [
 						description: 'Enable tracking for this message',
 					},
 				],
-				description: 'Enable or disable open tracking on this message',
+				description: 'Enable or disable open tracking on this message.',
 				default: 'account_default',
 			},
 			{
@@ -238,33 +213,10 @@ export const emailFields: INodeProperties[] = [
 						description: 'Enable tracking for this message',
 					},
 				],
-				description: 'Enable or disable open tracking on this message',
+				description: 'Enable or disable open tracking on this message.',
 				default: 'account_default',
 			},
-		],
-	},
-	{
-		displayName: 'Variables (JSON)',
-		name: 'variablesJson',
-		type: 'string',
-		typeOptions: {
-			alwaysOpenEditWindow: true,
-		},
-		displayOptions: {
-			show: {
-				resource: [
-					'email',
-				],
-				operation: [
-					'send',
-				],
-				jsonParameters: [
-					true,
-				],
-			},
-		},
-		default: '',
-		description: 'HTML text message of email',
+		]
 	},
 	{
 		displayName: 'Variables',
@@ -280,10 +232,7 @@ export const emailFields: INodeProperties[] = [
 				],
 				operation: [
 					'send',
-				],
-				jsonParameters: [
-					false,
-				],
+				]
 			},
 		},
 		placeholder: 'Add Variable',
@@ -305,13 +254,13 @@ export const emailFields: INodeProperties[] = [
 						type: 'string',
 						default: '',
 					},
-				],
+				]
 			},
 		],
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                email:sendTemplate                          */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                email:sendTemplate                          */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'From Email',
 		name: 'fromEmail',
@@ -325,7 +274,7 @@ export const emailFields: INodeProperties[] = [
 				],
 				operation: [
 					'sendTemplate',
-				],
+				]
 			},
 		},
 		placeholder: 'admin@example.com',
@@ -335,7 +284,6 @@ export const emailFields: INodeProperties[] = [
 		displayName: 'To Email',
 		name: 'toEmail',
 		type: 'string',
-		default: '',
 		required: true,
 		placeholder: 'info@example.com',
 		description: 'Email address of the recipient. Multiple ones can be separated by comma.',
@@ -346,17 +294,14 @@ export const emailFields: INodeProperties[] = [
 				],
 				operation: [
 					'sendTemplate',
-				],
+				]
 			},
 		},
 	},
 	{
 		displayName: 'Template ID',
 		name: 'templateId',
-		type: 'options',
-		typeOptions: {
-			loadOptionsMethod: 'getTemplates',
-		},
+		type: 'string',
 		required: true,
 		default: '',
 		displayOptions: {
@@ -366,23 +311,7 @@ export const emailFields: INodeProperties[] = [
 				],
 				operation: [
 					'sendTemplate',
-				],
-			},
-		},
-	},
-	{
-		displayName: 'JSON Parameters',
-		name: 'jsonParameters',
-		type: 'boolean',
-		default: false,
-		displayOptions: {
-			show: {
-				resource: [
-					'email',
-				],
-				operation: [
-					'sendTemplate',
-				],
+				]
 			},
 		},
 	},
@@ -407,14 +336,14 @@ export const emailFields: INodeProperties[] = [
 				displayName: 'Bcc Email',
 				name: 'bccEmail',
 				type: 'string',
-				description: 'BCC Recipients of the email separated by ,',
+				description: 'Bcc Recipients of the email separated by ,.',
 				default: '',
 			},
 			{
 				displayName: 'Cc Email',
 				name: 'ccEmail',
 				type: 'string',
-				description: 'Cc recipients of the email separated by ,',
+				description: 'Cc recipients of the email separated by ,.',
 				default: '',
 			},
 			{
@@ -430,13 +359,6 @@ export const emailFields: INodeProperties[] = [
 				default: 2,
 			},
 			{
-				displayName: 'Reply To',
-				name: 'replyTo',
-				type: 'string',
-				description: 'The reply-to email address. Multiple ones can be separated by comma.',
-				default: '',
-			},
-			{
 				displayName: 'Subject',
 				name: 'subject',
 				type: 'string',
@@ -446,23 +368,23 @@ export const emailFields: INodeProperties[] = [
 				displayName: 'Track Opens',
 				name: 'trackOpens',
 				type: 'string',
-				description: 'Enable or disable open tracking on this message',
+				description: 'Enable or disable open tracking on this message.',
 				default: '',
 			},
 			{
 				displayName: 'Track Clicks',
 				name: 'trackClicks',
 				type: 'string',
-				description: 'Enable or disable open tracking on this message',
+				description: 'Enable or disable open tracking on this message.',
 				default: '',
 			},
 			{
 				displayName: 'Template Language',
 				name: 'templateLanguage',
 				type: 'boolean',
-				default: false,
+				default: true,
 			},
-		],
+		]
 	},
 	{
 		displayName: 'Variables',
@@ -478,10 +400,7 @@ export const emailFields: INodeProperties[] = [
 				],
 				operation: [
 					'sendTemplate',
-				],
-				jsonParameters: [
-					false,
-				],
+				]
 			},
 		},
 		placeholder: 'Add Variable',
@@ -503,31 +422,8 @@ export const emailFields: INodeProperties[] = [
 						type: 'string',
 						default: '',
 					},
-				],
+				]
 			},
 		],
 	},
-	{
-		displayName: 'Variables (JSON)',
-		name: 'variablesJson',
-		type: 'string',
-		typeOptions: {
-			alwaysOpenEditWindow: true,
-		},
-		displayOptions: {
-			show: {
-				resource: [
-					'email',
-				],
-				operation: [
-					'sendTemplate',
-				],
-				jsonParameters: [
-					true,
-				],
-			},
-		},
-		default: '',
-		description: 'HTML text message of email',
-	},
-];
+] as INodeProperties[];

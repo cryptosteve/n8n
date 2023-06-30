@@ -1,24 +1,23 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 
 export class ActiveCampaignApi implements ICredentialType {
 	name = 'activeCampaignApi';
 	displayName = 'ActiveCampaign API';
-	documentationUrl = 'activeCampaign';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'API URL',
 			name: 'apiUrl',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'API Key',
 			name: 'apiKey',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 	];

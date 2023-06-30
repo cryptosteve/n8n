@@ -1,6 +1,6 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 const scopes = [
@@ -9,44 +9,44 @@ const scopes = [
 	'forms:read',
 ];
 
+
 export class TypeformOAuth2Api implements ICredentialType {
 	name = 'typeformOAuth2Api';
 	extends = [
 		'oAuth2Api',
 	];
 	displayName = 'Typeform OAuth2 API';
-	documentationUrl = 'typeform';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Authorization URL',
 			name: 'authUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://api.typeform.com/oauth/authorize',
 			required: true,
 		},
 		{
 			displayName: 'Access Token URL',
 			name: 'accessTokenUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://api.typeform.com/oauth/token',
 			required: true,
 		},
 		{
 			displayName: 'Scope',
 			name: 'scope',
-			type: 'hidden',
-			default: scopes.join(' '),
+			type: 'hidden' as NodePropertyTypes,
+			default: scopes.join(','),
 		},
 		{
 			displayName: 'Auth URI Query Parameters',
 			name: 'authQueryParameters',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Authentication',
 			name: 'authentication',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'header',
 		},
 	];

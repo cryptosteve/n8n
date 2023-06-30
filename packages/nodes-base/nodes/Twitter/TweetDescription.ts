@@ -2,7 +2,7 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export const tweetOperations: INodeProperties[] = [
+export const tweetOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -18,38 +18,23 @@ export const tweetOperations: INodeProperties[] = [
 			{
 				name: 'Create',
 				value: 'create',
-				description: 'Create or reply a tweet',
-			},
-			{
-				name: 'Delete',
-				value: 'delete',
-				description: 'Delete a tweet',
+				description: 'Create a new tweet',
 			},
 			{
 				name: 'Search',
 				value: 'search',
 				description: 'Search tweets',
 			},
-			{
-				name: 'Like',
-				value: 'like',
-				description: 'Like a tweet',
-			},
-			{
-				name: 'Retweet',
-				value: 'retweet',
-				description: 'Retweet a tweet',
-			},
 		],
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const tweetFields: INodeProperties[] = [
-	/* -------------------------------------------------------------------------- */
-	/*                                tweet:create                                */
-	/* -------------------------------------------------------------------------- */
+export const tweetFields = [
+/* -------------------------------------------------------------------------- */
+/*                                tweet:create                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Text',
 		name: 'text',
@@ -69,7 +54,7 @@ export const tweetFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The text of the status update. URL encode as necessary. t.co link wrapping will affect character counts.',
+		description: 'The text of the status update. URL encode as necessary. t.co link wrapping will affect character counts.	',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -93,21 +78,14 @@ export const tweetFields: INodeProperties[] = [
 				name: 'attachments',
 				type: 'string',
 				default: 'data',
-				description: 'Name of the binary properties which contain data which should be added to tweet as attachment. Multiple ones can be comma-separated.',
+				description: 'Name of the binary properties which contain<br />data which should be added to tweet as attachment.<br />Multiple ones can be comma separated.',
 			},
 			{
 				displayName: 'Display Coordinates',
 				name: 'displayCoordinates',
 				type: 'boolean',
 				default: false,
-				description: 'Whether or not to put a pin on the exact coordinates a Tweet has been sent from',
-			},
-			{
-				displayName: 'In Reply to Tweet',
-				name: 'inReplyToStatusId',
-				type: 'string',
-				default: '',
-				description: 'The ID of an existing status that the update is in reply to',
+				description: 'Whether or not to put a pin on the exact coordinates a Tweet has been sent from.',
 			},
 			{
 				displayName: 'Location',
@@ -115,7 +93,7 @@ export const tweetFields: INodeProperties[] = [
 				type: 'fixedCollection',
 				placeholder: 'Add Location',
 				default: {},
-				description: 'Subscriber location information.n',
+				description: `Subscriber location information.n`,
 				options: [
 					{
 						name: 'locationFieldsValues',
@@ -126,7 +104,7 @@ export const tweetFields: INodeProperties[] = [
 								name: 'latitude',
 								type: 'string',
 								required: true,
-								description: 'The location latitude',
+								description: 'The location latitude.',
 								default: '',
 							},
 							{
@@ -134,7 +112,7 @@ export const tweetFields: INodeProperties[] = [
 								name: 'longitude',
 								type: 'string',
 								required: true,
-								description: 'The location longitude',
+								description: 'The location longitude.',
 								default: '',
 							},
 						],
@@ -146,36 +124,13 @@ export const tweetFields: INodeProperties[] = [
 				name: 'possiblySensitive',
 				type: 'boolean',
 				default: false,
-				description: 'If you upload Tweet media that might be considered sensitive content such as nudity, or medical procedures, you must set this value to true',
+				description: 'If you upload Tweet media that might be considered sensitive content such as nudity, or medical procedures, you must set this value to true.',
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                tweet:delete                                */
-	/* -------------------------------------------------------------------------- */
-	{
-		displayName: 'Tweet ID',
-		name: 'tweetId',
-		type: 'string',
-		required: true,
-		default: '',
-		displayOptions: {
-			show: {
-				operation: [
-					'delete',
-				],
-				resource: [
-					'tweet',
-				],
-			},
-		},
-		description: 'The ID of the tweet to delete',
-	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                tweet:search                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                tweet:search                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Search Text',
 		name: 'searchText',
@@ -195,7 +150,9 @@ export const tweetFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'A UTF-8, URL-encoded search query of 500 characters maximum, including operators. Queries may additionally be limited by complexity. Check the searching examples <a href="https://developer.twitter.com/en/docs/tweets/search/guides/standard-operators">here</a>.',
+		description: `A UTF-8, URL-encoded search query of 500 characters maximum,</br>
+		including operators. Queries may additionally be limited by complexity.</br>
+		Check the searching examples <a href="https://developer.twitter.com/en/docs/tweets/search/guides/standard-operators">here</a>.`,
 	},
 	{
 		displayName: 'Return All',
@@ -212,7 +169,7 @@ export const tweetFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -235,7 +192,7 @@ export const tweetFields: INodeProperties[] = [
 			minValue: 1,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -277,7 +234,7 @@ export const tweetFields: INodeProperties[] = [
 				type: 'fixedCollection',
 				placeholder: 'Add Location',
 				default: {},
-				description: 'Subscriber location information.n',
+				description: `Subscriber location information.n`,
 				options: [
 					{
 						name: 'locationFieldsValues',
@@ -288,7 +245,7 @@ export const tweetFields: INodeProperties[] = [
 								name: 'latitude',
 								type: 'string',
 								required: true,
-								description: 'The location latitude',
+								description: 'The location latitude.',
 								default: '',
 							},
 							{
@@ -296,7 +253,7 @@ export const tweetFields: INodeProperties[] = [
 								name: 'longitude',
 								type: 'string',
 								required: true,
-								description: 'The location longitude',
+								description: 'The location longitude.',
 								default: '',
 							},
 							{
@@ -314,7 +271,7 @@ export const tweetFields: INodeProperties[] = [
 									},
 								],
 								required: true,
-								description: 'Returns tweets by users located within a given radius of the given latitude/longitude',
+								description: 'Returns tweets by users located within a given radius of the given latitude/longitude.',
 								default: '',
 							},
 							{
@@ -339,7 +296,7 @@ export const tweetFields: INodeProperties[] = [
 					{
 						name: 'Mixed',
 						value: 'mixed',
-						description: 'Include both popular and real time results in the response',
+						description: 'Include both popular and real time results in the response.',
 					},
 					{
 						name: 'Recent',
@@ -349,28 +306,11 @@ export const tweetFields: INodeProperties[] = [
 					{
 						name: 'Popular',
 						value: 'popular',
-						description: 'Return only the most popular results in the response',
+						description: 'Return only the most popular results in the response.'
 					},
 				],
 				default: 'mixed',
 				description: 'Specifies what type of search results you would prefer to receive',
-			},
-			{
-				displayName: 'Tweet Mode',
-				name: 'tweetMode',
-				type: 'options',
-				options: [
-					{
-						name: 'Compatibility',
-						value: 'compat',
-					},
-					{
-						name: 'Extended',
-						value: 'extended',
-					},
-				],
-				default: 'compat',
-				description: 'When the extended mode is selected, the response contains the entire untruncated text of the Tweet',
 			},
 			{
 				displayName: 'Until',
@@ -381,100 +321,4 @@ export const tweetFields: INodeProperties[] = [
 			},
 		],
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                tweet:like                                  */
-	/* -------------------------------------------------------------------------- */
-	{
-		displayName: 'Tweet ID',
-		name: 'tweetId',
-		type: 'string',
-		required: true,
-		default: '',
-		displayOptions: {
-			show: {
-				operation: [
-					'like',
-				],
-				resource: [
-					'tweet',
-				],
-			},
-		},
-		description: 'The ID of the tweet',
-	},
-	{
-		displayName: 'Additional Fields',
-		name: 'additionalFields',
-		type: 'collection',
-		placeholder: 'Add Field',
-		default: {},
-		displayOptions: {
-			show: {
-				operation: [
-					'like',
-				],
-				resource: [
-					'tweet',
-				],
-			},
-		},
-		options: [
-			{
-				displayName: 'Include Entities',
-				name: 'includeEntities',
-				type: 'boolean',
-				default: false,
-				description: 'The entities will be omitted when set to false',
-			},
-		],
-	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                tweet:retweet                               */
-	/* -------------------------------------------------------------------------- */
-	{
-		displayName: 'Tweet ID',
-		name: 'tweetId',
-		type: 'string',
-		required: true,
-		default: '',
-		displayOptions: {
-			show: {
-				operation: [
-					'retweet',
-				],
-				resource: [
-					'tweet',
-				],
-			},
-		},
-		description: 'The ID of the tweet',
-	},
-	{
-		displayName: 'Additional Fields',
-		name: 'additionalFields',
-		type: 'collection',
-		placeholder: 'Add Field',
-		default: {},
-		displayOptions: {
-			show: {
-				operation: [
-					'retweet',
-				],
-				resource: [
-					'tweet',
-				],
-			},
-		},
-		options: [
-			{
-				displayName: 'Trim User',
-				name: 'trimUser',
-				type: 'boolean',
-				default: false,
-				description: 'When set to either true, each tweet returned in a timeline will include a user object including only the status authors numerical ID',
-			},
-		],
-	},
-];
+] as INodeProperties[];

@@ -4,8 +4,8 @@ import {
 } from 'n8n-core';
 
 import {
-	INodeType,
 	INodeTypeDescription,
+	INodeType,
 	IWebhookResponseData,
 } from 'n8n-workflow';
 
@@ -17,12 +17,13 @@ export class CalendlyTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Calendly Trigger',
 		name: 'calendlyTrigger',
-		icon: 'file:calendly.svg',
+		icon: 'file:calendly.png',
 		group: ['trigger'],
 		version: 1,
-		description: 'Starts the workflow when Calendly events occur',
+		description: 'Starts the workflow when Calendly events occure.',
 		defaults: {
 			name: 'Calendly Trigger',
+			color: '#374252',
 		},
 		inputs: [],
 		outputs: ['main'],
@@ -121,7 +122,7 @@ export class CalendlyTrigger implements INodeType {
 
 					try {
 						await calendlyApiRequest.call(this, 'DELETE', endpoint);
-					} catch (error) {
+					} catch (e) {
 						return false;
 					}
 

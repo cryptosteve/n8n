@@ -1,12 +1,6 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from "n8n-workflow";
 
-import {
-	activeCampaignDefaultGetAllProperties,
-} from './GenericFunctions';
-
-export const ecomCustomerOperations: INodeProperties[] = [
+export const ecomCustomerOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -48,9 +42,9 @@ export const ecomCustomerOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const ecomCustomerFields: INodeProperties[] = [
+export const ecomCustomerFields = [
 	// ----------------------------------
 	//         ecommerceCustomer:create
 	// ----------------------------------
@@ -70,7 +64,7 @@ export const ecomCustomerFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the connection object for the service where the customer originates',
+		description: 'The id of the connection object for the service where the customer originates.',
 	},
 	{
 		displayName: 'Customer ID',
@@ -88,7 +82,7 @@ export const ecomCustomerFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the customer in the external service',
+		description: 'The id of the customer in the external service.',
 	},
 	{
 		displayName: 'Customer Email',
@@ -106,7 +100,7 @@ export const ecomCustomerFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The email address of the customer',
+		description: 'The email address of the customer.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -130,7 +124,7 @@ export const ecomCustomerFields: INodeProperties[] = [
 				name: 'acceptsMarketing',
 				type: 'boolean',
 				default: false,
-				description: 'Indication of whether customer has opt-ed in to marketing communications',
+				description: 'Indication of whether customer has opt-ed in to marketing communications.',
 			},
 		],
 	},
@@ -154,13 +148,13 @@ export const ecomCustomerFields: INodeProperties[] = [
 		},
 		default: 0,
 		required: true,
-		description: 'ID of the E-commerce customer to update',
+		description: 'ID of the E-commerce customer to update.',
 	},
 	{
 		displayName: 'Update Fields',
 		name: 'updateFields',
 		type: 'collection',
-		description: 'The fields to update',
+		description: 'The fields to update.',
 		placeholder: 'Add Field',
 		displayOptions: {
 			show: {
@@ -179,28 +173,28 @@ export const ecomCustomerFields: INodeProperties[] = [
 				name: 'connectionid',
 				type: 'string',
 				default: '',
-				description: 'The ID of the connection object for the service where the customer originates',
+				description: 'The id of the connection object for the service where the customer originates.',
 			},
 			{
 				displayName: 'Customer ID',
 				name: 'externalid',
 				type: 'string',
 				default: '',
-				description: 'The ID of the customer in the external service',
+				description: 'The id of the customer in the external service.',
 			},
 			{
 				displayName: 'Customer Email',
 				name: 'email',
 				type: 'string',
 				default: '',
-				description: 'The email address of the customer',
+				description: 'The email address of the customer.',
 			},
 			{
 				displayName: 'Accepts Marketing',
 				name: 'acceptsMarketing',
 				type: 'boolean',
 				default: false,
-				description: 'Indication of whether customer has opt-ed in to marketing communications',
+				description: 'Indication of whether customer has opt-ed in to marketing communications.',
 			},
 		],
 	},
@@ -224,7 +218,7 @@ export const ecomCustomerFields: INodeProperties[] = [
 		},
 		default: 0,
 		required: true,
-		description: 'ID of the E-commerce customer to delete',
+		description: 'ID of the E-commerce customer to delete.',
 	},
 
 	// ----------------------------------
@@ -246,11 +240,51 @@ export const ecomCustomerFields: INodeProperties[] = [
 		},
 		default: 0,
 		required: true,
-		description: 'ID of the E-commerce customer to get',
+		description: 'ID of the E-commerce customer to get.',
 	},
 
 	// ----------------------------------
 	//         ecommerceCustomer:getAll
 	// ----------------------------------
-	...activeCampaignDefaultGetAllProperties('ecommerceCustomer', 'getAll'),
-];
+	{
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
+		displayOptions: {
+			show: {
+				operation: [
+					'getAll',
+				],
+				resource: [
+					'ecommerceCustomer',
+				],
+			},
+		},
+		default: false,
+		description: 'If all results should be returned or only up to a given limit.',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		displayOptions: {
+			show: {
+				operation: [
+					'getAll',
+				],
+				resource: [
+					'ecommerceCustomer',
+				],
+				returnAll: [
+					false,
+				],
+			},
+		},
+		typeOptions: {
+			minValue: 1,
+			maxValue: 500,
+		},
+		default: 100,
+		description: 'How many results to return.',
+	},
+] as INodeProperties[];

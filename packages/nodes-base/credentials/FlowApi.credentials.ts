@@ -1,24 +1,23 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 
 export class FlowApi implements ICredentialType {
 	name = 'flowApi';
 	displayName = 'Flow API';
-	documentationUrl = 'flow';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Organization ID',
 			name: 'organizationId',
-			type: 'number',
+			type: 'number' as NodePropertyTypes,
 			default: 0,
 		},
 		{
 			displayName: 'Access Token',
 			name: 'accessToken',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 	];

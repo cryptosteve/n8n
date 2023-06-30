@@ -1,6 +1,6 @@
-import { INodeProperties } from 'n8n-workflow';
+import { INodeProperties } from "n8n-workflow";
 
-export const companyOperations: INodeProperties[] = [
+export const companyOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -36,19 +36,20 @@ export const companyOperations: INodeProperties[] = [
 			{
 				name: 'Users',
 				value: 'users',
-				description: 'List company\'s users',
+				description: `List company's users`,
 			},
 		],
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const companyFields: INodeProperties[] = [
+export const companyFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                company:users                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                company:users                               */
+/* -------------------------------------------------------------------------- */
+
 	{
 		displayName: 'List By',
 		name: 'listBy',
@@ -67,7 +68,7 @@ export const companyFields: INodeProperties[] = [
 			{
 				name: 'ID',
 				value: 'id',
-				description: 'The Intercom defined ID representing the company',
+				description: 'The Intercom defined id representing the company',
 			},
 			{
 				name: 'Company ID',
@@ -76,6 +77,7 @@ export const companyFields: INodeProperties[] = [
 			},
 		],
 		default: '',
+		description: 'List by',
 	},
 	{
 		displayName: 'Value',
@@ -95,51 +97,10 @@ export const companyFields: INodeProperties[] = [
 		},
 		description: 'View by value',
 	},
-	{
-		displayName: 'Return All',
-		name: 'returnAll',
-		type: 'boolean',
-		displayOptions: {
-			show: {
-				resource: [
-					'company',
-				],
-				operation: [
-					'users',
-				],
-			},
-		},
-		default: false,
-		description: 'Whether to return all results or only up to a given limit',
-	},
-	{
-		displayName: 'Limit',
-		name: 'limit',
-		type: 'number',
-		displayOptions: {
-			show: {
-				resource: [
-					'company',
-				],
-				operation: [
-					'users',
-				],
-				returnAll: [
-					false,
-				],
-			},
-		},
-		typeOptions: {
-			minValue: 1,
-			maxValue: 60,
-		},
-		default: 50,
-		description: 'Max number of results to return',
-	},
+/* -------------------------------------------------------------------------- */
+/*                                company:getAll                                */
+/* -------------------------------------------------------------------------- */
 
-	/* -------------------------------------------------------------------------- */
-	/*                                company:getAll                                */
-	/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Return All',
 		name: 'returnAll',
@@ -155,7 +116,7 @@ export const companyFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -179,7 +140,7 @@ export const companyFields: INodeProperties[] = [
 			maxValue: 60,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Filters',
@@ -212,12 +173,13 @@ export const companyFields: INodeProperties[] = [
 				default: '',
 				description: 'Tag representing the Lead',
 			},
-		],
+		]
 	},
 
-	/* -------------------------------------------------------------------------- */
-	/*                                company:get                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                company:get                                */
+/* -------------------------------------------------------------------------- */
+
 	{
 		displayName: 'Select By',
 		name: 'selectBy',
@@ -241,7 +203,7 @@ export const companyFields: INodeProperties[] = [
 			{
 				name: 'ID',
 				value: 'id',
-				description: 'The Intercom defined ID representing the company',
+				description: 'The Intercom defined id representing the company',
 			},
 			{
 				name: 'Name',
@@ -250,7 +212,7 @@ export const companyFields: INodeProperties[] = [
 			},
 		],
 		default: '',
-		description: 'What property to use to query the company',
+		description: 'What property to use to query the company.',
 	},
 	{
 		displayName: 'Value',
@@ -271,9 +233,10 @@ export const companyFields: INodeProperties[] = [
 		description: 'View by value',
 	},
 
-	/* -------------------------------------------------------------------------- */
-	/*                            company:create/update                           */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                            company:create/update                           */
+/* -------------------------------------------------------------------------- */
+
 	{
 		displayName: 'Company Id',
 		name: 'companyId',
@@ -290,13 +253,14 @@ export const companyFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The company ID you have defined for the company',
+		description: 'The company id you have defined for the company',
 	},
 	{
 		displayName: 'JSON Parameters',
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				operation: [
@@ -369,14 +333,15 @@ export const companyFields: INodeProperties[] = [
 				name: 'website',
 				type: 'string',
 				default: '',
-				description: 'The URL for this company\'s website. Please note that the value specified here is not validated. Accepts any string.',
+				description: `The URL for this company's website. Please note that the value<br />specified here is not validated. Accepts any string.`,
 			},
-		],
+		]
 	},
 	{
 		displayName: 'Custom Attributes',
 		name: 'customAttributesJson',
 		type: 'json',
+		required: false,
 		typeOptions: {
 			alwaysOpenEditWindow: true,
 		},
@@ -395,17 +360,18 @@ export const companyFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'A hash of key/value pairs to represent custom data you want to attribute to a user',
+		description: 'A hash of key/value pairs to represent custom data you want to attribute to a user.',
 	},
 	{
 		displayName: 'Custom Attributes',
 		name: 'customAttributesUi',
 		type: 'fixedCollection',
-		default: {},
+		default: '',
 		placeholder: 'Add Attribute',
 		typeOptions: {
 			multipleValues: true,
 		},
+		required: false,
 		displayOptions: {
 			show: {
 				resource: [
@@ -438,8 +404,8 @@ export const companyFields: INodeProperties[] = [
 						default: '',
 					},
 				],
-			},
+			}
 		],
-		description: 'A hash of key/value pairs to represent custom data you want to attribute to a user',
+		description: 'A hash of key/value pairs to represent custom data you want to attribute to a user.',
 	},
-];
+] as INodeProperties[];

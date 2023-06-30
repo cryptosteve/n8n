@@ -1,8 +1,6 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from 'n8n-workflow';
 
-export const personOperations: INodeProperties[] = [
+export const personOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -44,13 +42,13 @@ export const personOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const personFields: INodeProperties[] = [
+export const personFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                person:create                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                person:create                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Fist Name',
 		name: 'firstName',
@@ -64,10 +62,10 @@ export const personFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-				],
+				]
 			},
 		},
-		description: 'The first name of the person',
+		description: 'The first name of the person.',
 	},
 	{
 		displayName: 'Last Name',
@@ -82,10 +80,10 @@ export const personFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-				],
+				]
 			},
 		},
-		description: 'The last name of the person',
+		description: 'The last name of the person.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -112,7 +110,7 @@ export const personFields: INodeProperties[] = [
 					loadOptionsMethod: 'getOrganizations',
 				},
 				default: [],
-				description: 'Organizations that the person is associated with',
+				description: 'Organizations that the person is associated with.',
 			},
 		],
 	},
@@ -132,15 +130,15 @@ export const personFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-				],
+				]
 			},
 		},
 		placeholder: 'info@example.com',
 		default: [],
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 person:update                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 person:update                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Person ID',
 		name: 'personId',
@@ -154,10 +152,10 @@ export const personFields: INodeProperties[] = [
 				],
 				operation: [
 					'update',
-				],
+				]
 			},
 		},
-		description: 'Unique identifier for the person',
+		description: 'Unique identifier for the person.',
 	},
 	{
 		displayName: 'Update Fields',
@@ -181,14 +179,14 @@ export const personFields: INodeProperties[] = [
 				name: 'firstName',
 				type: 'string',
 				default: '',
-				description: 'The first name of the person',
+				description: 'The first name of the person.',
 			},
 			{
 				displayName: 'Last Name',
 				name: 'lastName',
 				type: 'string',
 				default: '',
-				description: 'The last name of the person',
+				description: 'The last name of the person.',
 			},
 			{
 				displayName: 'Organizations',
@@ -198,9 +196,9 @@ export const personFields: INodeProperties[] = [
 					loadOptionsMethod: 'getOrganizations',
 				},
 				default: [],
-				description: 'Organizations that the person is associated with',
+				description: 'Organizations that the person is associated with.',
 			},
-		],
+		]
 	},
 	{
 		displayName: 'Emails',
@@ -218,15 +216,15 @@ export const personFields: INodeProperties[] = [
 				],
 				operation: [
 					'update',
-				],
+				]
 			},
 		},
 		placeholder: 'info@example.com',
 		default: [],
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 person:get                                 */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 person:get                                 */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Person ID',
 		name: 'personId',
@@ -240,10 +238,10 @@ export const personFields: INodeProperties[] = [
 				],
 				operation: [
 					'get',
-				],
+				]
 			},
 		},
-		description: 'Unique identifier for the person',
+		description: 'Unique identifier for the person.',
 	},
 	{
 		displayName: 'Options',
@@ -267,13 +265,13 @@ export const personFields: INodeProperties[] = [
 				name: 'withInteractionDates',
 				type: 'boolean',
 				default: false,
-				description: 'When true, interaction dates will be present on the returned resources',
+				description: 'When true, interaction dates will be present on the returned resources.',
 			},
-		],
+		]
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 person:getAll                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 person:getAll                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Return All',
 		name: 'returnAll',
@@ -289,7 +287,7 @@ export const personFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -313,7 +311,7 @@ export const personFields: INodeProperties[] = [
 			maxValue: 10,
 		},
 		default: 5,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -344,13 +342,13 @@ export const personFields: INodeProperties[] = [
 				name: 'withInteractionDates',
 				type: 'boolean',
 				default: false,
-				description: 'When true, interaction dates will be present on the returned resources',
+				description: 'When true, interaction dates will be present on the returned resources.',
 			},
-		],
+		]
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 person:delete                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 person:delete                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Person ID',
 		name: 'personId',
@@ -364,9 +362,9 @@ export const personFields: INodeProperties[] = [
 				],
 				operation: [
 					'delete',
-				],
+				]
 			},
 		},
-		description: 'Unique identifier for the person',
+		description: 'Unique identifier for the person.',
 	},
-];
+] as INodeProperties[];

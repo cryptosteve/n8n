@@ -15,20 +15,19 @@ import {
 	helpscoutApiRequestAllItems,
 } from './GenericFunctions';
 
-import {
-	createHmac,
-} from 'crypto';
+import { createHmac } from 'crypto';
 
 export class HelpScoutTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'HelpScout Trigger',
 		name: 'helpScoutTrigger',
-		icon: 'file:helpScout.svg',
+		icon: 'file:helpScout.png',
 		group: ['trigger'],
 		version: 1,
-		description: 'Starts the workflow when HelpScout events occur',
+		description: 'Starts the workflow when HelpScout events occure.',
 		defaults: {
 			name: 'HelpScout Trigger',
+			color: '#1392ee',
 		},
 		inputs: [],
 		outputs: ['main'],
@@ -126,7 +125,7 @@ export class HelpScoutTrigger implements INodeType {
 					if (webhook.url === webhookUrl) {
 						for (const event of events) {
 							if (!webhook.events.includes(event)
-								&& webhook.state === 'enabled') {
+							&&	webhook.state === 'enabled') {
 								return false;
 							}
 						}
@@ -168,7 +167,7 @@ export class HelpScoutTrigger implements INodeType {
 					const endpoint = `/v2/webhooks/${webhookData.webhookId}`;
 					try {
 						await helpscoutApiRequest.call(this, 'DELETE', endpoint);
-					} catch (error) {
+					} catch (e) {
 						return false;
 					}
 
@@ -187,7 +186,7 @@ export class HelpScoutTrigger implements INodeType {
 		const bodyData = this.getBodyData();
 		const headerData = this.getHeaderData() as IDataObject;
 		const webhookData = this.getWorkflowStaticData('node');
-		if (headerData['x-helpscout-signature'] === undefined) {
+		if (headerData['x-helpscout-signature'] === undefined)  {
 			return {};
 		}
 		//@ts-ignore

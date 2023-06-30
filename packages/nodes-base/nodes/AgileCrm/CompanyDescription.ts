@@ -1,8 +1,7 @@
 import {
 	INodeProperties,
 } from 'n8n-workflow';
-
-export const companyOperations: INodeProperties[] = [
+export const companyOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -44,9 +43,8 @@ export const companyOperations: INodeProperties[] = [
 		default: 'get',
 		description: 'The operation to perform.',
 	},
-];
-
-export const companyFields: INodeProperties[] = [
+] as INodeProperties[];
+export const companyFields = [
 	/* -------------------------------------------------------------------------- */
 	/*                                  company:get                               */
 	/* -------------------------------------------------------------------------- */
@@ -87,12 +85,13 @@ export const companyFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
 		name: 'limit',
 		type: 'number',
+		default: 20,
 		displayOptions: {
 			show: {
 				resource: [
@@ -105,281 +104,8 @@ export const companyFields: INodeProperties[] = [
 					false,
 				],
 			},
-		},
-		default: 20,
-		description: 'Max number of results to return',
+		}
 	},
-
-	{
-		displayName: 'Filter',
-		name: 'filterType',
-		type: 'options',
-		options: [
-			{
-				name: 'None',
-				value: 'none',
-			},
-			{
-				name: 'Build Manually',
-				value: 'manual',
-			},
-			{
-				name: 'JSON',
-				value: 'json',
-			},
-		],
-		displayOptions: {
-			show: {
-				resource: [
-					'company',
-				],
-				operation: [
-					'getAll',
-				],
-			},
-		},
-		default: 'none',
-	},
-	{
-		displayName: 'Must Match',
-		name: 'matchType',
-		type: 'options',
-		options: [
-			{
-				name: 'Any filter',
-				value: 'anyFilter',
-			},
-			{
-				name: 'All Filters',
-				value: 'allFilters',
-			},
-		],
-		displayOptions: {
-			show: {
-				resource: [
-					'company',
-				],
-				operation: [
-					'getAll',
-				],
-				filterType: [
-					'manual',
-				],
-			},
-		},
-		default: 'anyFilter',
-	},
-	{
-		displayName: 'Simplify Response',
-		name: 'simple',
-		type: 'boolean',
-		displayOptions: {
-			show: {
-				resource: [
-					'company',
-				],
-				operation: [
-					'getAll',
-				],
-			},
-		},
-		// eslint-disable-next-line n8n-nodes-base/node-param-default-wrong-for-simplify
-		default: false,
-		description: 'Return a simplified version of the response instead of the raw data',
-	},
-	{
-		displayName: 'Filters',
-		name: 'filters',
-		type: 'fixedCollection',
-		typeOptions: {
-			multipleValues: true,
-		},
-		displayOptions: {
-			show: {
-				resource: [
-					'company',
-				],
-				operation: [
-					'getAll',
-				],
-				filterType: [
-					'manual',
-				],
-			},
-		},
-		default: {},
-		placeholder: 'Add Condition',
-		options: [
-			{
-				displayName: 'Conditions',
-				name: 'conditions',
-				values: [
-					{
-						displayName: 'Field',
-						name: 'field',
-						type: 'string',
-						default: '',
-						description: 'Any searchable field',
-					},
-					{
-						displayName: 'Condition Type',
-						name: 'condition_type',
-						type: 'options',
-						options: [
-							{
-								name: 'Equals',
-								value: 'EQUALS',
-							},
-							{
-								name: 'Not Equal',
-								value: 'NOTEQUALS',
-							},
-							{
-								name: 'Last',
-								value: 'LAST',
-							},
-							{
-								name: 'Between',
-								value: 'BETWEEN',
-							},
-							{
-								name: 'On',
-								value: 'ON',
-							},
-							{
-								name: 'Before',
-								value: 'BEFORE',
-							},
-							{
-								name: 'After',
-								value: 'AFTER',
-							},
-						],
-						default: 'EQUALS',
-					},
-					{
-						displayName: 'Value',
-						name: 'value',
-						type: 'string',
-						default: '',
-					},
-					{
-						displayName: 'Value 2',
-						name: 'value2',
-						type: 'string',
-						displayOptions: {
-							show: {
-								condition_type: [
-									'BETWEEN',
-								],
-							},
-						},
-						default: '',
-					},
-				],
-			},
-		],
-	},
-	{
-		displayName: 'See <a href="https://github.com/agilecrm/rest-api#121-get-contacts-by-dynamic-filter" target="_blank">Agile CRM guide</a> to creating filters',
-		name: 'jsonNotice',
-		type: 'notice',
-		displayOptions: {
-			show: {
-				resource: [
-					'company',
-				],
-				operation: [
-					'getAll',
-				],
-				filterType: [
-					'json',
-				],
-			},
-		},
-		default: '',
-	},
-	{
-		displayName: 'Filters (JSON)',
-		name: 'filterJson',
-		type: 'string',
-		typeOptions: {
-			alwaysOpenEditWindow: true,
-		},
-		displayOptions: {
-			show: {
-				resource: [
-					'company',
-				],
-				operation: [
-					'getAll',
-				],
-				filterType: [
-					'json',
-				],
-			},
-		},
-		default: '',
-	},
-	{
-		displayName: 'Options',
-		name: 'options',
-		type: 'collection',
-		placeholder: 'Add Option',
-		default: {},
-		displayOptions: {
-			show: {
-				resource: [
-					'company',
-				],
-				operation: [
-					'getAll',
-				],
-			},
-		},
-		options: [
-			{
-				displayName: 'Sort',
-				name: 'sort',
-				type: 'fixedCollection',
-				placeholder: 'Add Sort',
-				default: [],
-				options: [
-					{
-						displayName: 'Sort',
-						name: 'sort',
-						values: [
-							{
-								displayName: 'Direction',
-								name: 'direction',
-								type: 'options',
-								options: [
-									{
-										name: 'Ascending',
-										value: 'ASC',
-									},
-									{
-										name: 'Descending',
-										value: 'DESC',
-									},
-								],
-								default: 'ASC',
-								description: 'The sorting direction',
-							},
-							{
-								displayName: 'Field',
-								name: 'field',
-								type: 'string',
-								default: '',
-								description: 'The sorting field',
-							},
-						],
-					},
-				],
-			},
-		],
-	},
-
 	/* -------------------------------------------------------------------------- */
 	/*                                company:create                               */
 	/* -------------------------------------------------------------------------- */
@@ -388,6 +114,7 @@ export const companyFields: INodeProperties[] = [
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				resource: [
@@ -420,7 +147,7 @@ export const companyFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Object of values to set as described <a href="https://github.com/agilecrm/rest-api#1-companys---companies-api">here</a>',
+		description: 'Object of values to set as described <a href="https://github.com/agilecrm/rest-api#1-companys---companies-api" target="_blank">here</a>.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -447,28 +174,28 @@ export const companyFields: INodeProperties[] = [
 				name: 'email',
 				type: 'string',
 				default: '',
-				description: 'Company address',
+				description: 'Company address.',
 			},
 			{
 				displayName: 'Email',
 				name: 'email',
 				type: 'string',
 				default: '',
-				description: 'Company email',
+				description: 'Company email.',
 			},
 			{
 				displayName: 'Name',
 				name: 'name',
 				type: 'string',
 				default: '',
-				description: 'Company name',
+				description: 'Company name.',
 			},
 			{
 				displayName: 'Phone',
 				name: 'phone',
 				type: 'string',
 				default: '',
-				description: 'Company phone',
+				description: 'Company phone.',
 			},
 			{
 				displayName: 'Star Value',
@@ -479,29 +206,29 @@ export const companyFields: INodeProperties[] = [
 				options: [
 					{
 						name: '0',
-						value: 0,
+						value: 0
 					},
 					{
 						name: '1',
-						value: 1,
+						value: 1
 					},
 					{
 						name: '2',
-						value: 2,
+						value: 2
 					},
 					{
 						name: '3',
-						value: 3,
+						value: 3
 					},
 					{
 						name: '4',
-						value: 4,
+						value: 4
 					},
 					{
 						name: '5',
-						value: 5,
+						value: 5
 					},
-				],
+				]
 			},
 			{
 				displayName: 'Tags',
@@ -518,8 +245,7 @@ export const companyFields: INodeProperties[] = [
 				displayName: 'Website',
 				name: 'websiteOptions',
 				type: 'fixedCollection',
-				description: 'Companies websites',
-				default: {},
+				description: 'Companies websites.',
 				typeOptions: {
 					multipleValues: true,
 				},
@@ -534,7 +260,7 @@ export const companyFields: INodeProperties[] = [
 								type: 'options',
 								required: true,
 								default: '',
-								description: 'Type of website',
+								description: 'Type of website.',
 								options: [
 									{
 										name: 'Facebook',
@@ -598,7 +324,7 @@ export const companyFields: INodeProperties[] = [
 				displayName: 'Custom Properties',
 				name: 'customProperties',
 				type: 'fixedCollection',
-				default: {},
+				description: 'Custom Properties',
 				typeOptions: {
 					multipleValues: true,
 				},
@@ -613,21 +339,21 @@ export const companyFields: INodeProperties[] = [
 								type: 'string',
 								required: true,
 								default: '',
-								description: 'Property name',
+								description: 'Property name.'
 							},
 							{
 								displayName: 'Sub Type',
 								name: 'subtype',
 								type: 'string',
 								default: '',
-								description: 'Property sub type',
+								description: 'Property sub type.',
 							},
 							{
 								displayName: 'Value',
 								name: 'value',
 								type: 'string',
 								default: '',
-								description: 'Property value',
+								description: 'Property value.',
 							},
 						],
 					},
@@ -684,6 +410,7 @@ export const companyFields: INodeProperties[] = [
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				resource: [
@@ -716,7 +443,7 @@ export const companyFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Object of values to set as described <a href="https://github.com/agilecrm/rest-api#1-companys---companies-api">here</a>',
+		description: 'Object of values to set as described <a href="https://github.com/agilecrm/rest-api#1-companys---companies-api" target="_blank">here</a>.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -743,14 +470,14 @@ export const companyFields: INodeProperties[] = [
 				name: 'email',
 				type: 'string',
 				default: '',
-				description: 'Company address',
+				description: 'Company address.',
 			},
 			{
 				displayName: 'Email',
 				name: 'email',
 				type: 'string',
 				default: '',
-				description: 'Company email',
+				description: 'Company email.',
 			},
 			{
 				displayName: 'Star Value',
@@ -801,21 +528,20 @@ export const companyFields: INodeProperties[] = [
 				name: 'name',
 				type: 'string',
 				default: '',
-				description: 'Company name',
+				description: 'Company name.',
 			},
 			{
 				displayName: 'Phone',
 				name: 'phone',
 				type: 'string',
 				default: '',
-				description: 'Company phone',
+				description: 'Company phone.',
 			},
 			{
 				displayName: 'Website',
 				name: 'websiteOptions',
 				type: 'fixedCollection',
-				default: {},
-				description: 'Companys websites',
+				description: 'Companys websites.',
 				typeOptions: {
 					multipleValues: true,
 				},
@@ -830,7 +556,7 @@ export const companyFields: INodeProperties[] = [
 								type: 'options',
 								required: true,
 								default: '',
-								description: 'Type of website',
+								description: 'Type of website.',
 								options: [
 									{
 										name: 'Facebook',
@@ -894,7 +620,7 @@ export const companyFields: INodeProperties[] = [
 				displayName: 'Custom Properties',
 				name: 'customProperties',
 				type: 'fixedCollection',
-				default: {},
+				description: 'Custom Properties',
 				typeOptions: {
 					multipleValues: true,
 				},
@@ -909,27 +635,26 @@ export const companyFields: INodeProperties[] = [
 								type: 'string',
 								required: true,
 								default: '',
-								description: 'Property name',
+								description: 'Property name.',
 							},
 							{
 								displayName: 'Sub Type',
 								name: 'subtype',
 								type: 'string',
 								default: '',
-								description: 'Property sub type',
+								description: 'Property sub type.',
 							},
 							{
 								displayName: 'Value',
 								name: 'value',
 								type: 'string',
 								default: '',
-								description: 'Property value',
+								description: 'Property value.',
 							},
 						],
 					},
-				],
+				]
 			},
 		],
 	},
-
-];
+] as INodeProperties[];

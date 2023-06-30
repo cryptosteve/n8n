@@ -1,8 +1,8 @@
 import {
 	INodeProperties,
-} from 'n8n-workflow';
+ } from 'n8n-workflow';
 
-export const commentOperations: INodeProperties[] = [
+export const commentOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -39,13 +39,13 @@ export const commentOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const commentFields: INodeProperties[] = [
+export const commentFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                comment:create                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                comment:create                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Comment On',
 		name: 'commentOn',
@@ -137,14 +137,13 @@ export const commentFields: INodeProperties[] = [
 				name: 'notifyAll',
 				type: 'boolean',
 				default: false,
-				description: 'If true, creation notifications will be sent to everyone including the creator of the comment',
+				description: 'If true, creation notifications will be sent to everyone including the creator of the comment.',
 			},
 		],
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                comment:delete                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                comment:delete                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Comment ID',
 		name: 'comment',
@@ -162,10 +161,9 @@ export const commentFields: INodeProperties[] = [
 		},
 		required: true,
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                comment:getAll                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                comment:getAll                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Comments On',
 		name: 'commentsOn',
@@ -232,12 +230,11 @@ export const commentFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                comment:update                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                comment:update                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Comment ID',
 		name: 'comment',
@@ -292,4 +289,4 @@ export const commentFields: INodeProperties[] = [
 			},
 		],
 	},
-];
+] as INodeProperties[];

@@ -1,14 +1,17 @@
 import { OptionsWithUri } from 'request';
 import {
 	IExecuteFunctions,
-	IExecuteSingleFunctions,
 	IHookFunctions,
 	ILoadOptionsFunctions,
+	IExecuteSingleFunctions,
 } from 'n8n-core';
-import { IDataObject, NodeApiError, NodeOperationError, } from 'n8n-workflow';
+import { IDataObject } from 'n8n-workflow';
 
 export async function flowApiRequest(this: IHookFunctions | IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions, method: string, resource: string, body: any = {}, qs: IDataObject = {}, uri?: string, option: IDataObject = {}): Promise<any> { // tslint:disable-line:no-any
-	const credentials = await this.getCredentials('flowApi');
+	const credentials = this.getCredentials('flowApi');
+	if (credentials === undefined) {
+		throw new Error('No credentials got returned!');
+	}
 
 	let options: OptionsWithUri = {
 		headers: { 'Authorization': `Bearer ${credentials.accessToken}`},
@@ -16,7 +19,7 @@ export async function flowApiRequest(this: IHookFunctions | IExecuteFunctions | 
 		qs,
 		body,
 		uri: uri ||`https://api.getflow.com/v2${resource}`,
-		json: true,
+		json: true
 	};
 	options = Object.assign({}, options, option);
 	if (Object.keys(options.body).length === 0) {
@@ -26,7 +29,12 @@ export async function flowApiRequest(this: IHookFunctions | IExecuteFunctions | 
 	try {
 		return await this.helpers.request!(options);
 	} catch (error) {
-		throw new NodeApiError(this.getNode(), error);
+		let errorMessage = error.message;
+		if (error.response.body) {
+			errorMessage = error.response.body.message || error.response.body.Message || error.message;
+		}
+
+		throw new Error(errorMessage);
 	}
 }
 

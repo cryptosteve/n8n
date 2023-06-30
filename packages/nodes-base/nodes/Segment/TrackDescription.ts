@@ -1,8 +1,6 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from 'n8n-workflow';
 
-export const trackOperations: INodeProperties[] = [
+export const trackOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -18,20 +16,20 @@ export const trackOperations: INodeProperties[] = [
 			{
 				name: 'Event',
 				value: 'event',
-				description: 'Record the actions your users perform. Every action triggers an event, which can also have associated properties.',
+				description: 'lets you record the actions your users perform.Every action triggers what we call an “event”, which can also have associated properties.',
 			},
 			{
 				name: 'Page',
 				value: 'page',
-				description: 'Record page views on your website, along with optional extra information about the page being viewed',
+				description: ' lets you record page views on your website, along with optional extra information about the page being viewed.',
 			},
 		],
 		default: 'event',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const trackFields: INodeProperties[] = [
+export const trackFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                track:event                                 */
@@ -51,6 +49,7 @@ export const trackFields: INodeProperties[] = [
 				],
 			},
 		},
+		required: false,
 	},
 	{
 		displayName: 'Event',
@@ -67,8 +66,226 @@ export const trackFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Name of the action that a user has performed',
+		description: 'Name of the action that a user has performed.',
 		required: true,
+	},
+	{
+		displayName: 'Traits',
+		name: 'traits',
+		placeholder: 'Add Trait',
+		type: 'fixedCollection',
+		typeOptions: {
+			multipleValues: false,
+		},
+		displayOptions: {
+			show: {
+				resource: [
+					'track',
+				],
+				operation: [
+					'event',
+				],
+			},
+		},
+		default: {},
+		options: [
+			{
+				name: 'traitsUi',
+				displayName: 'Trait',
+				values: [
+					{
+						displayName: 'Email',
+						name: 'email',
+						type: 'string',
+						default: '',
+						description: 'Email address of a user',
+					},
+					{
+						displayName: 'First Name',
+						name: 'firstname',
+						type: 'string',
+						default: '',
+						description: 'First name of a user',
+					},
+					{
+						displayName: 'Last Name',
+						name: 'lastname',
+						type: 'string',
+						default: '',
+						description: 'Last name of a user',
+					},
+					{
+						displayName: 'Gender',
+						name: 'gender',
+						type: 'string',
+						default: '',
+						description: 'Gender of a user',
+					},
+					{
+						displayName: 'Phone',
+						name: 'phone',
+						type: 'string',
+						default: '',
+						description: 'Phone number of a user',
+					},
+					{
+						displayName: 'Username',
+						name: 'username',
+						type: 'string',
+						default: '',
+						description: 'User’s username',
+					},
+					{
+						displayName: 'Website',
+						name: 'website',
+						type: 'string',
+						default: '',
+						description: 'Website of a user',
+					},
+					{
+						displayName: 'Age',
+						name: 'age',
+						type: 'number',
+						default: 1,
+						description: 'Age of a user',
+					},
+					{
+						displayName: 'Avatar',
+						name: 'avatar',
+						type: 'string',
+						default: '',
+						description: 'URL to an avatar image for the user',
+					},
+					{
+						displayName: 'Birthday',
+						name: 'birthday',
+						type: 'dateTime',
+						default: '',
+						description: 'User’s birthday',
+					},
+					{
+						displayName: 'Created At',
+						name: 'createdAt',
+						type: 'dateTime',
+						default: '',
+						description: 'Date the user’s account was first created at',
+					},
+					{
+						displayName: 'Description',
+						name: 'description',
+						type: 'string',
+						typeOptions: {
+							alwaysOpenEditWindow: true,
+						},
+						default: '',
+						description: 'Description of the user',
+					},
+					{
+						displayName: 'ID',
+						name: 'id',
+						type: 'string',
+						default: '',
+						description: 'Unique ID in your database for a user',
+					},
+					{
+						displayName: 'Company',
+						name: 'company',
+						placeholder: 'Add Company',
+						type: 'fixedCollection',
+						typeOptions: {
+							multipleValues: false,
+						},
+						default: {},
+						options: [
+							{
+								name: 'companyUi',
+								displayName: 'Company',
+								values: [
+									{
+										displayName: 'ID',
+										name: 'id',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Name',
+										name: 'name',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Industry',
+										name: 'industry',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Employee Count',
+										name: 'employeeCount',
+										type: 'number',
+										default: 1,
+									},
+									{
+										displayName: 'Plan',
+										name: 'plan',
+										type: 'string',
+										default: '',
+									},
+								]
+							},
+						],
+					},
+					{
+						displayName: 'Address',
+						name: 'address',
+						placeholder: 'Add Address',
+						type: 'fixedCollection',
+						typeOptions: {
+							multipleValues: false,
+						},
+						default: {},
+						options: [
+							{
+								name: 'addressUi',
+								displayName: 'Address',
+								values: [
+									{
+										displayName: 'Street',
+										name: 'street',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'City',
+										name: 'city',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'State',
+										name: 'state',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Postal Code',
+										name: 'postalCode',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Country',
+										name: 'country',
+										type: 'string',
+										default: '',
+									},
+								]
+							},
+						],
+					},
+				]
+			},
+		],
 	},
 	{
 		displayName: 'Context',
@@ -98,7 +315,7 @@ export const trackFields: INodeProperties[] = [
 						displayName: 'Active',
 						name: 'active',
 						type: 'boolean',
-						default: false,
+						default: '',
 						description: 'Whether a user is active',
 					},
 					{
@@ -106,14 +323,14 @@ export const trackFields: INodeProperties[] = [
 						name: 'ip',
 						type: 'string',
 						default: '',
-						description: 'Current user’s IP address',
+						description: 'Current user’s IP address.',
 					},
 					{
 						displayName: 'Locale',
 						name: 'locate',
 						type: 'string',
 						default: '',
-						description: 'Locale string for the current user, for example en-US',
+						description: 'Locale string for the current user, for example en-US.',
 					},
 					{
 						displayName: 'Page',
@@ -161,7 +378,7 @@ export const trackFields: INodeProperties[] = [
 										type: 'string',
 										default: '',
 									},
-								],
+								]
 							},
 						],
 					},
@@ -209,7 +426,7 @@ export const trackFields: INodeProperties[] = [
 										type: 'string',
 										default: '',
 									},
-								],
+								]
 							},
 						],
 					},
@@ -267,7 +484,7 @@ export const trackFields: INodeProperties[] = [
 							},
 						],
 					},
-				],
+				]
 			},
 		],
 	},
@@ -317,7 +534,7 @@ export const trackFields: INodeProperties[] = [
 		placeholder: 'Add Properties',
 		type: 'fixedCollection',
 		typeOptions: {
-			multipleValues: true,
+			multipleValues: false,
 		},
 		displayOptions: {
 			show: {
@@ -333,19 +550,31 @@ export const trackFields: INodeProperties[] = [
 		options: [
 			{
 				name: 'propertiesUi',
-				displayName: 'Property',
+				displayName: 'Properties',
 				values: [
 					{
-						displayName: 'Key',
-						name: 'key',
+						displayName: 'Revenue',
+						name: 'revenue',
+						type: 'number',
+						typeOptions: {
+							numberPrecision: 2,
+						},
+						default: 1,
+						description: 'Amount of revenue an event resulted in. This should be a decimal value, so a shirt worth $19.99 would result in a revenue of 19.99.'
+					},
+					{
+						displayName: 'Currency',
+						name: 'currency',
 						type: 'string',
 						default: '',
+						description: 'Currency of the revenue an event resulted in <p>This should be sent in the ISO 4127 format. If this is not set, we assume the revenue to be in US dollars.</p>'
 					},
 					{
 						displayName: 'Value',
 						name: 'value',
-						type: 'string',
+						type: 'number',
 						default: '',
+						description: 'An abstract “value” to associate with an event. This is typically used in situations where the event doesn’t generate real-dollar revenue, but has an intrinsic value to a marketing team, like newsletter signups.'
 					},
 				],
 			},
@@ -388,6 +617,224 @@ export const trackFields: INodeProperties[] = [
 		description: 'Name of the page For example, most sites have a “Signup” page that can be useful to tag, so you can see users as they move through your funnel',
 	},
 	{
+		displayName: 'Traits',
+		name: 'traits',
+		placeholder: 'Add Trait',
+		type: 'fixedCollection',
+		typeOptions: {
+			multipleValues: false,
+		},
+		displayOptions: {
+			show: {
+				resource: [
+					'track',
+				],
+				operation: [
+					'page',
+				],
+			},
+		},
+		default: {},
+		options: [
+			{
+				name: 'traitsUi',
+				displayName: 'Trait',
+				values: [
+					{
+						displayName: 'Email',
+						name: 'email',
+						type: 'string',
+						default: '',
+						description: 'Email address of a user',
+					},
+					{
+						displayName: 'First Name',
+						name: 'firstname',
+						type: 'string',
+						default: '',
+						description: 'First name of a user',
+					},
+					{
+						displayName: 'Last Name',
+						name: 'lastname',
+						type: 'string',
+						default: '',
+						description: 'Last name of a user',
+					},
+					{
+						displayName: 'Gender',
+						name: 'gender',
+						type: 'string',
+						default: '',
+						description: 'Gender of a user',
+					},
+					{
+						displayName: 'Phone',
+						name: 'phone',
+						type: 'string',
+						default: '',
+						description: 'Phone number of a user',
+					},
+					{
+						displayName: 'Username',
+						name: 'username',
+						type: 'string',
+						default: '',
+						description: 'User’s username',
+					},
+					{
+						displayName: 'Website',
+						name: 'website',
+						type: 'string',
+						default: '',
+						description: 'Website of a user',
+					},
+					{
+						displayName: 'Age',
+						name: 'age',
+						type: 'number',
+						default: 1,
+						description: 'Age of a user',
+					},
+					{
+						displayName: 'Avatar',
+						name: 'avatar',
+						type: 'string',
+						default: '',
+						description: 'URL to an avatar image for the user',
+					},
+					{
+						displayName: 'Birthday',
+						name: 'birthday',
+						type: 'dateTime',
+						default: '',
+						description: 'User’s birthday',
+					},
+					{
+						displayName: 'Created At',
+						name: 'createdAt',
+						type: 'dateTime',
+						default: '',
+						description: 'Date the user’s account was first created at',
+					},
+					{
+						displayName: 'Description',
+						name: 'description',
+						type: 'string',
+						typeOptions: {
+							alwaysOpenEditWindow: true,
+						},
+						default: '',
+						description: 'Description of the user',
+					},
+					{
+						displayName: 'ID',
+						name: 'id',
+						type: 'string',
+						default: '',
+						description: 'Unique ID in your database for a user',
+					},
+					{
+						displayName: 'Company',
+						name: 'company',
+						placeholder: 'Add Company',
+						type: 'fixedCollection',
+						typeOptions: {
+							multipleValues: false,
+						},
+						default: {},
+						options: [
+							{
+								name: 'companyUi',
+								displayName: 'Company',
+								values: [
+									{
+										displayName: 'ID',
+										name: 'id',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Name',
+										name: 'name',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Industry',
+										name: 'industry',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Employee Count',
+										name: 'employeeCount',
+										type: 'number',
+										default: 1,
+									},
+									{
+										displayName: 'Plan',
+										name: 'plan',
+										type: 'string',
+										default: '',
+									},
+								]
+							},
+						],
+					},
+					{
+						displayName: 'Address',
+						name: 'address',
+						placeholder: 'Add Address',
+						type: 'fixedCollection',
+						typeOptions: {
+							multipleValues: false,
+						},
+						default: {},
+						options: [
+							{
+								name: 'addressUi',
+								displayName: 'Address',
+								values: [
+									{
+										displayName: 'Street',
+										name: 'street',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'City',
+										name: 'city',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'State',
+										name: 'state',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Postal Code',
+										name: 'postalCode',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Country',
+										name: 'country',
+										type: 'string',
+										default: '',
+									},
+								]
+							},
+						],
+					},
+				]
+			},
+		],
+	},
+	{
 		displayName: 'Context',
 		name: 'context',
 		placeholder: 'Add Context',
@@ -415,7 +862,7 @@ export const trackFields: INodeProperties[] = [
 						displayName: 'Active',
 						name: 'active',
 						type: 'boolean',
-						default: false,
+						default: '',
 						description: 'Whether a user is active',
 					},
 					{
@@ -423,14 +870,14 @@ export const trackFields: INodeProperties[] = [
 						name: 'ip',
 						type: 'string',
 						default: '',
-						description: 'Current user’s IP address',
+						description: 'Current user’s IP address.',
 					},
 					{
 						displayName: 'Locale',
 						name: 'locate',
 						type: 'string',
 						default: '',
-						description: 'Locale string for the current user, for example en-US',
+						description: 'Locale string for the current user, for example en-US.',
 					},
 					{
 						displayName: 'Page',
@@ -478,7 +925,7 @@ export const trackFields: INodeProperties[] = [
 										type: 'string',
 										default: '',
 									},
-								],
+								]
 							},
 						],
 					},
@@ -526,7 +973,7 @@ export const trackFields: INodeProperties[] = [
 										type: 'string',
 										default: '',
 									},
-								],
+								]
 							},
 						],
 					},
@@ -584,7 +1031,7 @@ export const trackFields: INodeProperties[] = [
 							},
 						],
 					},
-				],
+				]
 			},
 		],
 	},
@@ -634,7 +1081,7 @@ export const trackFields: INodeProperties[] = [
 		placeholder: 'Add Properties',
 		type: 'fixedCollection',
 		typeOptions: {
-			multipleValues: true,
+			multipleValues: false,
 		},
 		displayOptions: {
 			show: {
@@ -650,22 +1097,59 @@ export const trackFields: INodeProperties[] = [
 		options: [
 			{
 				name: 'propertiesUi',
-				displayName: 'Property',
+				displayName: 'Properties',
 				values: [
 					{
-						displayName: 'Key',
-						name: 'key',
+						displayName: 'Name',
+						name: 'name',
 						type: 'string',
 						default: '',
+						description: 'Name of the page. This is reserved for future use.'
 					},
 					{
-						displayName: 'Value',
-						name: 'value',
+						displayName: 'Path',
+						name: 'path',
 						type: 'string',
 						default: '',
+						description: 'Path portion of the URL of the page. Equivalent to canonical path which defaults to location.pathname from the DOM API.'
+					},
+					{
+						displayName: 'Referrer',
+						name: 'referrer',
+						type: 'string',
+						default: '',
+						description: 'Full URL of the previous page. Equivalent to document.referrer from the DOM API.'
+					},
+					{
+						displayName: 'Search',
+						name: 'search',
+						type: 'string',
+						default: '',
+						description: 'Query string portion of the URL of the page. Equivalent to location.search from the DOM API.'
+					},
+					{
+						displayName: 'Title',
+						name: 'title',
+						type: 'string',
+						default: '',
+						description: 'Title of the page. Equivalent to document.title from the DOM API.'
+					},
+					{
+						displayName: 'URL',
+						name: 'url',
+						type: 'string',
+						default: '',
+						description: 'Full URL of the page. First we look for the canonical url. If the canonical url is not provided, we use location.href from the DOM API.'
+					},
+					{
+						displayName: 'Keywords',
+						name: 'keywords',
+						type: 'string',
+						default: '',
+						description: 'A list/array of keywords describing the content of the page. The keywords would most likely be the same as, or similar to, the keywords you would find in an html meta tag for SEO purposes.'
 					},
 				],
 			},
 		],
 	},
-];
+] as INodeProperties[];

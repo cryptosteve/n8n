@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const conversationOperations: INodeProperties[] = [
+export const conversationOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -37,9 +37,9 @@ export const conversationOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const conversationFields: INodeProperties[] = [
+export const conversationFields = [
 /* -------------------------------------------------------------------------- */
 /*                                conversation:create                         */
 /* -------------------------------------------------------------------------- */
@@ -115,7 +115,7 @@ export const conversationFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Conversation’s subject',
+		description: `Conversation’s subject`,
 	},
 	{
 		displayName: 'Type',
@@ -164,7 +164,7 @@ export const conversationFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'By default the response only contain the ID to resource. If this option gets activated, it will resolve the data automatically.',
+		description: 'By default the response only contain the ID to resource<br />. If this option gets activated it<br />will resolve the data automatically.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -188,28 +188,29 @@ export const conversationFields: INodeProperties[] = [
 				name: 'assignTo',
 				type: 'number',
 				default: 0,
-				description: 'The Help Scout user assigned to the conversation',
+				description: 'The Help Scout user assigned to the conversation.',
 			},
 			{
 				displayName: 'Auto Reply',
 				name: 'autoReply',
 				type: 'boolean',
 				default: false,
-				description: 'When autoReply is set to true, an auto reply will be sent as long as there is at least one customer thread in the conversation',
+				description: `When autoReply is set to true, an auto reply will be sent</br>
+				as long as there is at least one customer thread in the conversation.`,
 			},
 			{
 				displayName: 'Closed At',
 				name: 'closedAt',
 				type: 'dateTime',
 				default: '',
-				description: 'When the conversation was closed, only applicable for imported conversations',
+				description: `When the conversation was closed, only applicable for imported conversations`,
 			},
 			{
 				displayName: 'Created At',
 				name: 'createdAt',
 				type: 'dateTime',
 				default: '',
-				description: 'When this conversation was created - ISO 8601 date time',
+				description: `When this conversation was created - ISO 8601 date time`,
 			},
 			{
 				displayName: 'Customer Email',
@@ -228,7 +229,7 @@ export const conversationFields: INodeProperties[] = [
 				name: 'imported',
 				type: 'boolean',
 				default: false,
-				description: 'When imported is set to true, no outgoing emails or notifications will be generated',
+				description: `When imported is set to true, no outgoing emails or notifications will be generated.`,
 			},
 			{
 				displayName: 'Tags',
@@ -245,9 +246,9 @@ export const conversationFields: INodeProperties[] = [
 				name: 'user',
 				type: 'number',
 				default: 0,
-				description: 'ID of the user who is adding the conversation and threads',
+				description: 'ID of the user who is adding the conversation and threads.',
 			},
-		],
+		]
 	},
 	{
 		displayName: 'Threads',
@@ -280,23 +281,23 @@ export const conversationFields: INodeProperties[] = [
 						options: [
 							{
 								name: 'Chat',
-								value: 'chat',
+								value: 'chat'
 							},
 							{
 								name: 'Customer',
-								value: 'customer',
+								value: 'customer'
 							},
 							{
 								name: 'Note',
-								value: 'note',
+								value: 'note'
 							},
 							{
 								name: 'Phone',
-								value: 'phone',
+								value: 'phone'
 							},
 							{
 								name: 'Reply',
-								value: 'reply',
+								value: 'reply'
 							},
 						],
 						default: '',
@@ -306,10 +307,10 @@ export const conversationFields: INodeProperties[] = [
 						name: 'text',
 						type: 'string',
 						typeOptions: {
-							alwaysOpenEditWindow: true,
+							alwaysOpenEditWindow: true
 						},
 						default: '',
-						description: 'The message text',
+						description: 'The message text.'
 					},
 					{
 						displayName: 'Bcc',
@@ -317,7 +318,7 @@ export const conversationFields: INodeProperties[] = [
 						displayOptions: {
 							show: {
 								type: [
-									'customer',
+									'customer'
 								],
 							},
 						},
@@ -327,7 +328,7 @@ export const conversationFields: INodeProperties[] = [
 							multipleValueButtonText: 'Add Email',
 						},
 						default: [],
-						description: 'Email addresses',
+						description: 'Email addresses.'
 					},
 					{
 						displayName: 'Cc',
@@ -335,7 +336,7 @@ export const conversationFields: INodeProperties[] = [
 						displayOptions: {
 							show: {
 								type: [
-									'customer',
+									'customer'
 								],
 							},
 						},
@@ -345,7 +346,7 @@ export const conversationFields: INodeProperties[] = [
 							multipleValueButtonText: 'Add Email',
 						},
 						default: [],
-						description: 'Email addresses',
+						description: 'Email addresses.'
 					},
 					{
 						displayName: 'Draft',
@@ -353,7 +354,7 @@ export const conversationFields: INodeProperties[] = [
 						displayOptions: {
 							show: {
 								type: [
-									'reply',
+									'reply'
 								],
 							},
 						},
@@ -384,6 +385,7 @@ export const conversationFields: INodeProperties[] = [
 				],
 			},
 		},
+		description: 'conversation ID',
 	},
 /* -------------------------------------------------------------------------- */
 /*                                conversation:delete                         */
@@ -404,6 +406,7 @@ export const conversationFields: INodeProperties[] = [
 				],
 			},
 		},
+		description: 'conversation ID',
 	},
 /* -------------------------------------------------------------------------- */
 /*                                conversation:getAll                         */
@@ -423,7 +426,7 @@ export const conversationFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -446,7 +449,7 @@ export const conversationFields: INodeProperties[] = [
 			minValue: 1,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -470,7 +473,7 @@ export const conversationFields: INodeProperties[] = [
 				name: 'assignTo',
 				type: 'number',
 				default: 0,
-				description: 'Filters conversations by assignee ID',
+				description: 'Filters conversations by assignee id',
 			},
 			{
 				displayName: 'Embed',
@@ -490,7 +493,7 @@ export const conversationFields: INodeProperties[] = [
 				name: 'folder',
 				type: 'string',
 				default: '',
-				description: 'Filters conversations from a specific folder ID',
+				description: 'Filters conversations from a specific folder id',
 			},
 			{
 				displayName: 'Mailbox ID',
@@ -524,7 +527,7 @@ export const conversationFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Advanced search <a href="https://developer.helpscout.com/mailbox-api/endpoints/conversations/list/#query">Examples</a>',
+				description: 'Advanced search <a href="https://developer.helpscout.com/mailbox-api/endpoints/conversations/list/#query">Examples</a>'
 			},
 			{
 				displayName: 'Sort Field',
@@ -632,4 +635,4 @@ export const conversationFields: INodeProperties[] = [
 			},
 		],
 	},
-];
+] as INodeProperties[];

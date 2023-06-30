@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const productOperations: INodeProperties[] = [
+export const productOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -42,9 +42,9 @@ export const productOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const productFields: INodeProperties[] = [
+export const productFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                product:create                              */
@@ -62,10 +62,10 @@ export const productFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-				],
+				]
 			},
 		},
-		description: 'Product name',
+		description: 'Product name.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -135,6 +135,7 @@ export const productFields: INodeProperties[] = [
 					},
 				],
 				default: 'visible',
+				description: 'Catalog visibility.',
 			},
 			{
 				displayName: 'Categories',
@@ -151,21 +152,21 @@ export const productFields: INodeProperties[] = [
 				name: 'crossSellIds',
 				type: 'string',
 				default: '',
-				description: 'List of cross-sell products IDs. Multiple can be added separated by ,.',
+				description: 'List of cross-sell products IDs. Multiple can be added separated by ,',
 			},
 			{
 				displayName: 'Date On Sale From',
 				name: 'dateOnSaleFrom',
 				type: 'dateTime',
 				default: '',
-				description: 'Start date of sale price, in the site\'s timezone',
+				description: `Start date of sale price, in the site's timezone.`,
 			},
 			{
 				displayName: 'Date On Sale To',
 				name: 'dateOnSaleTo',
 				type: 'dateTime',
 				default: '',
-				description: 'Ennd date of sale price, in the site\'s timezone',
+				description: `Ennd date of sale price, in the site's timezone.`,
 			},
 			{
 				displayName: 'Description',
@@ -175,14 +176,14 @@ export const productFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Product description',
+				description: 'Product description.',
 			},
 			{
 				displayName: 'Downloadable',
 				name: 'downloadable',
 				type: 'boolean',
 				default: false,
-				description: 'if the product is downloadable',
+				description: 'if the product is downloadable.',
 			},
 			{
 				displayName: 'External URL',
@@ -210,77 +211,77 @@ export const productFields: INodeProperties[] = [
 				name: 'menuOrder',
 				type: 'number',
 				default: 1,
-				description: 'Menu order, used to custom sort products',
+				description: 'Menu order, used to custom sort products.',
 			},
 			{
 				displayName: 'Parent ID',
 				name: 'parentId',
 				type: 'string',
 				default: '',
-				description: 'Product parent ID',
+				description: 'Product parent ID.',
 			},
 			{
 				displayName: 'Purchase Note',
 				name: 'purchaseNote',
 				type: 'string',
 				default: '',
-				description: 'Optional note to send the customer after purchase',
+				description: 'Optional note to send the customer after purchase.',
 			},
 			{
 				displayName: 'Regular Price',
 				name: 'regularPrice',
 				type: 'string',
 				default: '',
-				description: 'Product regular price',
+				description: 'Product regular price.',
 			},
 			{
 				displayName: 'Reviews Allowed',
 				name: 'reviewsAllowed',
 				type: 'boolean',
 				default: true,
-				description: 'Allow reviews',
+				description: 'Allow reviews.',
 			},
 			{
 				displayName: 'Sale Price',
 				name: 'salePrice',
 				type: 'string',
 				default: '',
-				description: 'Product sale price',
+				description: 'Product sale price.',
 			},
 			{
 				displayName: 'Shipping Class',
 				name: 'shippingClass',
 				type: 'string',
 				default: '',
-				description: 'Shipping class slug',
+				description: 'Shipping class slug.',
 			},
 			{
 				displayName: 'Short Description',
 				name: 'shortDescription',
 				type: 'string',
 				default: '',
-				description: 'Product short description',
+				description: 'Product short description.',
 			},
 			{
 				displayName: 'SKU',
 				name: 'sku',
 				type: 'string',
 				default: '',
-				description: 'Unique identifier',
+				description: 'Unique identifier.',
 			},
 			{
 				displayName: 'Slug',
 				name: 'slug',
 				type: 'string',
 				default: '',
-				description: 'Product slug',
+				description: 'Product slug.',
 			},
 			{
 				displayName: 'Sold Individually',
 				name: 'soldIndividually',
 				type: 'boolean',
 				default: false,
-				description: 'Allow one item to be bought in a single order',
+				description: 'Allow one item to be bought in a single order.',
 			},
 			{
 				displayName: 'Status',
@@ -305,13 +306,14 @@ export const productFields: INodeProperties[] = [
 					},
 				],
 				default: 'publish',
-				description: 'A named status for the product',
+				description: 'A named status for the product.',
 			},
 			{
 				displayName: 'Stock Quantity',
 				name: 'stockQuantity',
 				type: 'number',
 				default: 1,
+				description: 'Stock quantity.',
 			},
 			{
 				displayName: 'Stock Status',
@@ -349,6 +351,7 @@ export const productFields: INodeProperties[] = [
 				name: 'taxClass',
 				type: 'string',
 				default: '',
+				description: 'Tax class.',
 			},
 			{
 				displayName: 'Tax Status',
@@ -369,6 +372,7 @@ export const productFields: INodeProperties[] = [
 					},
 				],
 				default: 'taxable',
+				description: 'Tax status.',
 			},
 			{
 				displayName: 'Type',
@@ -400,30 +404,30 @@ export const productFields: INodeProperties[] = [
 				name: 'upsellIds',
 				type: 'string',
 				default: '',
-				description: 'List of up-sell products IDs. Multiple can be added separated by ,.',
+				description: 'List of up-sell products IDs. Multiple can be added separated by ,',
 			},
 			{
 				displayName: 'Virtual',
 				name: 'virtual',
 				type: 'boolean',
 				default: false,
-				description: 'If the product is virtual',
+				description: 'If the product is virtual.',
 			},
 			{
 				displayName: 'Weight',
 				name: 'weight',
 				type: 'string',
 				default: '',
-				description: 'Product weight',
+				description: 'Product weight.',
 			},
-		],
+		]
 	},
 	{
 		displayName: 'Dimensions',
 		name: 'dimensionsUi',
 		placeholder: 'Add Dimension',
 		type: 'fixedCollection',
-		default: {},
+		default: '',
 		typeOptions: {
 			multipleValues: false,
 		},
@@ -434,7 +438,7 @@ export const productFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-				],
+				]
 			},
 		},
 		description: 'Product dimensions',
@@ -448,21 +452,21 @@ export const productFields: INodeProperties[] = [
 						name: 'height',
 						type: 'string',
 						default: '',
-						description: 'Product height',
+						description: 'Product height.',
 					},
 					{
 						displayName: 'Length',
 						name: 'length',
 						type: 'string',
 						default: '',
-						description: 'Product length',
+						description: 'Product length.',
 					},
 					{
 						displayName: 'Width',
 						name: 'width',
 						type: 'string',
 						default: '',
-						description: 'Product width',
+						description: 'Product width.',
 					},
 				],
 			},
@@ -473,7 +477,7 @@ export const productFields: INodeProperties[] = [
 		name: 'imagesUi',
 		placeholder: 'Add Image',
 		type: 'fixedCollection',
-		default: {},
+		default: '',
 		typeOptions: {
 			multipleValues: true,
 		},
@@ -484,7 +488,7 @@ export const productFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-				],
+				]
 			},
 		},
 		description: 'Product Image',
@@ -498,21 +502,21 @@ export const productFields: INodeProperties[] = [
 						name: 'alt',
 						type: 'string',
 						default: '',
-						description: 'Image alternative text',
+						description: 'Image alternative text.',
 					},
 					{
 						displayName: 'Src',
 						name: 'src',
 						type: 'string',
 						default: '',
-						description: 'Image URL',
+						description: 'Image URL.',
 					},
 					{
 						displayName: 'Name',
 						name: 'name',
 						type: 'string',
 						default: '',
-						description: 'Image name',
+						description: 'Image name.',
 					},
 				],
 			},
@@ -523,7 +527,7 @@ export const productFields: INodeProperties[] = [
 		name: 'metadataUi',
 		placeholder: 'Add Metadata',
 		type: 'fixedCollection',
-		default: {},
+		default: '',
 		typeOptions: {
 			multipleValues: true,
 		},
@@ -534,7 +538,7 @@ export const productFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-				],
+				]
 			},
 		},
 		description: 'Meta data',
@@ -548,14 +552,14 @@ export const productFields: INodeProperties[] = [
 						name: 'key',
 						type: 'string',
 						default: '',
-						description: 'Name of the metadata key to add',
+						description: 'Name of the metadata key to add.',
 					},
 					{
 						displayName: 'Value',
 						name: 'value',
 						type: 'string',
 						default: '',
-						description: 'Value to set for the metadata key',
+						description: 'Value to set for the metadata key.',
 					},
 				],
 			},
@@ -579,6 +583,7 @@ export const productFields: INodeProperties[] = [
 			},
 		},
 		default: '',
+		description: 'Product ID.',
 	},
 	{
 		displayName: 'Update Fields',
@@ -648,6 +653,7 @@ export const productFields: INodeProperties[] = [
 					},
 				],
 				default: 'visible',
+				description: 'Catalog visibility.',
 			},
 			{
 				displayName: 'Categories',
@@ -664,21 +670,21 @@ export const productFields: INodeProperties[] = [
 				name: 'crossSellIds',
 				type: 'string',
 				default: '',
-				description: 'List of cross-sell products IDs. Multiple can be added separated by ,.',
+				description: 'List of cross-sell products IDs. Multiple can be added separated by ,',
 			},
 			{
 				displayName: 'Date On Sale From',
 				name: 'dateOnSaleFrom',
 				type: 'dateTime',
 				default: '',
-				description: 'Start date of sale price, in the site\'s timezone',
+				description: `Start date of sale price, in the site's timezone.`,
 			},
 			{
 				displayName: 'Date On Sale To',
 				name: 'dateOnSaleTo',
 				type: 'dateTime',
 				default: '',
-				description: 'Ennd date of sale price, in the site\'s timezone',
+				description: `Ennd date of sale price, in the site's timezone.`,
 			},
 			{
 				displayName: 'Description',
@@ -688,14 +694,14 @@ export const productFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Product description',
+				description: 'Product description.',
 			},
 			{
 				displayName: 'Downloadable',
 				name: 'downloadable',
 				type: 'boolean',
 				default: false,
-				description: 'if the product is downloadable',
+				description: 'if the product is downloadable.',
 			},
 			{
 				displayName: 'External URL',
@@ -723,84 +729,84 @@ export const productFields: INodeProperties[] = [
 				name: 'menuOrder',
 				type: 'number',
 				default: 1,
-				description: 'Menu order, used to custom sort products',
+				description: 'Menu order, used to custom sort products.',
 			},
 			{
 				displayName: 'Name',
 				name: 'name',
 				type: 'string',
 				default: '',
-				description: 'Product name',
+				description: 'Product name.',
 			},
 			{
 				displayName: 'Parent ID',
 				name: 'parentId',
 				type: 'string',
 				default: '',
-				description: 'Product parent ID',
+				description: 'Product parent ID.',
 			},
 			{
 				displayName: 'Purchase Note',
 				name: 'purchaseNote',
 				type: 'string',
 				default: '',
-				description: 'Optional note to send the customer after purchase',
+				description: 'Optional note to send the customer after purchase.',
 			},
 			{
 				displayName: 'Regular Price',
 				name: 'regularPrice',
 				type: 'string',
 				default: '',
-				description: 'Product regular price',
+				description: 'Product regular price.',
 			},
 			{
 				displayName: 'Reviews Allowed',
 				name: 'reviewsAllowed',
 				type: 'boolean',
 				default: true,
-				description: 'Allow reviews',
+				description: 'Allow reviews.',
 			},
 			{
 				displayName: 'Sale Price',
 				name: 'salePrice',
 				type: 'string',
 				default: '',
-				description: 'Product sale price',
+				description: 'Product sale price.',
 			},
 			{
 				displayName: 'Shipping Class',
 				name: 'shippingClass',
 				type: 'string',
 				default: '',
-				description: 'Shipping class slug',
+				description: 'Shipping class slug.',
 			},
 			{
 				displayName: 'Short Description',
 				name: 'shortDescription',
 				type: 'string',
 				default: '',
-				description: 'Product short description',
+				description: 'Product short description.',
 			},
 			{
 				displayName: 'SKU',
 				name: 'sku',
 				type: 'string',
 				default: '',
-				description: 'Unique identifier',
+				description: 'Unique identifier.',
 			},
 			{
 				displayName: 'Slug',
 				name: 'slug',
 				type: 'string',
 				default: '',
-				description: 'Product slug',
+				description: 'Product slug.',
 			},
 			{
 				displayName: 'Sold Individually',
 				name: 'soldIndividually',
 				type: 'boolean',
 				default: false,
-				description: 'Allow one item to be bought in a single order',
+				description: 'Allow one item to be bought in a single order.',
 			},
 			{
 				displayName: 'Status',
@@ -825,13 +831,14 @@ export const productFields: INodeProperties[] = [
 					},
 				],
 				default: 'publish',
-				description: 'A named status for the product',
+				description: 'A named status for the product.',
 			},
 			{
 				displayName: 'Stock Quantity',
 				name: 'stockQuantity',
 				type: 'number',
 				default: 1,
+				description: 'Stock quantity.',
 			},
 			{
 				displayName: 'Stock Status',
@@ -869,6 +876,7 @@ export const productFields: INodeProperties[] = [
 				name: 'taxClass',
 				type: 'string',
 				default: '',
+				description: 'Tax class.',
 			},
 			{
 				displayName: 'Tax Status',
@@ -889,6 +897,7 @@ export const productFields: INodeProperties[] = [
 					},
 				],
 				default: 'taxable',
+				description: 'Tax status.',
 			},
 			{
 				displayName: 'Type',
@@ -920,30 +929,30 @@ export const productFields: INodeProperties[] = [
 				name: 'upsellIds',
 				type: 'string',
 				default: '',
-				description: 'List of up-sell products IDs. Multiple can be added separated by ,.',
+				description: 'List of up-sell products IDs. Multiple can be added separated by ,',
 			},
 			{
 				displayName: 'Virtual',
 				name: 'virtual',
 				type: 'boolean',
 				default: false,
-				description: 'If the product is virtual',
+				description: 'If the product is virtual.',
 			},
 			{
 				displayName: 'Weight',
 				name: 'weight',
 				type: 'string',
 				default: '',
-				description: 'Product weight',
+				description: 'Product weight.',
 			},
-		],
+		]
 	},
 	{
 		displayName: 'Dimensions',
 		name: 'dimensionsUi',
 		placeholder: 'Add Dimension',
 		type: 'fixedCollection',
-		default: {},
+		default: '',
 		typeOptions: {
 			multipleValues: false,
 		},
@@ -954,7 +963,7 @@ export const productFields: INodeProperties[] = [
 				],
 				operation: [
 					'update',
-				],
+				]
 			},
 		},
 		description: 'Product dimensions',
@@ -968,21 +977,21 @@ export const productFields: INodeProperties[] = [
 						name: 'height',
 						type: 'string',
 						default: '',
-						description: 'Product height',
+						description: 'Product height.',
 					},
 					{
 						displayName: 'Length',
 						name: 'length',
 						type: 'string',
 						default: '',
-						description: 'Product length',
+						description: 'Product length.',
 					},
 					{
 						displayName: 'Width',
 						name: 'width',
 						type: 'string',
 						default: '',
-						description: 'Product width',
+						description: 'Product width.',
 					},
 				],
 			},
@@ -993,7 +1002,7 @@ export const productFields: INodeProperties[] = [
 		name: 'imagesUi',
 		placeholder: 'Add Image',
 		type: 'fixedCollection',
-		default: {},
+		default: '',
 		typeOptions: {
 			multipleValues: true,
 		},
@@ -1004,7 +1013,7 @@ export const productFields: INodeProperties[] = [
 				],
 				operation: [
 					'update',
-				],
+				]
 			},
 		},
 		description: 'Product Image',
@@ -1018,21 +1027,21 @@ export const productFields: INodeProperties[] = [
 						name: 'alt',
 						type: 'string',
 						default: '',
-						description: 'Image alternative text',
+						description: 'Image alternative text.',
 					},
 					{
 						displayName: 'Src',
 						name: 'src',
 						type: 'string',
 						default: '',
-						description: 'Image URL',
+						description: 'Image URL.',
 					},
 					{
 						displayName: 'Name',
 						name: 'name',
 						type: 'string',
 						default: '',
-						description: 'Image name',
+						description: 'Image name.',
 					},
 				],
 			},
@@ -1043,7 +1052,7 @@ export const productFields: INodeProperties[] = [
 		name: 'metadataUi',
 		placeholder: 'Add Metadata',
 		type: 'fixedCollection',
-		default: {},
+		default: '',
 		typeOptions: {
 			multipleValues: true,
 		},
@@ -1054,7 +1063,7 @@ export const productFields: INodeProperties[] = [
 				],
 				operation: [
 					'update',
-				],
+				]
 			},
 		},
 		description: 'Meta data',
@@ -1068,14 +1077,14 @@ export const productFields: INodeProperties[] = [
 						name: 'key',
 						type: 'string',
 						default: '',
-						description: 'Name of the metadata key to add',
+						description: 'Name of the metadata key to add.',
 					},
 					{
 						displayName: 'Value',
 						name: 'value',
 						type: 'string',
 						default: '',
-						description: 'Value to set for the metadata key',
+						description: 'Value to set for the metadata key.',
 					},
 				],
 			},
@@ -1099,6 +1108,7 @@ export const productFields: INodeProperties[] = [
 			},
 		},
 		default: '',
+		description: 'Product ID.',
 	},
 /* -------------------------------------------------------------------------- */
 /*                                   product:getAll                           */
@@ -1118,7 +1128,7 @@ export const productFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -1142,7 +1152,7 @@ export const productFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -1166,7 +1176,7 @@ export const productFields: INodeProperties[] = [
 				name: 'after',
 				type: 'dateTime',
 				default: '',
-				description: 'Limit response to resources published after a given ISO8601 compliant date',
+				description: 'Limit response to resources published after a given ISO8601 compliant date.',
 			},
 			{
 				displayName: 'Before',
@@ -1183,7 +1193,7 @@ export const productFields: INodeProperties[] = [
 				typeOptions: {
 					loadOptionsMethod: 'getCategories',
 				},
-				description: 'Limit result set to products assigned a specific category ID',
+				description: 'Limit result set to products assigned a specific category ID.',
 			},
 			{
 				displayName: 'Context',
@@ -1204,28 +1214,28 @@ export const productFields: INodeProperties[] = [
 					},
 				],
 				default: 'view',
-				description: 'Scope under which the request is made; determines fields present in response',
+				description: 'Scope under which the request is made; determines fields present in response.',
 			},
 			{
 				displayName: 'Featured',
 				name: 'featured',
 				type: 'boolean',
 				default: false,
-				description: 'Limit result set to featured products',
+				description: 'Limit result set to featured products.',
 			},
 			{
 				displayName: 'Max Price',
 				name: 'maxPrice',
 				type: 'string',
 				default: '',
-				description: 'Limit result set to products based on a maximun price',
+				description: 'Limit result set to products based on a maximun price.',
 			},
 			{
 				displayName: 'Min Price',
 				name: 'minPrice',
 				type: 'string',
 				default: '',
-				description: 'Limit result set to products based on a minimum price',
+				description: 'Limit result set to products based on a minimum price.',
 			},
 			{
 				displayName: 'Order',
@@ -1242,7 +1252,7 @@ export const productFields: INodeProperties[] = [
 					},
 				],
 				default: 'desc',
-				description: 'Order sort attribute ascending or descending',
+				description: 'Order sort attribute ascending or descending.',
 			},
 			{
 				displayName: 'Order By',
@@ -1271,28 +1281,28 @@ export const productFields: INodeProperties[] = [
 					},
 				],
 				default: 'id',
-				description: 'Sort collection by object attribute',
+				description: 'Sort collection by object attribute.',
 			},
 			{
 				displayName: 'Search',
 				name: 'search',
 				type: 'string',
 				default: '',
-				description: 'Limit results to those matching a string',
+				description: 'Limit results to those matching a string.',
 			},
 			{
 				displayName: 'SKU',
 				name: 'sku',
 				type: 'string',
 				default: '',
-				description: 'Limit result set to products with a specific SKU',
+				description: 'Limit result set to products with a specific SKU.',
 			},
 			{
 				displayName: 'Slug',
 				name: 'slug',
 				type: 'string',
 				default: '',
-				description: 'Limit result set to products with a specific slug',
+				description: 'Limit result set to products with a specific slug.',
 			},
 			{
 				displayName: 'Status',
@@ -1321,7 +1331,7 @@ export const productFields: INodeProperties[] = [
 					},
 				],
 				default: 'any',
-				description: 'Limit result set to products assigned a specific status',
+				description: 'Limit result set to products assigned a specific status.',
 			},
 			{
 				displayName: 'Stock Status',
@@ -1352,7 +1362,7 @@ export const productFields: INodeProperties[] = [
 				typeOptions: {
 					loadOptionsMethod: 'getTags',
 				},
-				description: 'Limit result set to products assigned a specific tag ID',
+				description: 'Limit result set to products assigned a specific tag ID.',
 			},
 			{
 				displayName: 'Tax Class',
@@ -1400,7 +1410,7 @@ export const productFields: INodeProperties[] = [
 				default: 'simple',
 				description: 'Product type',
 			},
-		],
+		]
 	},
 /* -------------------------------------------------------------------------- */
 /*                                   product:delete                           */
@@ -1420,5 +1430,6 @@ export const productFields: INodeProperties[] = [
 			},
 		},
 		default: '',
+		description: 'Product ID.',
 	},
-];
+] as INodeProperties[];

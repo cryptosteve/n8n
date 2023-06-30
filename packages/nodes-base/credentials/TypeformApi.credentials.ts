@@ -1,18 +1,17 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 
 export class TypeformApi implements ICredentialType {
 	name = 'typeformApi';
 	displayName = 'Typeform API';
-	documentationUrl = 'typeform';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Access Token',
 			name: 'accessToken',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 	];

@@ -1,6 +1,6 @@
-import { INodeProperties } from 'n8n-workflow';
+import { INodeProperties } from "n8n-workflow";
 
-export const clientOperations: INodeProperties[] = [
+export const clientOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -37,9 +37,9 @@ export const clientOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const clientFields: INodeProperties[] = [
+export const clientFields = [
 /* -------------------------------------------------------------------------- */
 /*                                 client:create                              */
 /* -------------------------------------------------------------------------- */
@@ -99,7 +99,7 @@ export const clientFields: INodeProperties[] = [
 				type: 'string',
 				default: '',
 			},
-		],
+		]
 	},
 	{
 		displayName: 'Billing Address',
@@ -294,7 +294,6 @@ export const clientFields: INodeProperties[] = [
 		displayName: 'Client ID',
 		name: 'clientId',
 		type: 'string',
-		default: '',
 		required: true,
 		displayOptions: {
 			show: {
@@ -314,7 +313,6 @@ export const clientFields: INodeProperties[] = [
 		displayName: 'Client ID',
 		name: 'clientId',
 		type: 'string',
-		default: '',
 		required: true,
 		displayOptions: {
 			show: {
@@ -376,7 +374,7 @@ export const clientFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -400,7 +398,7 @@ export const clientFields: INodeProperties[] = [
 			maxValue: 60,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -433,4 +431,4 @@ export const clientFields: INodeProperties[] = [
 			},
 		],
 	},
-];
+] as INodeProperties[];

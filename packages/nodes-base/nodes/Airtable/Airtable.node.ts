@@ -1,31 +1,31 @@
 import {
 	IExecuteFunctions,
 } from 'n8n-core';
-
 import {
 	IDataObject,
+	ILoadOptionsFunctions,
+	INodePropertyOptions,
+	INodeTypeDescription,
 	INodeExecutionData,
 	INodeType,
-	INodeTypeDescription,
-	NodeOperationError,
 } from 'n8n-workflow';
 
 import {
 	apiRequest,
 	apiRequestAllItems,
-	downloadRecordAttachments,
 } from './GenericFunctions';
 
 export class Airtable implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Airtable',
 		name: 'airtable',
-		icon: 'file:airtable.svg',
+		icon: 'file:airtable.png',
 		group: ['input'],
 		version: 1,
 		description: 'Read, update, write and delete data from Airtable',
 		defaults: {
 			name: 'Airtable',
+			color: '#445599',
 		},
 		inputs: ['main'],
 		outputs: ['main'],
@@ -33,7 +33,7 @@ export class Airtable implements INodeType {
 			{
 				name: 'airtableApi',
 				required: true,
-			},
+			}
 		],
 		properties: [
 			{
@@ -44,27 +44,27 @@ export class Airtable implements INodeType {
 					{
 						name: 'Append',
 						value: 'append',
-						description: 'Append the data to a table',
+						description: 'Appends the data to a table',
 					},
 					{
 						name: 'Delete',
 						value: 'delete',
-						description: 'Delete data from a table',
+						description: 'Deletes data from a table'
 					},
 					{
 						name: 'List',
 						value: 'list',
-						description: 'List data from a table',
+						description: 'List data from a table'
 					},
 					{
 						name: 'Read',
 						value: 'read',
-						description: 'Read data from a table',
+						description: 'Reads data from a table'
 					},
 					{
 						name: 'Update',
 						value: 'update',
-						description: 'Update data in a table',
+						description: 'Updates data in a table'
 					},
 				],
 				default: 'read',
@@ -75,21 +75,21 @@ export class Airtable implements INodeType {
 			//         All
 			// ----------------------------------
 			{
-				displayName: 'Base ID',
+				displayName: 'Application ID',
 				name: 'application',
 				type: 'string',
 				default: '',
 				required: true,
-				description: 'The ID of the base to access',
+				description: 'The ID of the application to access.',
 			},
 			{
-				displayName: 'Table ID',
+				displayName: 'Table',
 				name: 'table',
 				type: 'string',
 				default: '',
 				placeholder: 'Stories',
 				required: true,
-				description: 'The ID of the table to access',
+				description: 'The name of table to access.',
 			},
 
 			// ----------------------------------
@@ -107,7 +107,7 @@ export class Airtable implements INodeType {
 					},
 				},
 				default: true,
-				description: 'If all fields should be sent to Airtable or only specific ones',
+				description: 'If all fields should be send to Airtable or only specific ones.',
 			},
 			{
 				displayName: 'Fields',
@@ -130,14 +130,14 @@ export class Airtable implements INodeType {
 				default: [],
 				placeholder: 'Name',
 				required: true,
-				description: 'The name of fields for which data should be sent to Airtable',
+				description: 'The name of fields of which the data should be send to Airtable.',
 			},
 
 			// ----------------------------------
 			//         delete
 			// ----------------------------------
 			{
-				displayName: 'ID',
+				displayName: 'Id',
 				name: 'id',
 				type: 'string',
 				displayOptions: {
@@ -149,7 +149,7 @@ export class Airtable implements INodeType {
 				},
 				default: '',
 				required: true,
-				description: 'ID of the record to delete',
+				description: 'Id of the record to delete.',
 			},
 
 			// ----------------------------------
@@ -167,7 +167,7 @@ export class Airtable implements INodeType {
 					},
 				},
 				default: true,
-				description: 'Whether to return all results or only up to a given limit',
+				description: 'If all results should be returned or only up to a given limit.',
 			},
 			{
 				displayName: 'Limit',
@@ -188,40 +188,9 @@ export class Airtable implements INodeType {
 					maxValue: 100,
 				},
 				default: 100,
-				description: 'Max number of results to return',
+				description: 'How many results to return.',
 			},
-			{
-				displayName: 'Download Attachments',
-				name: 'downloadAttachments',
-				type: 'boolean',
-				displayOptions: {
-					show: {
-						operation: [
-							'list',
-						],
-					},
-				},
-				default: false,
-				description: 'When set to true the attachment fields define in \'Download Fields\' will be downloaded',
-			},
-			{
-				displayName: 'Download Fields',
-				name: 'downloadFieldNames',
-				type: 'string',
-				required: true,
-				displayOptions: {
-					show: {
-						operation: [
-							'list',
-						],
-						downloadAttachments: [
-							true,
-						],
-					},
-				},
-				default: '',
-				description: 'Name of the fields of type \'attachment\' that should be downloaded. Multiple ones can be defined separated by comma. Case sensitive and cannot include spaces after a comma.',
-			},
+
 			{
 				displayName: 'Additional Options',
 				name: 'additionalOptions',
@@ -229,7 +198,7 @@ export class Airtable implements INodeType {
 				displayOptions: {
 					show: {
 						operation: [
-							'list',
+							'list'
 						],
 					},
 				},
@@ -247,7 +216,7 @@ export class Airtable implements INodeType {
 						},
 						default: [],
 						placeholder: 'Name',
-						description: 'Only data for fields whose names are in this list will be included in the records',
+						description: 'Only data for fields whose names are in this list will be included in the records.',
 					},
 					{
 						displayName: 'Filter By Formula',
@@ -255,13 +224,13 @@ export class Airtable implements INodeType {
 						type: 'string',
 						default: '',
 						placeholder: 'NOT({Name} = \'\')',
-						description: 'A formula used to filter records. The formula will be evaluated for each record, and if the result is not 0, false, "", NaN, [], or #Error! the record will be included in the response.',
+						description: 'A formula used to filter records. The formula will be evaluated for each<br />record, and if the result is not 0, false, "", NaN, [], or #Error!<br />the record will be included in the response.',
 					},
 					{
 						displayName: 'Sort',
 						name: 'sort',
 						placeholder: 'Add Sort Rule',
-						description: 'Defines how the returned records should be ordered',
+						description: 'Defines how the returned records should be ordered.',
 						type: 'fixedCollection',
 						typeOptions: {
 							multipleValues: true,
@@ -277,7 +246,7 @@ export class Airtable implements INodeType {
 										name: 'field',
 										type: 'string',
 										default: '',
-										description: 'Name of the field to sort on',
+										description: 'Name of the field to sort on.',
 									},
 									{
 										displayName: 'Direction',
@@ -292,13 +261,13 @@ export class Airtable implements INodeType {
 											{
 												name: 'DESC',
 												value: 'desc',
-												description: 'Sort in descending order (large -> small)',
+												description: 'Sort in descending order (large -> small)'
 											},
 										],
 										default: 'asc',
-										description: 'The sort direction',
+										description: 'The sort direction.',
 									},
-								],
+								]
 							},
 						],
 					},
@@ -308,7 +277,7 @@ export class Airtable implements INodeType {
 						type: 'string',
 						default: '',
 						placeholder: 'All Stories',
-						description: 'The name or ID of a view in the Stories table. If set, only the records in that view will be returned. The records will be sorted according to the order of the view.',
+						description: 'The name or ID of a view in the Stories table. If set,<br />only the records in that view will be returned. The records<br />will be sorted according to the order of the view.',
 					},
 				],
 			},
@@ -317,7 +286,7 @@ export class Airtable implements INodeType {
 			//         read
 			// ----------------------------------
 			{
-				displayName: 'ID',
+				displayName: 'Id',
 				name: 'id',
 				type: 'string',
 				displayOptions: {
@@ -329,14 +298,14 @@ export class Airtable implements INodeType {
 				},
 				default: '',
 				required: true,
-				description: 'ID of the record to return',
+				description: 'Id of the record to return.',
 			},
 
 			// ----------------------------------
 			//         update
 			// ----------------------------------
 			{
-				displayName: 'ID',
+				displayName: 'Id',
 				name: 'id',
 				type: 'string',
 				displayOptions: {
@@ -348,7 +317,7 @@ export class Airtable implements INodeType {
 				},
 				default: '',
 				required: true,
-				description: 'ID of the record to update',
+				description: 'Id of the record to update.',
 			},
 			{
 				displayName: 'Update All Fields',
@@ -362,7 +331,7 @@ export class Airtable implements INodeType {
 					},
 				},
 				default: true,
-				description: 'If all fields should be sent to Airtable or only specific ones',
+				description: 'If all fields should be send to Airtable or only specific ones.',
 			},
 			{
 				displayName: 'Fields',
@@ -385,72 +354,7 @@ export class Airtable implements INodeType {
 				default: [],
 				placeholder: 'Name',
 				required: true,
-				description: 'The name of fields for which data should be sent to Airtable',
-			},
-
-			// ----------------------------------
-			//         append + delete + update
-			// ----------------------------------
-			{
-				displayName: 'Options',
-				name: 'options',
-				type: 'collection',
-				placeholder: 'Add Option',
-				displayOptions: {
-					show: {
-						operation: [
-							'append',
-							'delete',
-							'update',
-						],
-					},
-				},
-				default: {},
-				options: [
-					{
-						displayName: 'Bulk Size',
-						name: 'bulkSize',
-						type: 'number',
-						typeOptions: {
-							minValue: 1,
-							maxValue: 10,
-						},
-						default: 10,
-						description: 'Number of records to process at once',
-					},
-					{
-						displayName: 'Ignore Fields',
-						name: 'ignoreFields',
-						type: 'string',
-						displayOptions: {
-							show: {
-								'/operation': [
-									'update',
-								],
-								'/updateAllFields': [
-									true,
-								],
-							},
-						},
-						default: '',
-						description: 'Comma-separated list of fields to ignore',
-					},
-					{
-						displayName: 'Typecast',
-						name: 'typecast',
-						type: 'boolean',
-						displayOptions: {
-							show: {
-								'/operation': [
-									'append',
-									'update',
-								],
-							},
-						},
-						default: false,
-						description: 'If the Airtable API should attempt mapping of string values for linked records & select options',
-					},
-				],
+				description: 'The name of fields of which the data should be send to Airtable.',
 			},
 		],
 	};
@@ -463,7 +367,7 @@ export class Airtable implements INodeType {
 		const operation = this.getNodeParameter('operation', 0) as string;
 
 		const application = this.getNodeParameter('application', 0) as string;
-		const table = encodeURI(this.getNodeParameter('table', 0) as string);
+		const table = this.getNodeParameter('table', 0) as string;
 
 		let returnAll = false;
 		let endpoint = '';
@@ -482,144 +386,77 @@ export class Airtable implements INodeType {
 
 			let addAllFields: boolean;
 			let fields: string[];
-			let options: IDataObject;
-
-			const rows: IDataObject[] = [];
-			let bulkSize = 10;
-
 			for (let i = 0; i < items.length; i++) {
-				try {
-					addAllFields = this.getNodeParameter('addAllFields', i) as boolean;
-					options = this.getNodeParameter('options', i, {}) as IDataObject;
-					bulkSize = options.bulkSize as number || bulkSize;
+				addAllFields = this.getNodeParameter('addAllFields', i) as boolean;
 
-					const row: IDataObject = {};
+				if (addAllFields === true) {
+					// Add all the fields the item has
+					body.fields = items[i].json;
+				} else {
+					// Add only the specified fields
+					body.fields = {} as IDataObject;
 
-					if (addAllFields === true) {
-						// Add all the fields the item has
-						row.fields = { ...items[i].json };
-						// tslint:disable-next-line: no-any
-						delete (row.fields! as any).id;
-					} else {
-						// Add only the specified fields
-						row.fields = {} as IDataObject;
+					fields = this.getNodeParameter('fields', i, []) as string[];
 
-						fields = this.getNodeParameter('fields', i, []) as string[];
-
-						for (const fieldName of fields) {
-							// @ts-ignore
-							row.fields[fieldName] = items[i].json[fieldName];
-						}
+					for (const fieldName of fields) {
+						// @ts-ignore
+						body.fields[fieldName] = items[i].json[fieldName];
 					}
-
-					rows.push(row);
-
-					if (rows.length === bulkSize || i === items.length - 1) {
-						if (options.typecast === true) {
-							body['typecast'] = true;
-						}
-
-						body['records'] = rows;
-
-						responseData = await apiRequest.call(this, requestMethod, endpoint, body, qs);
-
-						returnData.push(...responseData.records);
-						// empty rows
-						rows.length = 0;
-					}
-				} catch (error) {
-					if (this.continueOnFail()) {
-						returnData.push({ error: error.message });
-						continue;
-					}
-					throw error;
 				}
+
+				responseData = await apiRequest.call(this, requestMethod, endpoint, body, qs);
+
+				returnData.push(responseData);
 			}
 
 		} else if (operation === 'delete') {
 			requestMethod = 'DELETE';
 
-			const rows: string[] = [];
-			const options = this.getNodeParameter('options', 0, {}) as IDataObject;
-			const bulkSize = options.bulkSize as number || 10;
-
+			let id: string;
 			for (let i = 0; i < items.length; i++) {
-				try {
-					let id: string;
+				id = this.getNodeParameter('id', i) as string;
 
-					id = this.getNodeParameter('id', i) as string;
+				endpoint = `${application}/${table}/${id}`;
 
-					rows.push(id);
+				// Make one request after another. This is slower but makes
+				// sure that we do not run into the rate limit they have in
+				// place and so block for 30 seconds. Later some global
+				// functionality in core should make it easy to make requests
+				// according to specific rules like not more than 5 requests
+				// per seconds.
+				responseData = await apiRequest.call(this, requestMethod, endpoint, body, qs);
 
-					if (rows.length === bulkSize || i === items.length - 1) {
-						endpoint = `${application}/${table}`;
-
-						// Make one request after another. This is slower but makes
-						// sure that we do not run into the rate limit they have in
-						// place and so block for 30 seconds. Later some global
-						// functionality in core should make it easy to make requests
-						// according to specific rules like not more than 5 requests
-						// per seconds.
-						qs.records = rows;
-
-						responseData = await apiRequest.call(this, requestMethod, endpoint, body, qs);
-
-						returnData.push(...responseData.records);
-						// empty rows
-						rows.length = 0;
-					}
-				} catch (error) {
-					if (this.continueOnFail()) {
-						returnData.push({ error: error.message });
-						continue;
-					}
-					throw error;
-				}
+				returnData.push(responseData);
 			}
 
 		} else if (operation === 'list') {
 			// ----------------------------------
 			//         list
 			// ----------------------------------
-			try {
-				requestMethod = 'GET';
-				endpoint = `${application}/${table}`;
 
-				returnAll = this.getNodeParameter('returnAll', 0) as boolean;
+			requestMethod = 'GET';
+			endpoint = `${application}/${table}`;
 
-				const downloadAttachments = this.getNodeParameter('downloadAttachments', 0) as boolean;
+			returnAll = this.getNodeParameter('returnAll', 0) as boolean;
 
-				const additionalOptions = this.getNodeParameter('additionalOptions', 0, {}) as IDataObject;
+			const additionalOptions = this.getNodeParameter('additionalOptions', 0, {}) as IDataObject;
 
-				for (const key of Object.keys(additionalOptions)) {
-					if (key === 'sort' && (additionalOptions.sort as IDataObject).property !== undefined) {
-						qs[key] = (additionalOptions[key] as IDataObject).property;
-					} else {
-						qs[key] = additionalOptions[key];
-					}
-				}
-
-				if (returnAll === true) {
-					responseData = await apiRequestAllItems.call(this, requestMethod, endpoint, body, qs);
+			for (const key of Object.keys(additionalOptions)) {
+				if (key === 'sort' && (additionalOptions.sort as IDataObject).property !== undefined) {
+					qs[key] = (additionalOptions[key] as IDataObject).property;
 				} else {
-					qs.maxRecords = this.getNodeParameter('limit', 0) as number;
-					responseData = await apiRequest.call(this, requestMethod, endpoint, body, qs);
-				}
-
-				returnData.push.apply(returnData, responseData.records);
-
-				if (downloadAttachments === true) {
-					const downloadFieldNames = (this.getNodeParameter('downloadFieldNames', 0) as string).split(',');
-					const data = await downloadRecordAttachments.call(this, responseData.records, downloadFieldNames);
-					return [data];
-				}
-			} catch (error) {
-				if (this.continueOnFail()) {
-					returnData.push({ error: error.message });
-				} else {
-					throw error;
+					qs[key] = additionalOptions[key];
 				}
 			}
+
+			if (returnAll === true) {
+				responseData = await apiRequestAllItems.call(this, requestMethod, endpoint, body, qs);
+			} else {
+				qs.maxRecords = this.getNodeParameter('limit', 0) as number;
+				responseData = await apiRequest.call(this, requestMethod, endpoint, body, qs);
+			}
+
+			returnData.push.apply(returnData, responseData.records);
 
 		} else if (operation === 'read') {
 			// ----------------------------------
@@ -641,17 +478,10 @@ export class Airtable implements INodeType {
 				// functionality in core should make it easy to make requests
 				// according to specific rules like not more than 5 requests
 				// per seconds.
-				try {
-					responseData = await apiRequest.call(this, requestMethod, endpoint, body, qs);
 
-					returnData.push(responseData);
-				} catch (error) {
-					if (this.continueOnFail()) {
-						returnData.push({ error: error.message });
-						continue;
-					}
-					throw error;
-				}
+				responseData = await apiRequest.call(this, requestMethod, endpoint, body, qs);
+
+				returnData.push(responseData);
 			}
 
 		} else if (operation === 'update') {
@@ -661,81 +491,45 @@ export class Airtable implements INodeType {
 
 			requestMethod = 'PATCH';
 
+			let id: string;
 			let updateAllFields: boolean;
 			let fields: string[];
-			let options: IDataObject;
-
-			const rows: IDataObject[] = [];
-			let bulkSize = 10;
-
 			for (let i = 0; i < items.length; i++) {
-				try {
-					updateAllFields = this.getNodeParameter('updateAllFields', i) as boolean;
-					options = this.getNodeParameter('options', i, {}) as IDataObject;
-					bulkSize = options.bulkSize as number || bulkSize;
+				updateAllFields = this.getNodeParameter('updateAllFields', i) as boolean;
 
-					const row: IDataObject = {};
-					row.fields = {} as IDataObject;
+				if (updateAllFields === true) {
+					// Update all the fields the item has
+					body.fields = items[i].json;
+				} else {
+					// Update only the specified fields
+					body.fields = {} as IDataObject;
 
-					if (updateAllFields === true) {
-						// Update all the fields the item has
-						row.fields = { ...items[i].json };
-						// remove id field
-						// tslint:disable-next-line: no-any
-						delete (row.fields! as any).id;
+					fields = this.getNodeParameter('fields', i, []) as string[];
 
-						if (options.ignoreFields && options.ignoreFields !== '') {
-							const ignoreFields = (options.ignoreFields as string).split(',').map(field => field.trim()).filter(field => !!field);
-							if (ignoreFields.length) {
-								// From: https://stackoverflow.com/questions/17781472/how-to-get-a-subset-of-a-javascript-objects-properties
-								row.fields = Object.entries(items[i].json)
-									.filter(([key]) => !ignoreFields.includes(key))
-									.reduce((obj, [key, val]) => Object.assign(obj, { [key]: val }), {});
-							}
-						}
-					} else {
-						fields = this.getNodeParameter('fields', i, []) as string[];
-
-						for (const fieldName of fields) {
-							// @ts-ignore
-							row.fields[fieldName] = items[i].json[fieldName];
-						}
+					for (const fieldName of fields) {
+						// @ts-ignore
+						body.fields[fieldName] = items[i].json[fieldName];
 					}
-
-					row.id = this.getNodeParameter('id', i) as string;
-
-					rows.push(row);
-
-					if (rows.length === bulkSize || i === items.length - 1) {
-						endpoint = `${application}/${table}`;
-
-						// Make one request after another. This is slower but makes
-						// sure that we do not run into the rate limit they have in
-						// place and so block for 30 seconds. Later some global
-						// functionality in core should make it easy to make requests
-						// according to specific rules like not more than 5 requests
-						// per seconds.
-
-						const data = { records: rows, typecast: (options.typecast) ? true : false };
-
-						responseData = await apiRequest.call(this, requestMethod, endpoint, data, qs);
-
-						returnData.push(...responseData.records);
-
-						// empty rows
-						rows.length = 0;
-					}
-				} catch (error) {
-					if (this.continueOnFail()) {
-						returnData.push({ error: error.message });
-						continue;
-					}
-					throw error;
 				}
+
+				id = this.getNodeParameter('id', i) as string;
+
+				endpoint = `${application}/${table}/${id}`;
+
+				// Make one request after another. This is slower but makes
+				// sure that we do not run into the rate limit they have in
+				// place and so block for 30 seconds. Later some global
+				// functionality in core should make it easy to make requests
+				// according to specific rules like not more than 5 requests
+				// per seconds.
+
+				responseData = await apiRequest.call(this, requestMethod, endpoint, body, qs);
+
+				returnData.push(responseData);
 			}
 
 		} else {
-			throw new NodeOperationError(this.getNode(), `The operation "${operation}" is not known!`);
+			throw new Error(`The operation "${operation}" is not known!`);
 		}
 
 		return [this.helpers.returnJsonArray(returnData)];

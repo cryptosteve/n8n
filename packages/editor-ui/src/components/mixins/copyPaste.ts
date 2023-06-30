@@ -9,9 +9,6 @@ export const copyPaste = Vue.extend({
 	data () {
 		return {
 			copyPasteElementsGotCreated: false,
-			hiddenInput: null as null | Element,
-			onPaste: null as null | Function,
-			onBeforePaste: null as null | Function,
 		};
 	},
 	mounted () {
@@ -56,7 +53,6 @@ export const copyPaste = Vue.extend({
 		hiddenInput.setAttribute('type', 'text');
 		hiddenInput.setAttribute('id', 'hidden-input-copy-paste');
 		hiddenInput.setAttribute('class', 'hidden-copy-paste');
-		this.hiddenInput = hiddenInput;
 
 		document.body.append(hiddenInput);
 
@@ -68,14 +64,12 @@ export const copyPaste = Vue.extend({
 			ieClipboardDiv.setAttribute('contenteditable', 'true');
 			document.body.append(ieClipboardDiv);
 
-			this.onBeforePaste =  () => {
+			document.addEventListener('beforepaste', () => {
 				// @ts-ignore
 				if (hiddenInput.is(':focus')) {
 					this.focusIeClipboardDiv(ieClipboardDiv as HTMLDivElement);
 				}
-			};
-			// @ts-ignore
-			document.addEventListener('beforepaste', this.onBeforePaste, true);
+			}, true);
 		}
 
 		let userInput = '';
@@ -96,38 +90,36 @@ export const copyPaste = Vue.extend({
 			}
 		});
 
-		this.onPaste = debounce((e) => {
-			const event = 'paste';
-			// Check if the event got emitted from a message box or from something
-			// else which should ignore the copy/paste
-			// @ts-ignore
-			const path = e.path || (e.composedPath && e.composedPath());
-			for (let index = 0; index < path.length; index++) {
-				if (path[index].className && typeof path[index].className === 'string' && (
-					path[index].className.includes('el-message-box') || path[index].className.includes('ignore-key-press')
-				)) {
-					return;
-				}
-			}
-
-			if (ieClipboardDiv !== null) {
-				this.ieClipboardEvent(event, ieClipboardDiv);
-			} else {
-				this.standardClipboardEvent(event, e as ClipboardEvent);
-				// @ts-ignore
-				if (!document.activeElement || (document.activeElement && ['textarea', 'text', 'email', 'password'].indexOf(document.activeElement.type) === -1)) {
-					// That it still allows to paste into text, email, password & textarea-fiels we
-					// check if we can identify the active element and if so only
-					// run it if something else is selected.
-					this.focusHiddenArea(hiddenInput);
-					e.preventDefault();
-				}
-			}
-		}, 1000, { leading: true });
-
 		// Set clipboard event listeners on the document.
-		// @ts-ignore
-		document.addEventListener('paste', this.onPaste);
+		['paste'].forEach((event) => {
+			document.addEventListener(event, debounce((e) => {
+				// Check if the event got emitted from a message box or from something
+				// else which should ignore the copy/paste
+				// @ts-ignore
+				const path = e.path || (e.composedPath && e.composedPath());
+				for (let index = 0; index < path.length; index++) {
+					if (path[index].className && typeof path[index].className === 'string' && (
+						path[index].className.includes('el-message-box') || path[index].className.includes('ignore-key-press')
+					)) {
+						return;
+					}
+				}
+
+				if (ieClipboardDiv !== null) {
+					this.ieClipboardEvent(event, ieClipboardDiv);
+				} else {
+					this.standardClipboardEvent(event, e as ClipboardEvent);
+					// @ts-ignore
+					if (!document.activeElement || (document.activeElement && ['textarea', 'text', 'email', 'password'].indexOf(document.activeElement.type) === -1)) {
+						// That it still allows to paste into text, email, password & textarea-fiels we
+						// check if we can identify the active element and if so only
+						// run it if something else is selected.
+						this.focusHiddenArea(hiddenInput);
+						e.preventDefault();
+					}
+				}
+			}, 1000, { leading: true }));
+		});
 	},
 	methods: {
 		receivedCopyPasteData (plainTextData: string, event?: ClipboardEvent): void {
@@ -205,18 +197,5 @@ export const copyPaste = Vue.extend({
 			}
 		},
 
-	},
-	beforeDestroy() {
-		if (this.hiddenInput) {
-			this.hiddenInput.remove();
-		}
-		if (this.onPaste) {
-			// @ts-ignore
-			document.removeEventListener('paste', this.onPaste);
-		}
-		if (this.onBeforePaste) {
-			// @ts-ignore
-			document.removeEventListener('beforepaste', this.onBeforePaste);
-		}
 	},
 });

@@ -1,39 +1,30 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable import/no-cycle */
 import {
-	ExecutionError,
 	ICredentialDataDecryptedObject,
 	ICredentialsDecrypted,
 	ICredentialsEncrypted,
+	ICredentialType,
 	IDataObject,
-	IDeferredPromise,
-	IExecuteResponsePromiseData,
+	IExecutionError,
 	IRun,
 	IRunData,
 	IRunExecutionData,
 	ITaskData,
-	ITelemetrySettings,
 	IWorkflowBase as IWorkflowBaseWorkflow,
-	Workflow,
+	IWorkflowCredentials,
 	WorkflowExecuteMode,
 } from 'n8n-workflow';
 
-import { WorkflowExecute } from 'n8n-core';
+import {
+	IDeferredPromise,
+} from 'n8n-core';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import PCancelable from 'p-cancelable';
-import { Repository } from 'typeorm';
+
+import * as PCancelable from 'p-cancelable';
+import { ObjectID, Repository } from 'typeorm';
 
 import { ChildProcess } from 'child_process';
 import { Url } from 'url';
 import { Request } from 'express';
-import { WorkflowEntity } from './databases/entities/WorkflowEntity';
-import { TagEntity } from './databases/entities/TagEntity';
-import { Role } from './databases/entities/Role';
-import { User } from './databases/entities/User';
-import { SharedCredentials } from './databases/entities/SharedCredentials';
-import { SharedWorkflow } from './databases/entities/SharedWorkflow';
-import { Settings } from './databases/entities/Settings';
 
 export interface IActivationError {
 	time: number;
@@ -42,29 +33,12 @@ export interface IActivationError {
 	};
 }
 
-export interface IBullJobData {
-	executionId: string;
-	loadStaticData: boolean;
-}
-
-export interface IBullJobResponse {
-	success: boolean;
-}
-
-export interface IBullWebhookResponse {
-	executionId: string;
-	response: IExecuteResponsePromiseData;
-}
-
 export interface ICustomRequest extends Request {
 	parsedUrl: Url | undefined;
 }
 
 export interface ICredentialsTypeData {
-	[key: string]: {
-		className: string;
-		sourcePath: string;
-	};
+	[key: string]: ICredentialType;
 }
 
 export interface ICredentialsOverwrite {
@@ -72,75 +46,34 @@ export interface ICredentialsOverwrite {
 }
 
 export interface IDatabaseCollections {
-	Credentials: Repository<ICredentialsDb>;
-	Execution: Repository<IExecutionFlattedDb>;
-	Workflow: Repository<WorkflowEntity>;
-	Webhook: Repository<IWebhookDb>;
-	Tag: Repository<TagEntity>;
-	Role: Repository<Role>;
-	User: Repository<User>;
-	SharedCredentials: Repository<SharedCredentials>;
-	SharedWorkflow: Repository<SharedWorkflow>;
-	Settings: Repository<Settings>;
+	Credentials: Repository<ICredentialsDb> | null;
+	Execution: Repository<IExecutionFlattedDb> | null;
+	Workflow: Repository<IWorkflowDb> | null;
 }
 
-export interface IWebhookDb {
-	workflowId: number | string;
-	webhookPath: string;
-	method: string;
-	node: string;
-	webhookId?: string;
-	pathLength?: number;
-}
-
-// ----------------------------------
-//               settings
-// ----------------------------------
-
-export interface ISettingsDb {
-	key: string;
-	value: string | boolean | IDataObject | number;
-	loadOnStartup: boolean;
-}
-
-// ----------------------------------
-//               tags
-// ----------------------------------
-
-export interface ITagDb {
-	id: number;
-	name: string;
-	createdAt: Date;
-	updatedAt: Date;
-}
-
-export type UsageCount = {
-	usageCount: number;
-};
-
-export type ITagWithCountDb = ITagDb & UsageCount;
-
-// ----------------------------------
-//            workflows
-// ----------------------------------
 
 export interface IWorkflowBase extends IWorkflowBaseWorkflow {
-	id?: number | string;
+	id?: number | string | ObjectID;
+
 }
+
 
 // Almost identical to editor-ui.Interfaces.ts
 export interface IWorkflowDb extends IWorkflowBase {
-	id: number | string;
-	tags: ITagDb[];
+	id: number | string | ObjectID;
 }
 
 export interface IWorkflowResponse extends IWorkflowBase {
 	id: string;
 }
 
-// ----------------------------------
-//            credentials
-// ----------------------------------
+export interface IWorkflowShortResponse {
+	id: string;
+	name: string;
+	active: boolean;
+	createdAt: Date;
+	updatedAt: Date;
+}
 
 export interface ICredentialsBase {
 	createdAt: Date;
@@ -148,8 +81,7 @@ export interface ICredentialsBase {
 }
 
 export interface ICredentialsDb extends ICredentialsBase, ICredentialsEncrypted {
-	id: number | string;
-	name: string;
+	id: number | string | ObjectID;
 }
 
 export interface ICredentialsResponse extends ICredentialsDb {
@@ -157,31 +89,30 @@ export interface ICredentialsResponse extends ICredentialsDb {
 }
 
 export interface ICredentialsDecryptedDb extends ICredentialsBase, ICredentialsDecrypted {
-	id: number | string;
+	id: number | string | ObjectID;
 }
 
 export interface ICredentialsDecryptedResponse extends ICredentialsDecryptedDb {
 	id: string;
 }
 
-export type DatabaseType = 'mariadb' | 'postgresdb' | 'mysqldb' | 'sqlite';
+export type DatabaseType = 'mariadb' | 'mongodb' | 'postgresdb' | 'mysqldb' | 'sqlite';
 export type SaveExecutionDataType = 'all' | 'none';
 
 export interface IExecutionBase {
-	id?: number | string;
+	id?: number | string | ObjectID;
 	mode: WorkflowExecuteMode;
 	startedAt: Date;
-	stoppedAt?: Date; // empty value means execution is still running
+	stoppedAt: Date;
 	workflowId?: string; // To be able to filter executions easily //
 	finished: boolean;
-	retryOf?: number | string; // If it is a retry, the id of the execution it is a retry of.
-	retrySuccessId?: number | string; // If it failed and a retry did succeed. The id of the successful retry.
+	retryOf?: number | string | ObjectID; // If it is a retry, the id of the execution it is a retry of.
+	retrySuccessId?: number | string | ObjectID; // If it failed and a retry did succeed. The id of the successful retry.
 }
 
 // Data in regular format with references
 export interface IExecutionDb extends IExecutionBase {
 	data: IRunExecutionData;
-	waitTill?: Date;
 	workflowData?: IWorkflowBase;
 }
 
@@ -195,7 +126,6 @@ export interface IExecutionResponse extends IExecutionBase {
 	data: IRunExecutionData;
 	retryOf?: string;
 	retrySuccessId?: string;
-	waitTill?: Date;
 	workflowData: IWorkflowBase;
 }
 
@@ -207,9 +137,8 @@ export interface IExecutionFlatted extends IExecutionBase {
 }
 
 export interface IExecutionFlattedDb extends IExecutionBase {
-	id: number | string;
+	id: number | string | ObjectID;
 	data: string;
-	waitTill?: Date | null;
 	workflowData: IWorkflowBase;
 }
 
@@ -222,28 +151,28 @@ export interface IExecutionsListResponse {
 	count: number;
 	// results: IExecutionShortResponse[];
 	results: IExecutionsSummary[];
-	estimated: boolean;
 }
 
 export interface IExecutionsStopData {
 	finished?: boolean;
 	mode: WorkflowExecuteMode;
 	startedAt: Date;
-	stoppedAt?: Date;
+	stoppedAt: Date;
 }
 
 export interface IExecutionsSummary {
-	id: string;
+	id?: string; // executionIdDb
+	idActive?: string; // executionIdActive
 	finished?: boolean;
 	mode: WorkflowExecuteMode;
 	retryOf?: string;
 	retrySuccessId?: string;
-	waitTill?: Date;
 	startedAt: Date;
 	stoppedAt?: Date;
 	workflowId: string;
 	workflowName?: string;
 }
+
 
 export interface IExecutionsCurrentSummary {
 	id: string;
@@ -252,6 +181,7 @@ export interface IExecutionsCurrentSummary {
 	mode: WorkflowExecuteMode;
 	workflowId: string;
 }
+
 
 export interface IExecutionDeleteFilter {
 	deleteBefore?: Date;
@@ -264,39 +194,21 @@ export interface IExecutingWorkflowData {
 	process?: ChildProcess;
 	startedAt: Date;
 	postExecutePromises: Array<IDeferredPromise<IRun | undefined>>;
-	responsePromise?: IDeferredPromise<IExecuteResponsePromiseData>;
 	workflowExecution?: PCancelable<IRun>;
 }
 
 export interface IExternalHooks {
 	credentials?: {
-		create?: Array<{
-			(this: IExternalHooksFunctions, credentialsData: ICredentialsEncrypted): Promise<void>;
-		}>;
-		delete?: Array<{ (this: IExternalHooksFunctions, credentialId: string): Promise<void> }>;
-		update?: Array<{
-			(this: IExternalHooksFunctions, credentialsData: ICredentialsDb): Promise<void>;
-		}>;
+		create?: Array<{ (this: IExternalHooksFunctions, credentialsData: ICredentialsEncrypted): Promise<void>; }>
+		delete?: Array<{ (this: IExternalHooksFunctions, credentialId: string): Promise<void>; }>
+		update?: Array<{ (this: IExternalHooksFunctions, credentialsData: ICredentialsDb): Promise<void>; }>
 	};
 	workflow?: {
-		activate?: Array<{ (this: IExternalHooksFunctions, workflowData: IWorkflowDb): Promise<void> }>;
-		create?: Array<{ (this: IExternalHooksFunctions, workflowData: IWorkflowBase): Promise<void> }>;
-		delete?: Array<{ (this: IExternalHooksFunctions, workflowId: string): Promise<void> }>;
-		execute?: Array<{
-			(
-				this: IExternalHooksFunctions,
-				workflowData: IWorkflowDb,
-				mode: WorkflowExecuteMode,
-			): Promise<void>;
-		}>;
-		update?: Array<{ (this: IExternalHooksFunctions, workflowData: IWorkflowDb): Promise<void> }>;
-	};
-}
-
-export interface IExternalHooksFileData {
-	[key: string]: {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		[key: string]: Array<(...args: any[]) => Promise<void>>;
+		activate?: Array<{ (this: IExternalHooksFunctions, workflowData: IWorkflowDb): Promise<void>; }>
+		create?: Array<{ (this: IExternalHooksFunctions, workflowData: IWorkflowBase): Promise<void>; }>
+		delete?: Array<{ (this: IExternalHooksFunctions, workflowId: string): Promise<void>; }>
+		execute?: Array<{ (this: IExternalHooksFunctions, workflowData: IWorkflowDb, mode: WorkflowExecuteMode): Promise<void>; }>
+		update?: Array<{ (this: IExternalHooksFunctions, workflowData: IWorkflowDb): Promise<void>; }>
 	};
 }
 
@@ -306,74 +218,7 @@ export interface IExternalHooksFunctions {
 
 export interface IExternalHooksClass {
 	init(): Promise<void>;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	run(hookName: string, hookParameters?: any[]): Promise<void>;
-}
-
-export interface IDiagnosticInfo {
-	versionCli: string;
-	databaseType: DatabaseType;
-	notificationsEnabled: boolean;
-	disableProductionWebhooksOnMainProcess: boolean;
-	basicAuthActive: boolean;
-	systemInfo: {
-		os: {
-			type?: string;
-			version?: string;
-		};
-		memory?: number;
-		cpus: {
-			count?: number;
-			model?: string;
-			speed?: number;
-		};
-	};
-	executionVariables: {
-		[key: string]: string | number | boolean | undefined;
-	};
-	deploymentType: string;
-	binaryDataMode: string;
-	n8n_multi_user_allowed: boolean;
-	smtp_set_up: boolean;
-}
-
-export interface ITelemetryUserDeletionData {
-	user_id: string;
-	target_user_old_status: 'active' | 'invited';
-	migration_strategy?: 'transfer_data' | 'delete_data';
-	target_user_id?: string;
-	migration_user_id?: string;
-}
-
-export interface IInternalHooksClass {
-	onN8nStop(): Promise<void>;
-	onServerStarted(
-		diagnosticInfo: IDiagnosticInfo,
-		firstWorkflowCreatedAt?: Date,
-	): Promise<unknown[]>;
-	onPersonalizationSurveySubmitted(userId: string, answers: Record<string, string>): Promise<void>;
-	onWorkflowCreated(userId: string, workflow: IWorkflowBase): Promise<void>;
-	onWorkflowDeleted(userId: string, workflowId: string): Promise<void>;
-	onWorkflowSaved(userId: string, workflow: IWorkflowBase): Promise<void>;
-	onWorkflowPostExecute(
-		executionId: string,
-		workflow: IWorkflowBase,
-		runData?: IRun,
-		userId?: string,
-	): Promise<void>;
-	onUserDeletion(userId: string, userDeletionData: ITelemetryUserDeletionData): Promise<void>;
-	onUserInvite(userInviteData: { user_id: string; target_user_id: string[] }): Promise<void>;
-	onUserReinvite(userReinviteData: { user_id: string; target_user_id: string }): Promise<void>;
-	onUserUpdate(userUpdateData: { user_id: string; fields_changed: string[] }): Promise<void>;
-	onUserInviteEmailClick(userInviteClickData: { user_id: string }): Promise<void>;
-	onUserPasswordResetEmailClick(userPasswordResetData: { user_id: string }): Promise<void>;
-	onUserTransactionalEmail(userTransactionalEmailData: {
-		user_id: string;
-		message_type: 'Reset password' | 'New user invite' | 'Resend invite';
-	}): Promise<void>;
-	onUserPasswordResetRequestClick(userPasswordResetData: { user_id: string }): Promise<void>;
-	onInstanceOwnerSetup(instanceOwnerSetupData: { user_id: string }): Promise<void>;
-	onUserSignup(userSignupData: { user_id: string }): Promise<void>;
+	run(hookName: string, hookParameters?: any[]): Promise<void>; // tslint:disable-line:no-any
 }
 
 export interface IN8nConfig {
@@ -389,6 +234,9 @@ export interface IN8nConfig {
 
 export interface IN8nConfigDatabase {
 	type: DatabaseType;
+	mongodb: {
+		connectionUrl: string;
+	};
 	postgresdb: {
 		host: string;
 		password: string;
@@ -403,14 +251,12 @@ export interface IN8nConfigEndpoints {
 	webhookTest: string;
 }
 
-// eslint-disable-next-line import/export
 export interface IN8nConfigExecutions {
 	saveDataOnError: SaveExecutionDataType;
 	saveDataOnSuccess: SaveExecutionDataType;
 	saveDataManualExecutions: boolean;
 }
 
-// eslint-disable-next-line import/export
 export interface IN8nConfigExecutions {
 	saveDataOnError: SaveExecutionDataType;
 	saveDataOnSuccess: SaveExecutionDataType;
@@ -426,11 +272,6 @@ export interface IN8nConfigNodes {
 	exclude: string[];
 }
 
-export interface IVersionNotificationSettings {
-	enabled: boolean;
-	endpoint: string;
-	infoUrl: string;
-}
 
 export interface IN8nUISettings {
 	endpointWebhook: string;
@@ -438,96 +279,29 @@ export interface IN8nUISettings {
 	saveDataErrorExecution: string;
 	saveDataSuccessExecution: string;
 	saveManualExecutions: boolean;
-	executionTimeout: number;
-	maxExecutionTimeout: number;
-	oauthCallbackUrls: {
-		oauth1: string;
-		oauth2: string;
-	};
 	timezone: string;
 	urlBaseWebhook: string;
-	urlBaseEditor: string;
 	versionCli: string;
-	n8nMetadata?: {
-		[key: string]: string | number | undefined;
-	};
-	versionNotifications: IVersionNotificationSettings;
-	instanceId: string;
-	telemetry: ITelemetrySettings;
-	personalizationSurveyEnabled: boolean;
-	defaultLocale: string;
-	userManagement: IUserManagementSettings;
-	workflowTagsDisabled: boolean;
-	logLevel: 'info' | 'debug' | 'warn' | 'error' | 'verbose' | 'silent';
-	hiringBannerEnabled: boolean;
-	templates: {
-		enabled: boolean;
-		host: string;
-	};
 }
 
-export interface IPersonalizationSurveyAnswers {
-	codingSkill: string | null;
-	companyIndustry: string[];
-	companySize: string | null;
-	otherCompanyIndustry: string | null;
-	otherWorkArea: string | null;
-	workArea: string[] | string | null;
-}
-
-export interface IUserManagementSettings {
-	enabled: boolean;
-	showSetupOnFirstLoad?: boolean;
-	smtpSetup: boolean;
-}
 
 export interface IPackageVersions {
 	cli: string;
 }
 
-export type IPushDataType = IPushData['type'];
 
-export type IPushData =
-	| PushDataExecutionFinished
-	| PushDataExecutionStarted
-	| PushDataExecuteAfter
-	| PushDataExecuteBefore
-	| PushDataConsoleMessage
-	| PushDataTestWebhook;
+export interface IPushData {
+	data: IPushDataExecutionFinished | IPushDataNodeExecuteAfter | IPushDataNodeExecuteBefore | IPushDataTestWebhook;
+	type: IPushDataType;
+}
 
-type PushDataExecutionFinished = {
-	data: IPushDataExecutionFinished;
-	type: 'executionFinished';
-};
+export type IPushDataType = 'executionFinished' | 'executionStarted' | 'nodeExecuteAfter' | 'nodeExecuteBefore' | 'testWebhookDeleted' | 'testWebhookReceived';
 
-type PushDataExecutionStarted = {
-	data: IPushDataExecutionStarted;
-	type: 'executionStarted';
-};
-
-type PushDataExecuteAfter = {
-	data: IPushDataNodeExecuteAfter;
-	type: 'nodeExecuteAfter';
-};
-
-type PushDataExecuteBefore = {
-	data: IPushDataNodeExecuteBefore;
-	type: 'nodeExecuteBefore';
-};
-
-type PushDataConsoleMessage = {
-	data: IPushDataConsoleMessage;
-	type: 'sendConsoleMessage';
-};
-
-type PushDataTestWebhook = {
-	data: IPushDataTestWebhook;
-	type: 'testWebhookDeleted' | 'testWebhookReceived';
-};
 
 export interface IPushDataExecutionFinished {
 	data: IRun;
-	executionId: string;
+	executionIdActive: string;
+	executionIdDb?: string;
 	retryOf?: string;
 }
 
@@ -546,27 +320,25 @@ export interface IPushDataNodeExecuteAfter {
 	nodeName: string;
 }
 
+
 export interface IPushDataNodeExecuteBefore {
 	executionId: string;
 	nodeName: string;
 }
+
 
 export interface IPushDataTestWebhook {
 	executionId: string;
 	workflowId: string;
 }
 
-export interface IPushDataConsoleMessage {
-	source: string;
-	message: string;
-}
 
 export interface IResponseCallbackData {
 	data?: IDataObject | IDataObject[];
-	headers?: object;
 	noWebhookResponse?: boolean;
 	responseCode?: number;
 }
+
 
 export interface ITransferNodeTypes {
 	[key: string]: {
@@ -575,11 +347,12 @@ export interface ITransferNodeTypes {
 	};
 }
 
+
 export interface IWorkflowErrorData {
-	[key: string]: IDataObject | string | number | ExecutionError;
+	[key: string]: IDataObject | string | number | IExecutionError;
 	execution: {
 		id?: string;
-		error: ExecutionError;
+		error: IExecutionError;
 		lastNodeExecuted: string;
 		mode: WorkflowExecuteMode;
 	};
@@ -591,34 +364,25 @@ export interface IWorkflowErrorData {
 
 export interface IProcessMessageDataHook {
 	hook: string;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	parameters: any[];
+	parameters: any[]; // tslint:disable-line:no-any
 }
 
 export interface IWorkflowExecutionDataProcess {
+	credentials: IWorkflowCredentials;
 	destinationNode?: string;
 	executionMode: WorkflowExecuteMode;
 	executionData?: IRunExecutionData;
 	runData?: IRunData;
-	retryOf?: number | string;
+	retryOf?: number | string | ObjectID;
 	sessionId?: string;
 	startNodes?: string[];
 	workflowData: IWorkflowBase;
-	userId: string;
 }
+
 
 export interface IWorkflowExecutionDataProcessWithExecution extends IWorkflowExecutionDataProcess {
 	credentialsOverwrite: ICredentialsOverwrite;
 	credentialsTypeData: ICredentialsTypeData;
 	executionId: string;
 	nodeTypeData: ITransferNodeTypes;
-	userId: string;
 }
-
-export interface IWorkflowExecuteProcess {
-	startedAt: Date;
-	workflow: Workflow;
-	workflowExecute: WorkflowExecute;
-}
-
-export type WhereClause = Record<string, { id: string }>;

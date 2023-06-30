@@ -1,32 +1,28 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 export class WordpressApi implements ICredentialType {
 	name = 'wordpressApi';
 	displayName = 'Wordpress API';
-	documentationUrl = 'wordpress';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Username',
 			name: 'username',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Password',
 			name: 'password',
-			type: 'string',
-			typeOptions: {
-				password: true,
-			},
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Wordpress URL',
 			name: 'url',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 			placeholder: 'https://example.com',
 		},

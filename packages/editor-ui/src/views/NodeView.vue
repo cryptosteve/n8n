@@ -1,141 +1,102 @@
 <template>
-	<div
-		class="node-view-root"
-	 	@dragover="onDragOver"
-	 	@drop="onDrop"
-	>
+	<div class="node-view-root">
 		<div
 			class="node-view-wrapper"
 			:class="workflowClasses"
-			@touchstart="mouseDown"
-			@touchend="mouseUp"
-			@touchmove="mouseMoveNodeWorkflow"
 			@mousedown="mouseDown"
-			v-touch:tap="touchTap"
 			@mouseup="mouseUp"
 			@wheel="wheelScroll"
-		>
-			<div id="node-view-background" class="node-view-background" :style="backgroundStyle" />
-			<div
-				id="node-view"
-				class="node-view"
-				:style="workflowStyle"
 			>
-				<div v-for="nodeData in nodes" :key="getNodeIndex(nodeData.name)">
-					<node
-						v-if="nodeData.type !== STICKY_NODE_TYPE"
-						@duplicateNode="duplicateNode"
-						@deselectAllNodes="deselectAllNodes"
-						@deselectNode="nodeDeselectedByName"
-						@nodeSelected="nodeSelectedByName"
-						@removeNode="removeNode"
-						@runWorkflow="runWorkflow"
-						@moved="onNodeMoved"
-						@run="onNodeRun"
-						:id="'node-' + getNodeIndex(nodeData.name)"
-						:key="getNodeIndex(nodeData.name)"
-						:name="nodeData.name"
-						:isReadOnly="isReadOnly"
-						:instance="instance"
-						:isActive="!!activeNode && activeNode.name === nodeData.name"
-						:hideActions="pullConnActive"
-					/>
-					<Sticky
-						v-else
-						@deselectAllNodes="deselectAllNodes"
-						@deselectNode="nodeDeselectedByName"
-						@nodeSelected="nodeSelectedByName"
-						@removeNode="removeNode"
-						:id="'node-' + getNodeIndex(nodeData.name)"
-						:name="nodeData.name"
-						:isReadOnly="isReadOnly"
-						:instance="instance"
-						:isActive="!!activeNode && activeNode.name === nodeData.name"
-						:nodeViewScale="nodeViewScale"
-						:gridSize="GRID_SIZE"
-						:hideActions="pullConnActive"
-					/>
-				</div>
+			<div class="node-view-background" :style="backgroundStyle"></div>
+			<div id="node-view" class="node-view" :style="workflowStyle">
+				<node
+				v-for="nodeData in nodes"
+				@duplicateNode="duplicateNode"
+				@deselectAllNodes="deselectAllNodes"
+				@deselectNode="nodeDeselectedByName"
+				@nodeSelected="nodeSelectedByName"
+				@removeNode="removeNode"
+				@runWorkflow="runWorkflow"
+				:id="'node-' + getNodeIndex(nodeData.name)"
+				:key="getNodeIndex(nodeData.name)"
+				:name="nodeData.name"
+				:isReadOnly="isReadOnly"
+				:instance="instance"
+				></node>
 			</div>
 		</div>
-		<DataDisplay :renaming="renamingActive" @valueChanged="valueChanged"/>
-		<div
-			class="node-buttons-wrapper"
-			v-if="!createNodeActive && !isReadOnly"
-		>
-			<div class="node-creator-button">
-				<n8n-icon-button size="xlarge" icon="plus" @click="() => openNodeCreator('add_node_button')" :title="$locale.baseText('nodeView.addNode')"/>
-				<div class="add-sticky-button" @click="nodeTypeSelected(STICKY_NODE_TYPE)">
-					<n8n-icon-button size="large" :icon="['far', 'note-sticky']" type="outline" :title="$locale.baseText('nodeView.addSticky')"/>
-				</div>
-			</div>
+		<DataDisplay @valueChanged="valueChanged"/>
+		<div v-if="!createNodeActive && !isReadOnly" class="node-creator-button" title="Add Node" @click="openNodeCreator">
+			<el-button icon="el-icon-plus" circle></el-button>
 		</div>
 		<node-creator
 			:active="createNodeActive"
 			@nodeTypeSelected="nodeTypeSelected"
 			@closeNodeCreator="closeNodeCreator"
-		/>
-		<div :class="{ 'zoom-menu': true, 'regular-zoom-menu': !isDemo, 'demo-zoom-menu': isDemo, expanded: !sidebarMenuCollapsed }">
-			<button @click="zoomToFit" class="button-white" :title="$locale.baseText('nodeView.zoomToFit')">
-				<font-awesome-icon icon="expand"/>
-			</button>
-			<button @click="zoomIn()" class="button-white" :title="$locale.baseText('nodeView.zoomIn')">
+			></node-creator>
+		<div class="zoom-menu">
+			<button @click="setZoom('in')" class="button-white" title="Zoom In">
 				<font-awesome-icon icon="search-plus"/>
 			</button>
-			<button @click="zoomOut()" class="button-white" :title="$locale.baseText('nodeView.zoomOut')">
+			<button @click="setZoom('out')" class="button-white" title="Zoom Out">
 				<font-awesome-icon icon="search-minus"/>
 			</button>
 			<button
-				v-if="nodeViewScale !== 1 && !isDemo"
-				@click="resetZoom()"
+				v-if="nodeViewScale !== 1"
+				@click="setZoom('reset')"
 				class="button-white"
-				:title="$locale.baseText('nodeView.resetZoom')"
+				title="Reset Zoom"
 				>
-				<font-awesome-icon icon="undo" :title="$locale.baseText('nodeView.resetZoom')"/>
+				<font-awesome-icon icon="undo" title="Reset Zoom"/>
 			</button>
 		</div>
 		<div class="workflow-execute-wrapper" v-if="!isReadOnly">
-			<n8n-button
+			<el-button
+				type="text"
 				@click.stop="runWorkflow()"
-				:loading="workflowRunning"
-				:label="runButtonText"
-				size="large"
-				icon="play-circle"
-				:title="$locale.baseText('nodeView.executesTheWorkflowFromTheStartOrWebhookNode')"
-				:type="workflowRunning ? 'light' : 'primary'"
-			/>
+				class="workflow-run-button"
+				:class="{'running': workflowRunning}"
+				:disabled="workflowRunning"
+				title="Executes the Workflow from the Start or Webhook Node."
+			>
+				<div class="run-icon">
+					<font-awesome-icon icon="spinner" spin v-if="workflowRunning"/>
+					<font-awesome-icon icon="play-circle" v-else/>
+				</div>
 
-			<n8n-icon-button
+				{{runButtonText}}
+			</el-button>
+
+			<el-button
 				v-if="workflowRunning === true && !executionWaitingForWebhook"
-				icon="stop"
-				size="large"
-				class="stop-execution"
-				type="light"
-				:title="stopExecutionInProgress
-					? $locale.baseText('nodeView.stoppingCurrentExecution')
-					: $locale.baseText('nodeView.stopCurrentExecution')
-				"
-				:loading="stopExecutionInProgress"
+				circle
+				type="text"
 				@click.stop="stopExecution()"
-			/>
-
-			<n8n-icon-button
-				v-if="workflowRunning === true && executionWaitingForWebhook === true"
 				class="stop-execution"
-				icon="stop"
-				size="large"
-				:title="$locale.baseText('nodeView.stopWaitingForWebhookCall')"
-				type="light"
+				:title="stopExecutionInProgress ? 'Stopping current execution':'Stop current execution'"
+			>
+				<font-awesome-icon icon="stop" :class="{'fa-spin': stopExecutionInProgress}"/>
+			</el-button>
+			<el-button
+				v-if="workflowRunning === true && executionWaitingForWebhook === true"
+				circle
+				type="text"
 				@click.stop="stopWaitingForWebhook()"
-			/>
-
-			<n8n-icon-button
+				class="stop-execution"
+				title="Stop waiting for Webhook call"
+			>
+				<font-awesome-icon icon="stop" :class="{'fa-spin': stopExecutionInProgress}"/>
+			</el-button>
+			<el-button
 				v-if="!isReadOnly && workflowExecution && !workflowRunning"
-				:title="$locale.baseText('nodeView.deletesTheCurrentExecutionData')"
-				icon="trash"
-				size="large"
+				circle
+				type="text"
 				@click.stop="clearExecutionData()"
-			/>
+				class="clear-execution"
+				title="Deletes the current Execution Data."
+			>
+				<font-awesome-icon icon="trash" class="clear-execution-icon" />
+			</el-button>
 		</div>
 	</div>
 </template>
@@ -143,35 +104,30 @@
 <script lang="ts">
 import Vue from 'vue';
 import {
-	Connection, Endpoint, N8nPlusEndpoint,
+	OverlaySpec,
 } from 'jsplumb';
 import { MessageBoxInputData } from 'element-ui/types/message-box';
-import { jsPlumb, OnConnectionBindInfo } from 'jsplumb';
-import { MODAL_CANCEL, MODAL_CLOSE, MODAL_CONFIRMED, NODE_NAME_PREFIX, NODE_OUTPUT_DEFAULT_KEY, PLACEHOLDER_EMPTY_WORKFLOW_ID, START_NODE_TYPE, STICKY_NODE_TYPE, VIEWS, WEBHOOK_NODE_TYPE, WORKFLOW_OPEN_MODAL_KEY } from '@/constants';
+import { jsPlumb, Endpoint, OnConnectionBindInfo } from 'jsplumb';
+import { NODE_NAME_PREFIX, PLACEHOLDER_EMPTY_WORKFLOW_ID } from '@/constants';
 import { copyPaste } from '@/components/mixins/copyPaste';
-import { externalHooks } from '@/components/mixins/externalHooks';
 import { genericHelpers } from '@/components/mixins/genericHelpers';
 import { mouseSelect } from '@/components/mixins/mouseSelect';
 import { moveNodeWorkflow } from '@/components/mixins/moveNodeWorkflow';
 import { restApi } from '@/components/mixins/restApi';
 import { showMessage } from '@/components/mixins/showMessage';
-import { titleChange } from '@/components/mixins/titleChange';
-import { newVersions } from '@/components/mixins/newVersions';
-
 import { workflowHelpers } from '@/components/mixins/workflowHelpers';
 import { workflowRun } from '@/components/mixins/workflowRun';
 
 import DataDisplay from '@/components/DataDisplay.vue';
 import Node from '@/components/Node.vue';
-import NodeCreator from '@/components/NodeCreator/NodeCreator.vue';
+import NodeCreator from '@/components/NodeCreator.vue';
 import NodeSettings from '@/components/NodeSettings.vue';
 import RunData from '@/components/RunData.vue';
-import Sticky from '@/components/Sticky.vue';
-
-import * as CanvasHelpers from './canvasHelpers';
 
 import mixins from 'vue-typed-mixins';
-import { v4 as uuidv4} from 'uuid';
+
+import { debounce } from 'lodash';
+import axios from 'axios';
 import {
 	IConnection,
 	IConnections,
@@ -180,54 +136,35 @@ import {
 	INodeConnections,
 	INodeIssues,
 	INodeTypeDescription,
-	INodeTypeNameVersion,
+	IRunData,
+	NodeInputConnections,
 	NodeHelpers,
 	Workflow,
-	IRun,
-	ITaskData,
-	INodeCredentialsDetails,
 } from 'n8n-workflow';
 import {
-	ICredentialsResponse,
+	IConnectionsUi,
 	IExecutionResponse,
+	IExecutionsStopData,
+	IN8nUISettings,
+	IStartRunData,
 	IWorkflowDb,
 	IWorkflowData,
 	INodeUi,
+	IRunDataUi,
 	IUpdateInformation,
 	IWorkflowDataUpdate,
-	XYPosition,
-	IPushDataExecutionFinished,
-	ITag,
-	IWorkflowTemplate,
-	IExecutionsSummary,
+	XYPositon,
 } from '../Interface';
-import { mapGetters } from 'vuex';
-
-import {
-	addNodeTranslation,
-	addHeaders,
-} from '@/plugins/i18n';
-
-import '../plugins/N8nCustomConnectorType';
-import '../plugins/PlusEndpointType';
-
-interface AddNodeOptions {
-	position?: XYPosition;
-	dragAndDrop?: boolean;
-}
 
 export default mixins(
 	copyPaste,
-	externalHooks,
 	genericHelpers,
 	mouseSelect,
 	moveNodeWorkflow,
 	restApi,
 	showMessage,
-	titleChange,
 	workflowHelpers,
 	workflowRun,
-	newVersions,
 )
 	.extend({
 		name: 'NodeView',
@@ -237,7 +174,6 @@ export default mixins(
 			NodeCreator,
 			NodeSettings,
 			RunData,
-			Sticky,
 		},
 		errorCaptured: (err, vm, info) => {
 			console.error('errorCaptured'); // eslint-disable-line no-console
@@ -250,92 +186,33 @@ export default mixins(
 				// When a node gets set as active deactivate the create-menu
 				this.createNodeActive = false;
 			},
-			nodes: {
-				async handler (value, oldValue) {
-					// Load a workflow
-					let workflowId = null as string | null;
-					if (this.$route && this.$route.params.name) {
-						workflowId = this.$route.params.name;
-					}
-				},
-				deep: true,
-			},
-			connections: {
-				async handler (value, oldValue) {
-					// Load a workflow
-					let workflowId = null as string | null;
-					if (this.$route && this.$route.params.name) {
-						workflowId = this.$route.params.name;
-					}
-				},
-				deep: true,
-			},
-
-		},
-		async beforeRouteLeave(to, from, next) {
-			const result = this.$store.getters.getStateIsDirty;
-			if(result) {
-				const confirmModal = await this.confirmModal(
-					this.$locale.baseText('nodeView.confirmMessage.beforeRouteLeave.message'),
-					this.$locale.baseText('nodeView.confirmMessage.beforeRouteLeave.headline'),
-					'warning',
-					this.$locale.baseText('nodeView.confirmMessage.beforeRouteLeave.confirmButtonText'),
-					this.$locale.baseText('nodeView.confirmMessage.beforeRouteLeave.cancelButtonText'),
-					true,
-				);
-
-				if (confirmModal === MODAL_CONFIRMED) {
-					const saved = await this.saveCurrentWorkflow({}, false);
-					if (saved) this.$store.dispatch('settings/fetchPromptsData');
-					this.$store.commit('setStateDirty', false);
-					next();
-				} else if (confirmModal === MODAL_CANCEL) {
-					this.$store.commit('setStateDirty', false);
-					next();
-				} else if (confirmModal === MODAL_CLOSE) {
-					next(false);
-				}
-
-			} else {
-				next();
-			}
 		},
 		computed: {
-			...mapGetters('ui', [
-				'sidebarMenuCollapsed',
-			]),
-			defaultLocale (): string {
-				return this.$store.getters.defaultLocale;
-			},
-			isEnglishLocale(): boolean {
-				return this.defaultLocale === 'en';
-			},
-			...mapGetters(['nativelyNumberSuffixedDefaults']),
 			activeNode (): INodeUi | null {
 				return this.$store.getters.activeNode;
 			},
 			executionWaitingForWebhook (): boolean {
 				return this.$store.getters.executionWaitingForWebhook;
 			},
-			isDemo (): boolean {
-				return this.$route.name === VIEWS.DEMO;
-			},
-			lastSelectedNode (): INodeUi | null {
+			lastSelectedNode (): INodeUi {
 				return this.$store.getters.lastSelectedNode;
+			},
+			connections (): IConnectionsUi {
+				return this.$store.getters.allConnections;
 			},
 			nodes (): INodeUi[] {
 				return this.$store.getters.allNodes;
 			},
 			runButtonText (): string {
 				if (this.workflowRunning === false) {
-					return this.$locale.baseText('nodeView.runButtonText.executeWorkflow');
+					return 'Execute Workflow';
 				}
 
 				if (this.executionWaitingForWebhook === true) {
-					return this.$locale.baseText('nodeView.runButtonText.waitingForTriggerEvent');
+					return 'Waiting for Webhook-Call';
 				}
 
-				return this.$locale.baseText('nodeView.runButtonText.executingWorkflow');
+				return 'Executing Workflow';
 			},
 			workflowStyle (): object {
 				const offsetPosition = this.$store.getters.getNodeViewOffsetPosition;
@@ -345,7 +222,11 @@ export default mixins(
 				};
 			},
 			backgroundStyle (): object {
-				return CanvasHelpers.getBackgroundStyles(this.nodeViewScale, this.$store.getters.getNodeViewOffsetPosition);
+				const offsetPosition = this.$store.getters.getNodeViewOffsetPosition;
+				return {
+					'transform': `scale(${this.nodeViewScale})`,
+					'background-position': `right ${-offsetPosition[0]}px bottom ${-offsetPosition[1]}px`,
+				};
 			},
 			workflowClasses () {
 				const returnClasses = [];
@@ -371,114 +252,40 @@ export default mixins(
 		},
 		data () {
 			return {
-				GRID_SIZE: CanvasHelpers.GRID_SIZE,
-				STICKY_NODE_TYPE,
 				createNodeActive: false,
 				instance: jsPlumb.getInstance(),
-				lastSelectedConnection: null as null | Connection,
-				lastClickPosition: [450, 450] as XYPosition,
+				lastClickPosition: [450, 450] as XYPositon,
 				nodeViewScale: 1,
 				ctrlKeyPressed: false,
+				debouncedFunctions: [] as any[], // tslint:disable-line:no-any
 				stopExecutionInProgress: false,
-				blankRedirect: false,
-				credentialsUpdated: false,
-				newNodeInsertPosition: null as XYPosition | null,
-				pullConnActiveNodeName: null as string | null,
-				pullConnActive: false,
-				dropPrevented: false,
-				renamingActive: false,
 			};
 		},
 		beforeDestroy () {
-			this.resetWorkspace();
 			// Make sure the event listeners get removed again else we
 			// could add up with them registred multiple times
 			document.removeEventListener('keydown', this.keyDown);
 			document.removeEventListener('keyup', this.keyUp);
 		},
 		methods: {
+			async callDebounced (...inputParameters: any[]): Promise<void> { // tslint:disable-line:no-any
+				const functionName = inputParameters.shift() as string;
+				const debounceTime = inputParameters.shift() as number;
+
+				// @ts-ignore
+				if (this.debouncedFunctions[functionName] === undefined) {
+					// @ts-ignore
+					this.debouncedFunctions[functionName] = debounce(this[functionName], debounceTime, { leading: true });
+				}
+				// @ts-ignore
+				await this.debouncedFunctions[functionName].apply(this, inputParameters);
+			},
 			clearExecutionData () {
 				this.$store.commit('setWorkflowExecutionData', null);
 				this.updateNodesExecutionIssues();
 			},
-			translateName(type: string, originalName: string) {
-				return this.$locale.headerText({
-					key: `headers.${this.$locale.shortNodeType(type)}.displayName`,
-					fallback: originalName,
-				});
-			},
-			getUniqueNodeName({
-				originalName,
-				additionalUsedNames = [],
-				type = '',
-			} : {
-				originalName: string,
-				additionalUsedNames?: string[],
-				type?: string,
-			}) {
-				const allNodeNamesOnCanvas = this.$store.getters.allNodes.map((n: INodeUi) => n.name);
-				originalName = this.isEnglishLocale ? originalName : this.translateName(type, originalName);
-
-				if (
-					!allNodeNamesOnCanvas.includes(originalName) &&
-					!additionalUsedNames.includes(originalName)
-				) {
-					return originalName; // already unique
-				}
-
-				let natives: string[] = this.nativelyNumberSuffixedDefaults;
-				natives = this.isEnglishLocale ? natives : natives.map(name => {
-					const type = name.toLowerCase().replace('_', '');
-					return this.translateName(type, name);
-				});
-
-				const found = natives.find((n) => originalName.startsWith(n));
-
-				let ignore, baseName, nameIndex, uniqueName;
-				let index = 1;
-
-				if (found) {
-					// name natively ends with number
-					nameIndex = originalName.split(found).pop();
-					if (nameIndex) {
-						index = parseInt(nameIndex, 10);
-					}
-					baseName = uniqueName = found;
-				} else {
-					const nameMatch = originalName.match(/(.*\D+)(\d*)/);
-
-					if (nameMatch === null) {
-						// name is only a number
-						index = parseInt(originalName, 10);
-						baseName = '';
-						uniqueName = baseName + index;
-					} else {
-						// name is string or string/number combination
-						[ignore, baseName, nameIndex] = nameMatch;
-						if (nameIndex !== '') {
-							index = parseInt(nameIndex, 10);
-						}
-						uniqueName = baseName;
-					}
-				}
-
-				while (
-					allNodeNamesOnCanvas.includes(uniqueName) ||
-					additionalUsedNames.includes(uniqueName)
-				) {
-					uniqueName = baseName + (index++);
-				}
-
-				return uniqueName;
-			},
-			async onSaveKeyboardShortcut () {
-				const saved = await this.saveCurrentWorkflow();
-				if (saved) this.$store.dispatch('settings/fetchPromptsData');
-			},
-			openNodeCreator (source: string) {
+			openNodeCreator () {
 				this.createNodeActive = true;
-				this.$externalHooks().run('nodeView.createNodeActiveChanged', { source, createNodeActive: this.createNodeActive });
-				this.$telemetry.trackNodesPanel('nodeView.createNodeActiveChanged', { source, workflow_id: this.$store.getters.workflowId, createNodeActive: this.createNodeActive });
 			},
 			async openExecution (executionId: string) {
 				this.resetWorkspace();
@@ -487,10 +294,7 @@ export default mixins(
 				try {
 					data = await this.restApi().getExecution(executionId);
 				} catch (error) {
-					this.$showError(
-						error,
-						this.$locale.baseText('nodeView.showError.openExecution.title'),
-					);
+					this.$showError(error, 'Problem loading execution', 'There was a problem opening the execution:');
 					return;
 				}
 
@@ -498,111 +302,12 @@ export default mixins(
 					throw new Error(`Execution with id "${executionId}" could not be found!`);
 				}
 
-				this.$store.commit('setWorkflowName', {newName: data.workflowData.name, setStateDirty: false});
+				this.$store.commit('setWorkflowName', data.workflowData.name);
 				this.$store.commit('setWorkflowId', PLACEHOLDER_EMPTY_WORKFLOW_ID);
 
 				this.$store.commit('setWorkflowExecutionData', data);
 
 				await this.addNodes(JSON.parse(JSON.stringify(data.workflowData.nodes)), JSON.parse(JSON.stringify(data.workflowData.connections)));
-				this.$nextTick(() => {
-					this.zoomToFit();
-					this.$store.commit('setStateDirty', false);
-				});
-
-				this.$externalHooks().run('execution.open', { workflowId: data.workflowData.id, workflowName: data.workflowData.name, executionId });
-				this.$telemetry.track('User opened read-only execution', { workflow_id: data.workflowData.id, execution_mode: data.mode, execution_finished: data.finished });
-
-				if (data.finished !== true && data && data.data && data.data.resultData && data.data.resultData.error) {
-					// Check if any node contains an error
-					let nodeErrorFound = false;
-					if (data.data.resultData.runData) {
-						const runData = data.data.resultData.runData;
-						errorCheck:
-						for (const nodeName of Object.keys(runData)) {
-							for (const taskData of runData[nodeName]) {
-								if (taskData.error) {
-									nodeErrorFound = true;
-									break errorCheck;
-								}
-							}
-						}
-					}
-
-					if (nodeErrorFound === false) {
-						const resultError = data.data.resultData.error;
-						const errorMessage = this.$getExecutionError(resultError);
-						const shouldTrack = resultError && resultError.node && resultError.node.type.startsWith('n8n-nodes-base');
-						this.$showMessage({
-							title: 'Failed execution',
-							message: errorMessage,
-							type: 'error',
-						}, shouldTrack);
-
-						if (data.data.resultData.error.stack) {
-							// Display some more information for now in console to make debugging easier
-							// TODO: Improve this in the future by displaying in UI
-							console.error(`Execution ${executionId} error:`); // eslint-disable-line no-console
-							console.error(data.data.resultData.error.stack); // eslint-disable-line no-console
-						}
-					}
-				}
-
-				if ((data as IExecutionsSummary).waitTill) {
-					this.$showMessage({
-						title: this.$locale.baseText('nodeView.thisExecutionHasntFinishedYet'),
-						message: `<a onclick="window.location.reload(false);">${this.$locale.baseText('nodeView.refresh')}</a> ${this.$locale.baseText('nodeView.toSeeTheLatestStatus')}.<br/> <a href="https://docs.n8n.io/nodes/n8n-nodes-base.wait/" target="_blank">${this.$locale.baseText('nodeView.moreInfo')}</a>`,
-						type: 'warning',
-						duration: 0,
-					});
-				}
-			},
-			async importWorkflowExact(data: {workflow: IWorkflowDataUpdate}) {
-				if (!data.workflow.nodes || !data.workflow.connections) {
-					throw new Error('Invalid workflow object');
-				}
-				this.resetWorkspace();
-				data.workflow.nodes = CanvasHelpers.getFixedNodesList(data.workflow.nodes);
-				await this.addNodes(data.workflow.nodes, data.workflow.connections);
-				this.$nextTick(() => {
-					this.zoomToFit();
-				});
-			},
-			async openWorkflowTemplate (templateId: string) {
-				this.setLoadingText(this.$locale.baseText('nodeView.loadingTemplate'));
-				this.resetWorkspace();
-
-				let data: IWorkflowTemplate | undefined;
-				try {
-					this.$externalHooks().run('template.requested', { templateId });
-					data = await this.$store.dispatch('templates/getWorkflowTemplate', templateId);
-
-					if (!data) {
-						throw new Error(
-							this.$locale.baseText(
-								'nodeView.workflowTemplateWithIdCouldNotBeFound',
-								{ interpolate: { templateId } },
-							),
-						);
-					}
-				} catch (error) {
-					this.$showError(error, this.$locale.baseText('nodeView.couldntImportWorkflow'));
-					this.$router.replace({ name: VIEWS.NEW_WORKFLOW });
-					return;
-				}
-
-				data.workflow.nodes = CanvasHelpers.getFixedNodesList(data.workflow.nodes);
-
-				this.blankRedirect = true;
-				this.$router.replace({ name: VIEWS.NEW_WORKFLOW, query: { templateId } });
-
-				await this.addNodes(data.workflow.nodes, data.workflow.connections);
-				await this.$store.dispatch('workflows/setNewWorkflowName', data.name);
-				this.$nextTick(() => {
-					this.zoomToFit();
-					this.$store.commit('setStateDirty', true);
-				});
-
-				this.$externalHooks().run('template.open', { templateId, templateName: data.name, workflow: data.workflow });
 			},
 			async openWorkflow (workflowId: string) {
 				this.resetWorkspace();
@@ -611,55 +316,29 @@ export default mixins(
 				try {
 					data = await this.restApi().getWorkflow(workflowId);
 				} catch (error) {
-					this.$showError(
-						error,
-						this.$locale.baseText('nodeView.showError.openWorkflow.title'),
-					);
+					this.$showError(error, 'Problem opening workflow', 'There was a problem opening the workflow:');
 					return;
 				}
 
 				if (data === undefined) {
-					throw new Error(
-						this.$locale.baseText(
-							'nodeView.workflowWithIdCouldNotBeFound',
-							{ interpolate: { workflowId } },
-						),
-					);
+					throw new Error(`Workflow with id "${workflowId}" could not be found!`);
 				}
 
 				this.$store.commit('setActive', data.active || false);
 				this.$store.commit('setWorkflowId', workflowId);
-				this.$store.commit('setWorkflowName', {newName: data.name, setStateDirty: false});
+				this.$store.commit('setWorkflowName', data.name);
 				this.$store.commit('setWorkflowSettings', data.settings || {});
 
-				const tags = (data.tags || []) as ITag[];
-				this.$store.commit('tags/upsertTags', tags);
-
-				const tagIds = tags.map((tag) => tag.id);
-				this.$store.commit('setWorkflowTagIds', tagIds || []);
-
 				await this.addNodes(data.nodes, data.connections);
-				if (!this.credentialsUpdated) {
-					this.$store.commit('setStateDirty', false);
-				}
-
-				this.zoomToFit();
-
-				this.$externalHooks().run('workflow.open', { workflowId, workflowName: data.name });
-
-				return data;
 			},
-			touchTap (e: MouseEvent | TouchEvent) {
-				if (this.isTouchDevice) {
-					this.mouseDown(e);
-				}
-			},
-			mouseDown (e: MouseEvent | TouchEvent) {
+			mouseDown (e: MouseEvent) {
 				// Save the location of the mouse click
-				this.lastClickPosition = this.getMousePositionWithinNodeView(e);
+				const offsetPosition = this.$store.getters.getNodeViewOffsetPosition;
+				this.lastClickPosition[0] = e.pageX - offsetPosition[0];
+				this.lastClickPosition[1] = e.pageY - offsetPosition[1];
 
-				this.mouseDownMouseSelect(e as MouseEvent);
-				this.mouseDownMoveWorkflow(e as MouseEvent);
+				this.mouseDownMouseSelect(e);
+				this.mouseDownMoveWorkflow(e);
 
 				// Hide the node-creator
 				this.createNodeActive = false;
@@ -669,17 +348,6 @@ export default mixins(
 				this.mouseUpMoveWorkflow(e);
 			},
 			wheelScroll (e: WheelEvent) {
-				//* Control + scroll zoom
-				if (e.ctrlKey) {
-					if (e.deltaY > 0) {
-						this.zoomOut();
-					} else {
-						this.zoomIn();
-					}
-
-					e.preventDefault();
-					return;
-				}
 				this.wheelMoveWorkflow(e);
 			},
 			keyUp (e: KeyboardEvent) {
@@ -695,100 +363,67 @@ export default mixins(
 				// else which should ignore the default keybindings
 				for (let index = 0; index < path.length; index++) {
 					if (path[index].className && typeof path[index].className === 'string' && (
-						path[index].className.includes('ignore-key-press')
+						path[index].className.includes('el-message-box') || path[index].className.includes('ignore-key-press')
 					)) {
 						return;
 					}
 				}
 
-				// el-dialog or el-message-box element is open
-				if (window.document.body.classList.contains('el-popup-parent--hidden')) {
-					return;
-				}
-
-				if (e.key === 'Escape') {
-					this.createNodeActive = false;
-					if (this.activeNode) {
-						this.$externalHooks().run('dataDisplay.nodeEditingFinished');
-						this.$store.commit('setActiveNode', null);
-					}
-
-					return;
-				}
-
-				// node modal is open
-				if (this.activeNode) {
-					return;
-				}
-
 				if (e.key === 'd') {
-					this.callDebounced('deactivateSelectedNode', { debounceTime: 350 });
-
-				} else if (e.key === 'Delete' || e.key === 'Backspace') {
+					this.callDebounced('deactivateSelectedNode', 350);
+				} else if (e.key === 'Delete') {
 					e.stopPropagation();
 					e.preventDefault();
 
-					this.callDebounced('deleteSelectedNodes', { debounceTime: 500 });
-
+					this.callDebounced('deleteSelectedNodes', 500);
+				} else if (e.key === 'Escape') {
+					this.createNodeActive = false;
+					this.$store.commit('setActiveNode', null);
 				} else if (e.key === 'Tab') {
 					this.createNodeActive = !this.createNodeActive && !this.isReadOnly;
-					this.$externalHooks().run('nodeView.createNodeActiveChanged', { source: 'tab', createNodeActive: this.createNodeActive });
-					this.$telemetry.trackNodesPanel('nodeView.createNodeActiveChanged', { source: 'tab', workflow_id: this.$store.getters.workflowId, createNodeActive: this.createNodeActive });
-
 				} else if (e.key === this.controlKeyCode) {
 					this.ctrlKeyPressed = true;
-				} else if (e.key === 'F2' && !this.isReadOnly) {
+				} else if (e.key === 'F2') {
 					const lastSelectedNode = this.lastSelectedNode;
-					if (lastSelectedNode !== null && lastSelectedNode.type !== STICKY_NODE_TYPE) {
-						this.callDebounced('renameNodePrompt', { debounceTime: 1500 }, lastSelectedNode.name);
+					if (lastSelectedNode !== null) {
+						this.callDebounced('renameNodePrompt', 1500, lastSelectedNode.name);
 					}
-				} else if ((e.key === '=' || e.key === '+') && !this.isCtrlKeyPressed(e)) {
-					this.zoomIn();
-				} else if ((e.key === '_' || e.key === '-') && !this.isCtrlKeyPressed(e)) {
-					this.zoomOut();
-				} else if ((e.key === '0') && !this.isCtrlKeyPressed(e)) {
-					this.resetZoom();
-				} else if ((e.key === '1') && !this.isCtrlKeyPressed(e)) {
-					this.zoomToFit();
+				} else if (e.key === '+') {
+					this.callDebounced('setZoom', 300, 'in');
+				} else if (e.key === '-') {
+					this.callDebounced('setZoom', 300, 'out');
+				} else if ((e.key === '0') && (this.isCtrlKeyPressed(e) === true)) {
+					this.callDebounced('setZoom', 300, 'reset');
 				} else if ((e.key === 'a') && (this.isCtrlKeyPressed(e) === true)) {
 					// Select all nodes
 					e.stopPropagation();
 					e.preventDefault();
 
-					this.callDebounced('selectAllNodes', { debounceTime: 1000 });
+					this.callDebounced('selectAllNodes', 1000);
 				} else if ((e.key === 'c') && (this.isCtrlKeyPressed(e) === true)) {
-					this.callDebounced('copySelectedNodes', { debounceTime: 1000 });
+					this.callDebounced('copySelectedNodes', 1000);
 				} else if ((e.key === 'x') && (this.isCtrlKeyPressed(e) === true)) {
 					// Cut nodes
 					e.stopPropagation();
 					e.preventDefault();
 
-					this.callDebounced('cutSelectedNodes', { debounceTime: 1000 });
+					this.callDebounced('cutSelectedNodes', 1000);
 				} else if (e.key === 'o' && this.isCtrlKeyPressed(e) === true) {
 					// Open workflow dialog
 					e.stopPropagation();
 					e.preventDefault();
-					if (this.isDemo) {
-						return;
-					}
 
-					this.$store.dispatch('ui/openModal', WORKFLOW_OPEN_MODAL_KEY);
+					this.$root.$emit('openWorkflowDialog');
 				} else if (e.key === 'n' && this.isCtrlKeyPressed(e) === true && e.altKey === true) {
 					// Create a new workflow
 					e.stopPropagation();
 					e.preventDefault();
-					if (this.isDemo) {
-						return;
-					}
 
-					if (this.$router.currentRoute.name === VIEWS.NEW_WORKFLOW) {
-						this.$root.$emit('newWorkflow');
-					} else {
-						this.$router.push({ name: VIEWS.NEW_WORKFLOW });
-					}
+					this.$router.push({ name: 'NodeViewNew' });
 
 					this.$showMessage({
-						title: this.$locale.baseText('nodeView.showMessage.keyDown.title'),
+						title: 'Created',
+						message: 'A new workflow got created!',
 						type: 'success',
 					});
 				} else if ((e.key === 's') && (this.isCtrlKeyPressed(e) === true)) {
@@ -796,19 +431,12 @@ export default mixins(
 					e.stopPropagation();
 					e.preventDefault();
 
-					if (this.isReadOnly) {
-						return;
-					}
-
-					this.callDebounced('onSaveKeyboardShortcut', { debounceTime: 1000 });
+					this.callDebounced('saveCurrentWorkflow', 1000);
 				} else if (e.key === 'Enter') {
 					// Activate the last selected node
-					const lastSelectedNode = this.lastSelectedNode;
+					const lastSelectedNode = this.$store.getters.lastSelectedNode;
 
 					if (lastSelectedNode !== null) {
-						if (lastSelectedNode.type === STICKY_NODE_TYPE && this.isReadOnly) {
-							return;
-						}
 						this.$store.commit('setActiveNode', lastSelectedNode.name);
 					}
 				} else if (e.key === 'ArrowRight' && e.shiftKey === true) {
@@ -816,30 +444,30 @@ export default mixins(
 					e.stopPropagation();
 					e.preventDefault();
 
-					this.callDebounced('selectDownstreamNodes', { debounceTime: 1000 });
+					this.callDebounced('selectDownstreamNodes', 1000);
 				} else if (e.key === 'ArrowRight') {
 					// Set child node active
-					const lastSelectedNode = this.lastSelectedNode;
+					const lastSelectedNode = this.$store.getters.lastSelectedNode;
 					if (lastSelectedNode === null) {
 						return;
 					}
 
-					const connections = this.$store.getters.outgoingConnectionsByNodeName(lastSelectedNode.name);
+					const connections = this.$store.getters.connectionsByNodeName(lastSelectedNode.name);
 
 					if (connections.main === undefined || connections.main.length === 0) {
 						return;
 					}
 
-					this.callDebounced('nodeSelectedByName', { debounceTime: 100 }, connections.main[0][0].node, false, true);
+					this.callDebounced('nodeSelectedByName', 100, connections.main[0][0].node, false, true);
 				} else if (e.key === 'ArrowLeft' && e.shiftKey === true) {
 					// Select all downstream nodes
 					e.stopPropagation();
 					e.preventDefault();
 
-					this.callDebounced('selectUpstreamNodes', { debounceTime: 1000 });
+					this.callDebounced('selectUpstreamNodes', 1000);
 				} else if (e.key === 'ArrowLeft') {
 					// Set parent node active
-					const lastSelectedNode = this.lastSelectedNode;
+					const lastSelectedNode = this.$store.getters.lastSelectedNode;
 					if (lastSelectedNode === null) {
 						return;
 					}
@@ -856,12 +484,12 @@ export default mixins(
 						return;
 					}
 
-					this.callDebounced('nodeSelectedByName', { debounceTime: 100 }, connections.main[0][0].node, false, true);
+					this.callDebounced('nodeSelectedByName', 100, connections.main[0][0].node, false, true);
 				} else if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
 					// Set sibling node as active
 
 					// Check first if it has a parent node
-					const lastSelectedNode = this.lastSelectedNode;
+					const lastSelectedNode = this.$store.getters.lastSelectedNode;
 					if (lastSelectedNode === null) {
 						return;
 					}
@@ -879,7 +507,7 @@ export default mixins(
 					}
 
 					const parentNode = connections.main[0][0].node;
-					const connectionsParent = this.$store.getters.outgoingConnectionsByNodeName(parentNode);
+					const connectionsParent = this.$store.getters.connectionsByNodeName(parentNode);
 
 					if (connectionsParent.main === undefined || connectionsParent.main.length === 0) {
 						return;
@@ -895,7 +523,7 @@ export default mixins(
 								// Ignore current node
 								continue;
 							}
-							siblingNode = this.$store.getters.getNodeByName(ouputConnection.node);
+							siblingNode = this.$store.getters.nodeByName(ouputConnection.node);
 
 							if (e.key === 'ArrowUp') {
 								// Get the next node on the left
@@ -914,7 +542,7 @@ export default mixins(
 					}
 
 					if (nextSelectNode !== null) {
-						this.callDebounced('nodeSelectedByName', { debounceTime: 100 }, nextSelectNode, false, true);
+						this.callDebounced('nodeSelectedByName', 100, nextSelectNode, false, true);
 					}
 				}
 			},
@@ -945,7 +573,7 @@ export default mixins(
 			},
 
 			selectUpstreamNodes () {
-				const lastSelectedNode = this.lastSelectedNode;
+				const lastSelectedNode = this.$store.getters.lastSelectedNode as INodeUi | null;
 				if (lastSelectedNode === null) {
 					return;
 				}
@@ -962,7 +590,7 @@ export default mixins(
 				this.nodeSelectedByName(lastSelectedNode.name);
 			},
 			selectDownstreamNodes () {
-				const lastSelectedNode = this.lastSelectedNode;
+				const lastSelectedNode = this.$store.getters.lastSelectedNode as INodeUi | null;
 				if (lastSelectedNode === null) {
 					return;
 				}
@@ -979,85 +607,30 @@ export default mixins(
 				this.nodeSelectedByName(lastSelectedNode.name);
 			},
 
-			pushDownstreamNodes (sourceNodeName: string, margin: number) {
-				const sourceNode = this.$store.getters.nodesByName[sourceNodeName];
-				const workflow = this.getWorkflow();
-				const childNodes = workflow.getChildNodes(sourceNodeName);
-				for (const nodeName of childNodes) {
-					const node = this.$store.getters.nodesByName[nodeName] as INodeUi;
-					if (node.position[0] < sourceNode.position[0]) {
-						continue;
-					}
-
-					const updateInformation = {
-						name: nodeName,
-						properties: {
-							position: [node.position[0] + margin, node.position[1]],
-						},
-					};
-
-					this.$store.commit('updateNodeProperties', updateInformation);
-					this.onNodeMoved(node);
-				}
-			},
-
 			cutSelectedNodes () {
-				const deleteCopiedNodes = !this.isReadOnly;
-				this.copySelectedNodes(deleteCopiedNodes);
-				if (deleteCopiedNodes) {
-					this.deleteSelectedNodes();
-				}
+				this.copySelectedNodes();
+				this.deleteSelectedNodes();
 			},
 
-			copySelectedNodes (isCut: boolean) {
+			copySelectedNodes () {
 				this.getSelectedNodesToSave().then((data) => {
 					const nodeData = JSON.stringify(data, null, 2);
 					this.copyToClipboard(nodeData);
-					if (data.nodes.length > 0) {
-						if(!isCut){
-							this.$showMessage({
-								title: 'Copied!',
-								message: '',
-								type: 'success',
-							});
-						}
-						this.$telemetry.track('User copied nodes', {
-							node_types: data.nodes.map((node) => node.type),
-							workflow_id: this.$store.getters.workflowId,
-						});
-					}
 				});
 			},
 
-			resetZoom () {
-				const { scale, offset } = CanvasHelpers.scaleReset({scale: this.nodeViewScale, offset: this.$store.getters.getNodeViewOffsetPosition});
-
-				this.setZoomLevel(scale);
-				this.$store.commit('setNodeViewOffsetPosition', {newOffset: offset});
-			},
-
-			zoomIn() {
-				const { scale, offset: [xOffset, yOffset] } = CanvasHelpers.scaleBigger({scale: this.nodeViewScale, offset: this.$store.getters.getNodeViewOffsetPosition});
-
-				this.setZoomLevel(scale);
-				this.$store.commit('setNodeViewOffsetPosition', {newOffset: [xOffset, yOffset]});
-			},
-
-			zoomOut() {
-				const { scale, offset: [xOffset, yOffset] } = CanvasHelpers.scaleSmaller({scale: this.nodeViewScale, offset: this.$store.getters.getNodeViewOffsetPosition});
-
-				this.setZoomLevel(scale);
-				this.$store.commit('setNodeViewOffsetPosition', {newOffset: [xOffset, yOffset]});
-			},
-
-			setZoomLevel (zoomLevel: number) {
-				this.nodeViewScale = zoomLevel; // important for background
-				const element = this.instance.getContainer() as HTMLElement;
-				if (!element) {
-					return;
+			setZoom (zoom: string) {
+				if (zoom === 'in') {
+					this.nodeViewScale *= 1.25;
+				} else if (zoom === 'out') {
+					this.nodeViewScale /= 1.25;
+				} else {
+					this.nodeViewScale = 1;
 				}
 
-				// https://docs.jsplumbtoolkit.com/community/current/articles/zooming.html
+				const zoomLevel = this.nodeViewScale;
+
+				const element = this.instance.getContainer() as HTMLElement;
 				const prependProperties = ['webkit', 'moz', 'ms', 'o'];
 				const scaleString = 'scale(' + zoomLevel + ')';
 
@@ -1071,19 +644,6 @@ export default mixins(
 				this.instance.setZoom(zoomLevel);
 			},
 
-			zoomToFit () {
-				const nodes = this.$store.getters.allNodes as INodeUi[];
-
-				if (nodes.length === 0) { // some unknown workflow executions
-					return;
-				}
-
-				const {zoomLevel, offset} = CanvasHelpers.getZoomToFit(nodes, !this.isDemo);
-
-				this.setZoomLevel(zoomLevel);
-				this.$store.commit('setNodeViewOffsetPosition', {newOffset: offset});
-			},
-
 			async stopExecution () {
 				const executionId = this.$store.getters.activeExecutionId;
 				if (executionId === null) {
@@ -1092,60 +652,30 @@ export default mixins(
 
 				try {
 					this.stopExecutionInProgress = true;
-					await this.restApi().stopCurrentExecution(executionId);
+					const stopData: IExecutionsStopData = await this.restApi().stopCurrentExecution(executionId);
 					this.$showMessage({
-						title: this.$locale.baseText('nodeView.showMessage.stopExecutionTry.title'),
+						title: 'Execution stopped',
+						message: `The execution with the id "${executionId}" got stopped!`,
 						type: 'success',
 					});
 				} catch (error) {
-					// Execution stop might fail when the execution has already finished. Let's treat this here.
-					const execution = await this.restApi().getExecution(executionId);
-					if (execution.finished) {
-						const executedData = {
-							data: execution.data,
-							finished: execution.finished,
-							mode: execution.mode,
-							startedAt: execution.startedAt,
-							stoppedAt: execution.stoppedAt,
-						} as IRun;
-						const pushData = {
-							data: executedData,
-							executionId,
-							retryOf: execution.retryOf,
-						} as IPushDataExecutionFinished;
-						this.$store.commit('finishActiveExecution', pushData);
-						this.$titleSet(execution.workflowData.name, 'IDLE');
-						this.$store.commit('setExecutingNode', null);
-						this.$store.commit('setWorkflowExecutionData', executedData);
-						this.$store.commit('removeActiveAction', 'workflowRunning');
-						this.$showMessage({
-							title: this.$locale.baseText('nodeView.showMessage.stopExecutionCatch.title'),
-							message: this.$locale.baseText('nodeView.showMessage.stopExecutionCatch.message'),
-							type: 'success',
-						});
-					} else {
-						this.$showError(
-							error,
-							this.$locale.baseText('nodeView.showError.stopExecution.title'),
-						);
-					}
+					this.$showError(error, 'Problem stopping execution', 'There was a problem stopping the execuction:');
 				}
 				this.stopExecutionInProgress = false;
 			},
 
 			async stopWaitingForWebhook () {
+				let result;
 				try {
-					await this.restApi().removeTestWebhook(this.$store.getters.workflowId);
+					result = await this.restApi().removeTestWebhook(this.$store.getters.workflowId);
 				} catch (error) {
-					this.$showError(
-						error,
-						this.$locale.baseText('nodeView.showError.stopWaitingForWebhook.title'),
-					);
+					this.$showError(error, 'Problem deleting the test-webhook', 'There was a problem deleting webhook:');
 					return;
 				}
 
 				this.$showMessage({
-					title: this.$locale.baseText('nodeView.showMessage.stopWaitingForWebhook.title'),
+					title: 'Webhook got deleted',
+					message: `The webhook got deleted!`,
 					type: 'success',
 				});
 			},
@@ -1164,16 +694,7 @@ export default mixins(
 						return;
 					}
 
-					const importConfirm = await this.confirmMessage(
-						this.$locale.baseText(
-							'nodeView.confirmMessage.receivedCopyPasteData.message',
-							{ interpolate: { plainTextData } },
-						),
-						this.$locale.baseText('nodeView.confirmMessage.receivedCopyPasteData.headline'),
-						'warning',
-						this.$locale.baseText('nodeView.confirmMessage.receivedCopyPasteData.confirmButtonText'),
-						this.$locale.baseText('nodeView.confirmMessage.receivedCopyPasteData.cancelButtonText'),
-					);
+					const importConfirm = await this.confirmMessage(`Import workflow from this URL:<br /><i>${plainTextData}<i>`, 'Import Workflow from URL?', 'warning', 'Yes, import!');
 
 					if (importConfirm === false) {
 						return;
@@ -1198,10 +719,6 @@ export default mixins(
 					}
 				}
 
-				this.$telemetry.track('User pasted nodes', {
-					workflow_id: this.$store.getters.workflowId,
-				});
-
 				return this.importWorkflowData(workflowData!);
 			},
 
@@ -1215,15 +732,10 @@ export default mixins(
 					workflowData = await this.restApi().getWorkflowFromUrl(url);
 				} catch (error) {
 					this.stopLoading();
-					this.$showError(
-						error,
-						this.$locale.baseText('nodeView.showError.getWorkflowDataFromUrl.title'),
-					);
+					this.$showError(error, 'Problem loading workflow', 'There was a problem loading the workflow data from URL:');
 					return;
 				}
 				this.stopLoading();
-
-				this.$telemetry.track('User imported workflow', { source: 'url', workflow_id: this.$store.getters.workflowId });
 
 				return workflowData;
 			},
@@ -1246,7 +758,7 @@ export default mixins(
 					// Fix the node position as it could be totally offscreen
 					// and the pasted nodes would so not be directly visible to
 					// the user
-					this.updateNodePositions(workflowData, CanvasHelpers.getNewNodePosition(this.nodes, this.lastClickPosition));
+					this.updateNodePositions(workflowData, this.getNewNodePosition());
 
 					const data = await this.addNodesToWorkflow(workflowData);
 
@@ -1256,10 +768,7 @@ export default mixins(
 						});
 					});
 				} catch (error) {
-					this.$showError(
-						error,
-						this.$locale.baseText('nodeView.showError.importWorkflowData.title'),
-					);
+					this.$showError(error, 'Problem importing workflow', 'There was a problem importing workflow data:');
 				}
 			},
 
@@ -1272,29 +781,8 @@ export default mixins(
 				this.createNodeActive = false;
 			},
 
-			onDragOver(event: DragEvent) {
-				event.preventDefault();
-			},
-
-			onDrop(event: DragEvent) {
-				if (!event.dataTransfer) {
-					return;
-				}
-
-				const nodeTypeName = event.dataTransfer.getData('nodeTypeName');
-				if (nodeTypeName) {
-					const mousePosition = this.getMousePositionWithinNodeView(event);
-
-					this.addNodeButton(nodeTypeName, {
-						position: [mousePosition[0] - CanvasHelpers.NODE_SIZE / 2, mousePosition[1] - CanvasHelpers.NODE_SIZE / 2],
-						dragAndDrop: true,
-					});
-					this.createNodeActive = false;
-				}
-			},
-
 			nodeDeselectedByName (nodeName: string) {
-				const node = this.$store.getters.getNodeByName(nodeName);
+				const node = this.$store.getters.nodeByName(nodeName);
 				if (node) {
 					this.nodeDeselected(node);
 				}
@@ -1305,44 +793,123 @@ export default mixins(
 					this.deselectAllNodes();
 				}
 
-				const node = this.$store.getters.getNodeByName(nodeName);
+				const node = this.$store.getters.nodeByName(nodeName);
 				if (node) {
 					this.nodeSelected(node);
 				}
 
 				this.$store.commit('setLastSelectedNode', node.name);
 				this.$store.commit('setLastSelectedNodeOutputIndex', null);
-				this.lastSelectedConnection = null;
-				this.newNodeInsertPosition = null;
 
 				if (setActive === true) {
 					this.$store.commit('setActiveNode', node.name);
 				}
 			},
+
+			canUsePosition (position1: XYPositon, position2: XYPositon) {
+				if (Math.abs(position1[0] - position2[0]) <= 100) {
+					if (Math.abs(position1[1] - position2[1]) <= 50) {
+						return false;
+					}
+				}
+
+				return true;
+			},
+			getNewNodePosition (newPosition?: XYPositon, movePosition?: XYPositon): XYPositon {
+				// TODO: Lates has to consider also the view position (that it creates the node where it is visible)
+				// Use the last click position as position for new node
+				if (newPosition === undefined) {
+					newPosition = this.lastClickPosition;
+				}
+
+				// @ts-ignore
+				newPosition = newPosition.slice();
+
+				if (!movePosition) {
+					movePosition = [50, 50];
+				}
+
+				let conflictFound = false;
+				let i, node;
+				do {
+					conflictFound = false;
+					for (i = 0; i < this.nodes.length; i++) {
+						node = this.nodes[i];
+						if (!this.canUsePosition(node.position, newPosition!)) {
+							conflictFound = true;
+							break;
+						}
+					}
+
+					if (conflictFound === true) {
+						newPosition![0] += movePosition[0];
+						newPosition![1] += movePosition[1];
+					}
+				} while (conflictFound === true);
+
+				return newPosition!;
+			},
+			getUniqueNodeName (originalName: string, additinalUsedNames?: string[]) {
+				// Check if node-name is unique else find one that is
+				additinalUsedNames = additinalUsedNames || [];
+
+				// Get all the names of the current nodes
+				const nodeNames = this.$store.getters.allNodes.map((node: INodeUi) => {
+					return node.name;
+				});
+
+				// Check first if the current name is already unique
+				if (!nodeNames.includes(originalName) && !additinalUsedNames.includes(originalName)) {
+					return originalName;
+				}
+
+				const nameMatch = originalName.match(/(.*[a-zA-Z])(\d*)/);
+				let ignore, baseName, nameIndex, uniqueName;
+				let index = 1;
+
+				if (nameMatch === null) {
+					// Name is only a number
+					index = parseInt(originalName, 10);
+					baseName = '';
+					uniqueName = baseName + index;
+				} else {
+					// Name is string or string/number combination
+					[ignore, baseName, nameIndex] = nameMatch;
+					if (nameIndex !== '') {
+						index = parseInt(nameIndex, 10);
+					}
+					uniqueName = baseName;
+				}
+
+				while (
+					nodeNames.includes(uniqueName) ||
+					additinalUsedNames.includes(uniqueName)
+				) {
+					uniqueName = baseName + (index++);
+				}
+
+				return uniqueName;
+			},
 			showMaxNodeTypeError (nodeTypeData: INodeTypeDescription) {
 				const maxNodes = nodeTypeData.maxNodes;
 				this.$showMessage({
-					title: this.$locale.baseText('nodeView.showMessage.showMaxNodeTypeError.title'),
-					message: this.$locale.baseText('nodeView.showMessage.showMaxNodeTypeError.message',
-						{
-							adjustToNumber: maxNodes,
-							interpolate: { nodeTypeDataDisplayName: nodeTypeData.displayName },
-						},
-					),
+					title: 'Could not create node!',
+					message: `Node can not be created because in a workflow max. ${maxNodes} ${maxNodes === 1 ? 'node' : 'nodes'} of type "${nodeTypeData.displayName}" ${maxNodes === 1 ? 'is' : 'are'} allowed!`,
 					type: 'error',
 					duration: 0,
 				});
 			},
-			async injectNode (nodeTypeName: string, options: AddNodeOptions = {}) {
+			async addNodeButton (nodeTypeName: string) {
+				if (this.editAllowedCheck() === false) {
+					return;
+				}
+
 				const nodeTypeData: INodeTypeDescription | null = this.$store.getters.nodeType(nodeTypeName);
 
 				if (nodeTypeData === null) {
 					this.$showMessage({
-						title: this.$locale.baseText('nodeView.showMessage.addNodeButton.title'),
-						message: this.$locale.baseText(
-							'nodeView.showMessage.addNodeButton.message',
-							{ interpolate: { nodeTypeName } },
-						),
+						title: 'Could not create node!',
+						message: `Node of type "${nodeTypeName}" could not be created as it is not known.`,
 						type: 'error',
 					});
 					return;
@@ -1356,561 +923,403 @@ export default mixins(
 				const newNodeData: INodeUi = {
 					name: nodeTypeData.defaults.name as string,
 					type: nodeTypeData.name,
-					typeVersion: Array.isArray(nodeTypeData.version)
-						? nodeTypeData.version.slice(-1)[0]
-						: nodeTypeData.version,
+					typeVersion: nodeTypeData.version,
 					position: [0, 0],
 					parameters: {},
 				};
 
-				// when pulling new connection from node or injecting into a connection
-				const lastSelectedNode = this.lastSelectedNode;
-
-				if (options.position) {
-					newNodeData.position = CanvasHelpers.getNewNodePosition(this.nodes, options.position);
-				} else if (lastSelectedNode) {
-					const lastSelectedConnection = this.lastSelectedConnection;
-					if (lastSelectedConnection) { // set when injecting into a connection
-						const [diffX] = CanvasHelpers.getConnectorLengths(lastSelectedConnection);
-						if (diffX <= CanvasHelpers.MAX_X_TO_PUSH_DOWNSTREAM_NODES) {
-							this.pushDownstreamNodes(lastSelectedNode.name, CanvasHelpers.PUSH_NODES_OFFSET);
-						}
-					}
-
-					// set when pulling connections
-					if (this.newNodeInsertPosition) {
-						newNodeData.position = CanvasHelpers.getNewNodePosition(this.nodes, [
-							this.newNodeInsertPosition[0] + CanvasHelpers.GRID_SIZE,
-							this.newNodeInsertPosition[1] - CanvasHelpers.NODE_SIZE / 2,
-						]);
-						this.newNodeInsertPosition = null;
-					} else {
-						let yOffset = 0;
-
-						if (lastSelectedConnection) {
-							const sourceNodeType = this.$store.getters.nodeType(lastSelectedNode.type, lastSelectedNode.typeVersion) as INodeTypeDescription | null;
-							const offsets = [[-100, 100], [-140, 0, 140], [-240, -100, 100, 240]];
-							if (sourceNodeType && sourceNodeType.outputs.length > 1) {
-								const offset = offsets[sourceNodeType.outputs.length - 2];
-								const sourceOutputIndex = lastSelectedConnection.__meta ? lastSelectedConnection.__meta.sourceOutputIndex : 0;
-								yOffset = offset[sourceOutputIndex];
-							}
-						}
-
-						// If a node is active then add the new node directly after the current one
-						// newNodeData.position = [activeNode.position[0], activeNode.position[1] + 60];
-						newNodeData.position = CanvasHelpers.getNewNodePosition(
-							this.nodes,
-							[lastSelectedNode.position[0] + CanvasHelpers.PUSH_NODES_OFFSET, lastSelectedNode.position[1] + yOffset],
-							[100, 0],
-						);
-					}
+				// Check if there is a last selected node
+				const lastSelectedNode = this.$store.getters.lastSelectedNode;
+				const lastSelectedNodeOutputIndex = this.$store.getters.lastSelectedNodeOutputIndex;
+				if (lastSelectedNode) {
+					// If a node is active then add the new node directly after the current one
+					// newNodeData.position = [activeNode.position[0], activeNode.position[1] + 60];
+					newNodeData.position = this.getNewNodePosition(
+						[lastSelectedNode.position[0] + 150, lastSelectedNode.position[1]],
+						[100, 0],
+					);
 				} else {
 					// If no node is active find a free spot
-					newNodeData.position = CanvasHelpers.getNewNodePosition(this.nodes, this.lastClickPosition);
+					newNodeData.position = this.getNewNodePosition();
 				}
-
 
 				// Check if node-name is unique else find one that is
-				newNodeData.name = this.getUniqueNodeName({
-					originalName: newNodeData.name,
-					type: newNodeData.type,
-				});
-
-				if (nodeTypeData.webhooks && nodeTypeData.webhooks.length) {
-					newNodeData.webhookId = uuidv4();
-				}
+				newNodeData.name = this.getUniqueNodeName(newNodeData.name);
 
 				await this.addNodes([newNodeData]);
-
-				this.$store.commit('setStateDirty', true);
-
-				if (nodeTypeName === STICKY_NODE_TYPE) {
-					this.$telemetry.trackNodesPanel('nodeView.addSticky', { workflow_id: this.$store.getters.workflowId });
-				} else {
-					this.$externalHooks().run('nodeView.addNodeButton', { nodeTypeName });
-					this.$telemetry.trackNodesPanel('nodeView.addNodeButton', {
-						node_type: nodeTypeName,
-						workflow_id: this.$store.getters.workflowId,
-						drag_and_drop: options.dragAndDrop,
-					} as IDataObject);
-				}
 
 				// Automatically deselect all nodes and select the current one and also active
 				// current node
 				this.deselectAllNodes();
 				setTimeout(() => {
-					this.nodeSelectedByName(newNodeData.name, nodeTypeName !== STICKY_NODE_TYPE);
+					this.nodeSelectedByName(newNodeData.name, true);
 				});
-
-				return newNodeData;
-			},
-			getConnection (sourceNodeName: string, sourceNodeOutputIndex: number, targetNodeName: string, targetNodeOuputIndex: number): IConnection | undefined {
-				const nodeConnections = (this.$store.getters.outgoingConnectionsByNodeName(sourceNodeName) as INodeConnections).main;
-				if (nodeConnections) {
-					const connections: IConnection[] | null = nodeConnections[sourceNodeOutputIndex];
-
-					if (connections) {
-						return connections.find((connection: IConnection) => connection.node === targetNodeName && connection.index === targetNodeOuputIndex);
-					}
-				}
-
-				return undefined;
-			},
-			connectTwoNodes (sourceNodeName: string, sourceNodeOutputIndex: number, targetNodeName: string, targetNodeOuputIndex: number) {
-				if (this.getConnection(sourceNodeName, sourceNodeOutputIndex, targetNodeName, targetNodeOuputIndex)) {
-					return;
-				}
-
-				const connectionData = [
-					{
-						node: sourceNodeName,
-						type: 'main',
-						index: sourceNodeOutputIndex,
-					},
-					{
-						node: targetNodeName,
-						type: 'main',
-						index: targetNodeOuputIndex,
-					},
-				] as [IConnection, IConnection];
-
-				this.__addConnection(connectionData, true);
-			},
-			async addNodeButton (nodeTypeName: string, options: AddNodeOptions = {}) {
-				if (this.editAllowedCheck() === false) {
-					return;
-				}
-
-				const lastSelectedConnection = this.lastSelectedConnection;
-				const lastSelectedNode = this.lastSelectedNode;
-				const lastSelectedNodeOutputIndex = this.$store.getters.lastSelectedNodeOutputIndex;
-
-				const newNodeData = await this.injectNode(nodeTypeName, options);
-				if (!newNodeData) {
-					return;
-				}
 
 				const outputIndex = lastSelectedNodeOutputIndex || 0;
 
-				// If a node is last selected then connect between the active and its child ones
 				if (lastSelectedNode) {
+					// If a node is last selected then connect between the active and its child ones
 					await Vue.nextTick();
 
-					if (lastSelectedConnection && lastSelectedConnection.__meta) {
-						this.__deleteJSPlumbConnection(lastSelectedConnection);
+					// Add connections of active node to newly created one
+					let connections = this.$store.getters.connectionsByNodeName(
+						lastSelectedNode.name,
+					);
+					connections = JSON.parse(JSON.stringify(connections));
 
-						const targetNodeName = lastSelectedConnection.__meta.targetNodeName;
-						const targetOutputIndex = lastSelectedConnection.__meta.targetOutputIndex;
-						this.connectTwoNodes(newNodeData.name, 0, targetNodeName, targetOutputIndex);
+					for (const type of Object.keys(connections)) {
+						if (outputIndex <= connections[type].length) {
+							connections[type][outputIndex].forEach((connectionInfo: IConnection) => {
+								// Remove currenct connection
+
+								const connectionDataDisonnect = [
+									{
+										node: lastSelectedNode.name,
+										type,
+										index: outputIndex,
+									},
+									connectionInfo,
+								] as [IConnection, IConnection];
+
+								this.__removeConnection(connectionDataDisonnect, true);
+
+								const connectionDataConnect = [
+									{
+										node: newNodeData.name,
+										type,
+										index: 0,
+									},
+									connectionInfo,
+								] as [IConnection, IConnection];
+
+								this.__addConnection(connectionDataConnect, true);
+							});
+						}
 					}
 
+					// TODO: Check if new node has input
+					// TODO: disconnect
 					// Connect active node to the newly created one
-					this.connectTwoNodes(lastSelectedNode.name, outputIndex, newNodeData.name, 0);
+					const connectionData = [
+						{
+							node: lastSelectedNode.name,
+							type: 'main',
+							index: outputIndex,
+						},
+						{
+							node: newNodeData.name,
+							type: 'main',
+							index: 0,
+						},
+					] as [IConnection, IConnection];
+
+					this.__addConnection(connectionData, true);
 				}
 			},
 			initNodeView () {
+				const connectionOverlays: OverlaySpec[] = [];
+				if (this.isReadOnly === false) {
+					connectionOverlays.push.apply(connectionOverlays, [
+						[
+							'Arrow',
+							{
+								location: 1,
+								foldback: 0.7,
+								width: 12,
+							},
+						],
+						[
+							'Label',
+							{
+								id: 'drop-add-node',
+								label: 'Drop connection<br />to create node',
+								cssClass: 'drop-add-node-label',
+								location: 0.5,
+							},
+						],
+					]);
+				}
+
 				this.instance.importDefaults({
-					Connector: CanvasHelpers.CONNECTOR_FLOWCHART_TYPE,
+					// notice the 'curviness' argument to this Bezier curve.
+					// the curves on this page are far smoother
+					// than the curves on the first demo, which use the default curviness value.
+					// Connector: ["Bezier", { curviness: 80 }],
+					Connector: ['Bezier', { curviness: 40 }],
+					// @ts-ignore
 					Endpoint: ['Dot', { radius: 5 }],
 					DragOptions: { cursor: 'pointer', zIndex: 5000 },
-					PaintStyle: CanvasHelpers.CONNECTOR_PAINT_STYLE_DEFAULT,
-					HoverPaintStyle: CanvasHelpers.CONNECTOR_PAINT_STYLE_PRIMARY,
-					ConnectionOverlays: CanvasHelpers.CONNECTOR_ARROW_OVERLAYS,
+					PaintStyle: { strokeWidth: 2, stroke: '#334455' },
+					EndpointStyle: { radius: 9, fill: '#acd', stroke: 'red' },
+					// EndpointStyle: {},
+					HoverPaintStyle: { stroke: '#ff6d5a', lineWidth: 4 },
+					EndpointHoverStyle: { fill: '#ff6d5a', stroke: '#acd' },
+					ConnectionOverlays: connectionOverlays,
 					Container: '#node-view',
 				});
 
-				const insertNodeAfterSelected = (info: {sourceId: string, index: number, eventSource: string, connection?: Connection}) => {
+				this.instance.bind('connectionAborted', (info) => {
 					// Get the node and set it as active that new nodes
 					// which get created get automatically connected
 					// to it.
 					const sourceNodeName = this.$store.getters.getNodeNameByIndex(info.sourceId.slice(NODE_NAME_PREFIX.length));
 					this.$store.commit('setLastSelectedNode', sourceNodeName);
-					this.$store.commit('setLastSelectedNodeOutputIndex', info.index);
-					this.newNodeInsertPosition = null;
 
-					if (info.connection) {
-						this.lastSelectedConnection = info.connection;
-					}
+					const sourceInfo = info.getParameters();
+					this.$store.commit('setLastSelectedNodeOutputIndex', sourceInfo.index);
 
-					this.openNodeCreator(info.eventSource);
-				};
-
-				this.instance.bind('connectionAborted', (connection) => {
-					try {
-						if (this.dropPrevented) {
-							this.dropPrevented = false;
-							return;
-						}
-
-						if (this.pullConnActiveNodeName) {
-							const sourceNodeName = this.$store.getters.getNodeNameByIndex(connection.sourceId.slice(NODE_NAME_PREFIX.length));
-							const outputIndex = connection.getParameters().index;
-
-							this.connectTwoNodes(sourceNodeName, outputIndex, this.pullConnActiveNodeName, 0);
-							this.pullConnActiveNodeName = null;
-							return;
-						}
-
-						insertNodeAfterSelected({
-							sourceId: connection.sourceId,
-							index: connection.getParameters().index,
-							eventSource: 'node_connection_drop',
-						});
-					} catch (e) {
-						console.error(e);  // eslint-disable-line no-console
-					}
+					// Display the node-creator
+					this.createNodeActive = true;
 				});
-
-				this.instance.bind('beforeDrop', (info) => {
-					try {
-						const sourceInfo = info.connection.endpoints[0].getParameters();
-						// @ts-ignore
-						const targetInfo = info.dropEndpoint.getParameters();
-
-						const sourceNodeName = this.$store.getters.getNodeNameByIndex(sourceInfo.nodeIndex);
-						const targetNodeName = this.$store.getters.getNodeNameByIndex(targetInfo.nodeIndex);
-
-						// check for duplicates
-						if (this.getConnection(sourceNodeName, sourceInfo.index, targetNodeName, targetInfo.index)) {
-							this.dropPrevented = true;
-							this.pullConnActiveNodeName = null;
-							return false;
-						}
-
-						return true;
-					} catch (e) {
-						console.error(e);  // eslint-disable-line no-console
-						return true;
-					}
-				});
-
-				// only one set of visible actions should be visible at the same time
-				let activeConnection: null | Connection = null;
 
 				this.instance.bind('connection', (info: OnConnectionBindInfo) => {
-					try {
-						const sourceInfo = info.sourceEndpoint.getParameters();
-						const targetInfo = info.targetEndpoint.getParameters();
+					// @ts-ignore
+					const sourceInfo = info.sourceEndpoint.getParameters();
+					// @ts-ignore
+					const targetInfo = info.targetEndpoint.getParameters();
 
-						const sourceNodeName = this.$store.getters.getNodeNameByIndex(sourceInfo.nodeIndex);
-						const targetNodeName = this.$store.getters.getNodeNameByIndex(targetInfo.nodeIndex);
+					const sourceNodeName = this.$store.getters.getNodeNameByIndex(sourceInfo.nodeIndex);
+					const targetNodeName = this.$store.getters.getNodeNameByIndex(targetInfo.nodeIndex);
 
-						info.connection.__meta = {
-							sourceNodeName,
-							sourceOutputIndex: sourceInfo.index,
-							targetNodeName,
-							targetOutputIndex: targetInfo.index,
-						};
+					const sourceNode = this.$store.getters.nodeByName(sourceNodeName);
+					const targetNode = this.$store.getters.nodeByName(targetNodeName);
 
-						CanvasHelpers.resetConnection(info.connection);
+					// TODO: That should happen after each move (only the setConnector part)
+					if (info.sourceEndpoint.anchor.lastReturnValue[0] >= info.targetEndpoint.anchor.lastReturnValue[0]) {
+						// When the source is before the target it will make sure that
+						// the connection is clearer visible
 
-						if (this.isReadOnly === false) {
-							let exitTimer: NodeJS.Timeout | undefined;
-							let enterTimer: NodeJS.Timeout | undefined;
-							info.connection.bind('mouseover', (connection: Connection) => {
-								try {
-									if (exitTimer !== undefined) {
-										clearTimeout(exitTimer);
-										exitTimer = undefined;
-									}
-
-									if (enterTimer) {
-										return;
-									}
-
-									if (!info.connection || info.connection === activeConnection) {
-										return;
-									}
-
-									CanvasHelpers.hideConnectionActions(activeConnection);
-
-
-									enterTimer = setTimeout(() => {
-										enterTimer = undefined;
-										if (info.connection) {
-											activeConnection = info.connection;
-											CanvasHelpers.showConectionActions(info.connection);
-										}
-									}, 150);
-								} catch (e) {
-									console.error(e); // eslint-disable-line no-console
-								}
-							});
-
-							info.connection.bind('mouseout', (connection: Connection) => {
-								try {
-									if (exitTimer) {
-										return;
-									}
-
-									if (enterTimer) {
-										clearTimeout(enterTimer);
-										enterTimer = undefined;
-									}
-
-									if (!info.connection || activeConnection !== info.connection) {
-										return;
-									}
-
-									exitTimer = setTimeout(() => {
-										exitTimer = undefined;
-
-										if (info.connection && activeConnection === info.connection) {
-											CanvasHelpers.hideConnectionActions(activeConnection);
-											activeConnection = null;
-										}
-									}, 500);
-								} catch (e) {
-									console.error(e); // eslint-disable-line no-console
-								}
-							});
-
-							CanvasHelpers.addConnectionActionsOverlay(info.connection,
-								() => {
-									activeConnection = null;
-									this.__deleteJSPlumbConnection(info.connection);
-								},
-								() => {
-									setTimeout(() => {
-										insertNodeAfterSelected({
-											sourceId: info.sourceId,
-											index: sourceInfo.index,
-											connection: info.connection,
-											eventSource: 'node_connection_action',
-										});
-									}, 150);
-								});
-						}
-
-						CanvasHelpers.moveBackInputLabelPosition(info.targetEndpoint);
-
-						this.$store.commit('addConnection', {
-							connection: [
-								{
-									node: sourceNodeName,
-									type: sourceInfo.type,
-									index: sourceInfo.index,
-								},
-								{
-									node: targetNodeName,
-									type: targetInfo.type,
-									index: targetInfo.index,
-								},
-							],
-							setStateDirty: true,
-						});
-					} catch (e) {
-						console.error(e); // eslint-disable-line no-console
-					}
-				});
-
-				this.instance.bind('connectionMoved', (info) => {
-					try {
-						// When a connection gets moved from one node to another it for some reason
-						// calls the "connection" event but not the "connectionDetached" one. So we listen
-						// additionally to the "connectionMoved" event and then only delete the existing connection.
-
-						CanvasHelpers.resetInputLabelPosition(info.originalTargetEndpoint);
-
-						// @ts-ignore
-						const sourceInfo = info.originalSourceEndpoint.getParameters();
-						// @ts-ignore
-						const targetInfo = info.originalTargetEndpoint.getParameters();
-
-						const connectionInfo = [
+						// Use the Flowchart connector if the source is underneath the target
+						// so that the connection is properly visible
+						info.connection.setConnector(['Flowchart', { cornerRadius: 15 }]);
+						// TODO: Location should be dependent on distance. The closer together
+						//       the further away from the center
+						info.connection.addOverlay([
+							'Arrow',
 							{
-								node: this.$store.getters.getNodeNameByIndex(sourceInfo.nodeIndex),
+								location: 0.55,
+								foldback: 0.7,
+								width: 12,
+							},
+						]);
+
+						// Change also the color to give an additional visual hint
+						info.connection.setPaintStyle({ strokeWidth: 2, stroke: '#334455' });
+					} else if (Math.abs(info.sourceEndpoint.anchor.lastReturnValue[1] - info.targetEndpoint.anchor.lastReturnValue[1]) < 30) {
+						info.connection.setConnector(['Straight']);
+					}
+
+					// @ts-ignore
+					info.connection.removeOverlay('drop-add-node');
+
+					if (this.isReadOnly === false) {
+						// Display the connection-delete button only on hover
+						let timer: NodeJS.Timeout | undefined;
+						info.connection.bind('mouseover', (connection: IConnection) => {
+							if (timer !== undefined) {
+								clearTimeout(timer);
+							}
+							const overlay = info.connection.getOverlay('remove-connection');
+							overlay.setVisible(true);
+						});
+						info.connection.bind('mouseout', (connection: IConnection) => {
+							timer = setTimeout(() => {
+								const overlay = info.connection.getOverlay('remove-connection');
+								overlay.setVisible(false);
+								timer = undefined;
+							}, 500);
+						});
+
+						// @ts-ignore
+						info.connection.addOverlay([
+							'Label',
+							{
+								id: 'remove-connection',
+								label: '<span class="delete-connection clickable" title="Delete Connection">x</span>',
+								cssClass: 'remove-connection-label',
+								visible: false,
+								events: {
+									mousedown: () => {
+										this.__removeConnectionByConnectionInfo(info, true);
+									},
+								},
+							},
+						]);
+					}
+
+					// Display input names if they exist on connection
+					const targetNodeTypeData: INodeTypeDescription = this.$store.getters.nodeType(targetNode.type);
+					if (targetNodeTypeData.inputNames !== undefined) {
+						for (const input of targetNodeTypeData.inputNames) {
+							const inputName = targetNodeTypeData.inputNames[targetInfo.index];
+
+							if (info.connection.getOverlay('input-name-label')) {
+								// Make sure that it does not get added multiple times
+								// continue;
+								info.connection.removeOverlay('input-name-label');
+							}
+
+							// @ts-ignore
+							info.connection.addOverlay([
+								'Label',
+								{
+									id: 'input-name-label',
+									label: inputName,
+									cssClass: 'connection-input-name-label',
+									location: 0.8,
+								},
+							]);
+						}
+					}
+
+					// Display output names if they exist on connection
+					const sourceNodeTypeData: INodeTypeDescription = this.$store.getters.nodeType(sourceNode.type);
+					if (sourceNodeTypeData.outputNames !== undefined) {
+						for (const output of sourceNodeTypeData.outputNames) {
+							const outputName = sourceNodeTypeData.outputNames[sourceInfo.index];
+
+							if (info.connection.getOverlay('output-name-label')) {
+								// Make sure that it does not get added multiple times
+								info.connection.removeOverlay('output-name-label');
+							}
+
+							// @ts-ignore
+							info.connection.addOverlay([
+								'Label',
+								{
+									id: 'output-name-label',
+									label: outputName,
+									cssClass: 'connection-output-name-label',
+									location: 0.2,
+								},
+							]);
+						}
+					}
+
+					// When connection gets made the output and input name get displayed
+					// as overlay on the connection. So the ones on the endpoint can be hidden.
+					// @ts-ignore
+					const outputNameOverlay = info.connection.endpoints[0].getOverlay('output-name-label');
+					if (![null, undefined].includes(outputNameOverlay)) {
+						outputNameOverlay.setVisible(false);
+					}
+
+					const inputNameOverlay = info.targetEndpoint.getOverlay('input-name-label');
+					if (![null, undefined].includes(inputNameOverlay)) {
+						inputNameOverlay.setVisible(false);
+					}
+
+					this.$store.commit('addConnection', {
+						connection: [
+							{
+								node: sourceNodeName,
 								type: sourceInfo.type,
 								index: sourceInfo.index,
 							},
 							{
-								node: this.$store.getters.getNodeNameByIndex(targetInfo.nodeIndex),
+								node: targetNodeName,
 								type: targetInfo.type,
 								index: targetInfo.index,
 							},
-						] as [IConnection, IConnection];
+						],
+					});
+				});
 
-						this.__removeConnection(connectionInfo, false);
-					} catch (e) {
-						console.error(e); // eslint-disable-line no-console
+				const updateConnectionDetach = (sourceEndpoint: Endpoint, targetEndpoint: Endpoint, maxConnections: number) => {
+					// If the source endpoint is not connected to anything else anymore
+					// display the output-name overlays on the endpoint if any exist
+					if (sourceEndpoint !== undefined && sourceEndpoint.connections!.length === maxConnections) {
+						const outputNameOverlay = sourceEndpoint.getOverlay('output-name-label');
+						if (![null, undefined].includes(outputNameOverlay)) {
+							outputNameOverlay.setVisible(true);
+						}
 					}
+					if (targetEndpoint !== undefined && targetEndpoint.connections!.length === maxConnections) {
+						const inputNameOverlay = targetEndpoint.getOverlay('input-name-label');
+						if (![null, undefined].includes(inputNameOverlay)) {
+							inputNameOverlay.setVisible(true);
+						}
+					}
+				};
+
+				this.instance.bind('connectionMoved', (info) => {
+					// When a connection gets moved from one node to another it for some reason
+					// calls the "connection" event but not the "connectionDetached" one. So we listen
+					// additionally to the "connectionMoved" event and then only delete the existing connection.
+
+					updateConnectionDetach(info.originalSourceEndpoint, info.originalTargetEndpoint, 0);
+
+					// @ts-ignore
+					const sourceInfo = info.originalSourceEndpoint.getParameters();
+					// @ts-ignore
+					const targetInfo = info.originalTargetEndpoint.getParameters();
+
+					const connectionInfo = [
+						{
+							node: this.$store.getters.getNodeNameByIndex(sourceInfo.nodeIndex),
+							type: sourceInfo.type,
+							index: sourceInfo.index,
+						},
+						{
+							node: this.$store.getters.getNodeNameByIndex(targetInfo.nodeIndex),
+							type: targetInfo.type,
+							index: targetInfo.index,
+						},
+					] as [IConnection, IConnection];
+
+					this.__removeConnection(connectionInfo, false);
+
+					// Make sure to remove the overlay else after the second move
+					// it visibly stays behind free floating without a connection.
+					info.connection.removeOverlays();
 				});
 
 				this.instance.bind('connectionDetached', (info) => {
-					try {
-						CanvasHelpers.resetInputLabelPosition(info.targetEndpoint);
-						info.connection.removeOverlays();
-						this.__removeConnectionByConnectionInfo(info, false);
-
-						if (this.pullConnActiveNodeName) { // establish new connection when dragging connection from one node to another
-							const sourceNodeName = this.$store.getters.getNodeNameByIndex(info.connection.sourceId.slice(NODE_NAME_PREFIX.length));
-							const outputIndex = info.connection.getParameters().index;
-
-							this.connectTwoNodes(sourceNodeName, outputIndex, this.pullConnActiveNodeName, 0);
-							this.pullConnActiveNodeName = null;
-						}
-					} catch (e) {
-						console.error(e); // eslint-disable-line no-console
-					}
-				});
-
-				// @ts-ignore
-				this.instance.bind('connectionDrag', (connection: Connection) => {
-					try {
-						this.pullConnActiveNodeName = null;
-						this.pullConnActive = true;
-						this.newNodeInsertPosition = null;
-						CanvasHelpers.resetConnection(connection);
-
-						const nodes = [...document.querySelectorAll('.node-default')];
-
-						const onMouseMove = (e: MouseEvent | TouchEvent) => {
-							if (!connection) {
-								return;
-							}
-
-							const element = document.querySelector('.jtk-endpoint.dropHover');
-							if (element) {
-								// @ts-ignore
-								CanvasHelpers.showDropConnectionState(connection, element._jsPlumb);
-								return;
-							}
-
-							const inputMargin = 24;
-							const intersecting = nodes.find((element: Element) => {
-								const {top, left, right, bottom} = element.getBoundingClientRect();
-								const [x, y] = CanvasHelpers.getMousePosition(e);
-								if (top <= y && bottom >= y && (left - inputMargin) <= x && right >= x) {
-									const nodeName = (element as HTMLElement).dataset['name'] as string;
-									const node = this.$store.getters.getNodeByName(nodeName) as INodeUi | null;
-									if (node) {
-										const nodeType = this.$store.getters.nodeType(node.type, node.typeVersion) as INodeTypeDescription | null;
-										if (nodeType && nodeType.inputs && nodeType.inputs.length === 1) {
-											this.pullConnActiveNodeName = node.name;
-											const endpoint = this.instance.getEndpoint(this.getInputEndpointUUID(nodeName, 0));
-
-											CanvasHelpers.showDropConnectionState(connection, endpoint);
-
-											return true;
-										}
-									}
-								}
-
-								return false;
-							});
-
-							if (!intersecting) {
-								CanvasHelpers.showPullConnectionState(connection);
-								this.pullConnActiveNodeName = null;
-							}
-						};
-
-						const onMouseUp = (e: MouseEvent | TouchEvent) => {
-							this.pullConnActive = false;
-							this.newNodeInsertPosition = this.getMousePositionWithinNodeView(e);
-							CanvasHelpers.resetConnectionAfterPull(connection);
-							window.removeEventListener('mousemove', onMouseMove);
-							window.removeEventListener('mouseup', onMouseUp);
-						};
-
-						window.addEventListener('mousemove', onMouseMove);
-						window.addEventListener('touchmove', onMouseMove);
-						window.addEventListener('mouseup', onMouseUp);
-						window.addEventListener('touchend', onMouseMove);
-					} catch (e) {
-						console.error(e); // eslint-disable-line no-console
-					}
-				});
-
-				// @ts-ignore
-				this.instance.bind(('plusEndpointClick'), (endpoint: Endpoint) => {
-					if (endpoint && endpoint.__meta) {
-						insertNodeAfterSelected({
-							sourceId: endpoint.__meta.nodeId,
-							index: endpoint.__meta.index,
-							eventSource: 'plus_endpoint',
-						});
-					}
+					updateConnectionDetach(info.sourceEndpoint, info.targetEndpoint, 1);
+					info.connection.removeOverlays();
+					this.__removeConnectionByConnectionInfo(info, false);
 				});
 			},
 			async newWorkflow (): Promise<void> {
 				await this.resetWorkspace();
-				await this.$store.dispatch('workflows/setNewWorkflowName');
-				this.$store.commit('setStateDirty', false);
 
-				await this.addNodes([{...CanvasHelpers.DEFAULT_START_NODE}]);
+				// Create start node
+				const defaultNodes = [
+					{
+						name: 'Start',
+						type: 'n8n-nodes-base.start',
+						typeVersion: 1,
+						position: [
+							250,
+							300,
+						] as XYPositon,
+						parameters: {},
+					},
+				];
 
-				this.nodeSelectedByName(CanvasHelpers.DEFAULT_START_NODE.name, false);
-
-				this.$store.commit('setStateDirty', false);
-
-				this.setZoomLevel(1);
-				setTimeout(() => {
-					this.$store.commit('setNodeViewOffsetPosition', {newOffset: [0, 0]});
-				}, 0);
+				await this.addNodes(defaultNodes);
 			},
 			async initView (): Promise<void> {
 				if (this.$route.params.action === 'workflowSave') {
 					// In case the workflow got saved we do not have to run init
 					// as only the route changed but all the needed data is already loaded
-					this.$store.commit('setStateDirty', false);
 					return Promise.resolve();
 				}
 
-				if (this.blankRedirect) {
-					this.blankRedirect = false;
-				}
-				else if (this.$route.name === VIEWS.TEMPLATE_IMPORT) {
-					const templateId = this.$route.params.id;
-					await this.openWorkflowTemplate(templateId);
-				}
-				else if (this.$route.name === VIEWS.EXECUTION) {
+				if (this.$route.name === 'ExecutionById') {
 					// Load an execution
 					const executionId = this.$route.params.id;
 					await this.openExecution(executionId);
 				} else {
-
-					const result = this.$store.getters.getStateIsDirty;
-					if(result) {
-						const confirmModal = await this.confirmModal(
-							this.$locale.baseText('nodeView.confirmMessage.initView.message'),
-							this.$locale.baseText('nodeView.confirmMessage.initView.headline'),
-							'warning',
-							this.$locale.baseText('nodeView.confirmMessage.initView.confirmButtonText'),
-							this.$locale.baseText('nodeView.confirmMessage.initView.cancelButtonText'),
-							true,
-						);
-
-						if (confirmModal === MODAL_CONFIRMED) {
-							const saved = await this.saveCurrentWorkflow();
-							if (saved) this.$store.dispatch('settings/fetchPromptsData');
-						} else if (confirmModal === MODAL_CLOSE) {
-							return Promise.resolve();
-						}
-					}
-
 					// Load a workflow
 					let workflowId = null as string | null;
 					if (this.$route.params.name) {
 						workflowId = this.$route.params.name;
 					}
+
 					if (workflowId !== null) {
-						const workflow = await this.restApi().getWorkflow(workflowId);
-						if (!workflow) {
-							this.$router.push({
-								name: VIEWS.NEW_WORKFLOW,
-							});
-							this.$showMessage({
-								title: 'Error',
-								message: this.$locale.baseText('openWorkflow.workflowNotFoundError'),
-								type: 'error',
-							});
-						} else {
-							this.$titleSet(workflow.name, 'IDLE');
-							// Open existing workflow
-							await this.openWorkflow(workflowId);
-						}
+						// Open existing workflow
+						await this.openWorkflow(workflowId);
 					} else {
 						// Create new workflow
 						await this.newWorkflow();
@@ -1919,35 +1328,12 @@ export default mixins(
 
 				document.addEventListener('keydown', this.keyDown);
 				document.addEventListener('keyup', this.keyUp);
-
-				window.addEventListener("beforeunload",  (e) => {
-					if(this.isDemo){
-						return;
-					}
-					else if(this.$store.getters.getStateIsDirty === true) {
-						const confirmationMessage = this.$locale.baseText('nodeView.itLooksLikeYouHaveBeenEditingSomething');
-						(e || window.event).returnValue = confirmationMessage; //Gecko + IE
-						return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-					} else {
-						this.startLoading(
-							this.$locale.baseText('nodeView.redirecting'),
-						);
-
-						return;
-					}
-				});
-			},
-			getOutputEndpointUUID(nodeName: string, index: number) {
-				return CanvasHelpers.getOutputEndpointUUID(this.getNodeIndex(nodeName), index);
-			},
-			getInputEndpointUUID(nodeName: string, index: number) {
-				return CanvasHelpers.getInputEndpointUUID(this.getNodeIndex(nodeName), index);
 			},
 			__addConnection (connection: [IConnection, IConnection], addVisualConnection = false) {
 				if (addVisualConnection === true) {
 					const uuid: [string, string] = [
-						this.getOutputEndpointUUID(connection[0].node, connection[0].index),
-						this.getInputEndpointUUID(connection[1].node, connection[1].index),
+						`${this.getNodeIndex(connection[0].node)}-output${connection[0].index}`,
+						`${this.getNodeIndex(connection[1].node)}-input${connection[1].index}`,
 					];
 
 					// Create connections in DOM
@@ -1957,10 +1343,9 @@ export default mixins(
 						detachable: !this.isReadOnly,
 					});
 				} else {
-					const connectionProperties = {connection, setStateDirty: false};
 					// When nodes get connected it gets saved automatically to the storage
 					// so if we do not connect we have to save the connection manually
-					this.$store.commit('addConnection', connectionProperties);
+					this.$store.commit('addConnection', { connection });
 				}
 			},
 			__removeConnection (connection: [IConnection, IConnection], removeVisualConnection = false) {
@@ -1973,24 +1358,11 @@ export default mixins(
 
 					// @ts-ignore
 					connections.forEach((connectionInstance) => {
-						this.__deleteJSPlumbConnection(connectionInstance);
+						this.instance.deleteConnection(connectionInstance);
 					});
 				}
 
 				this.$store.commit('removeConnection', { connection });
-			},
-			__deleteJSPlumbConnection(connection: Connection) {
-				// Make sure to remove the overlay else after the second move
-				// it visibly stays behind free floating without a connection.
-				connection.removeOverlays();
-
-				const sourceEndpoint = connection.endpoints && connection.endpoints[0];
-				this.pullConnActiveNodeName = null; // prevent new connections when connectionDetached is triggered
-				this.instance.deleteConnection(connection); // on delete, triggers connectionDetached event which applies mutation to store
-				if (sourceEndpoint) {
-					const endpoints = this.instance.getEndpoints(sourceEndpoint.elementId);
-					endpoints.forEach((endpoint: Endpoint) => endpoint.repaint()); // repaint both circle and plus endpoint
-				}
 			},
 			__removeConnectionByConnectionInfo (info: OnConnectionBindInfo, removeVisualConnection = false) {
 				// @ts-ignore
@@ -2011,21 +1383,17 @@ export default mixins(
 					},
 				] as [IConnection, IConnection];
 
-				if (removeVisualConnection) {
-					this.__deleteJSPlumbConnection(info.connection);
-				}
-
-				this.$store.commit('removeConnection', { connection: connectionInfo });
+				this.__removeConnection(connectionInfo, removeVisualConnection);
 			},
 			async duplicateNode (nodeName: string) {
 				if (this.editAllowedCheck() === false) {
 					return;
 				}
 
-				const node = this.$store.getters.getNodeByName(nodeName);
+				const node = this.$store.getters.nodeByName(nodeName);
 
-				const nodeTypeData: INodeTypeDescription | null= this.$store.getters.nodeType(node.type, node.typeVersion);
-				if (nodeTypeData && nodeTypeData.maxNodes !== undefined && this.getNodeTypeCount(node.type) >= nodeTypeData.maxNodes) {
+				const nodeTypeData: INodeTypeDescription = this.$store.getters.nodeType(node.type);
+				if (nodeTypeData.maxNodes !== undefined && this.getNodeTypeCount(node.type) >= nodeTypeData.maxNodes) {
 					this.showMaxNodeTypeError(nodeTypeData);
 					return;
 				}
@@ -2035,148 +1403,20 @@ export default mixins(
 				const newNodeData = JSON.parse(JSON.stringify(this.getNodeDataToSave(node)));
 
 				// Check if node-name is unique else find one that is
-				newNodeData.name = this.getUniqueNodeName({
-					originalName: newNodeData.name,
-					type: newNodeData.type,
-				});
+				newNodeData.name = this.getUniqueNodeName(newNodeData.name);
 
-				newNodeData.position = CanvasHelpers.getNewNodePosition(
-					this.nodes,
-					[node.position[0], node.position[1] + 140],
-					[0, 140],
+				newNodeData.position = this.getNewNodePosition(
+					[node.position[0], node.position[1] + 150],
+					[0, 150],
 				);
 
-				if (newNodeData.webhookId) {
-					// Make sure that the node gets a new unique webhook-ID
-					newNodeData.webhookId = uuidv4();
-				}
-
 				await this.addNodes([newNodeData]);
-
-				this.$store.commit('setStateDirty', true);
 
 				// Automatically deselect all nodes and select the current one and also active
 				// current node
 				this.deselectAllNodes();
 				setTimeout(() => {
-					this.nodeSelectedByName(newNodeData.name, false);
-				});
-
-				this.$telemetry.track('User duplicated node', { node_type: node.type, workflow_id: this.$store.getters.workflowId });
-			},
-			getJSPlumbConnection (sourceNodeName: string, sourceOutputIndex: number, targetNodeName: string, targetInputIndex: number): Connection | undefined {
-				const sourceIndex = this.getNodeIndex(sourceNodeName);
-				const sourceId = `${NODE_NAME_PREFIX}${sourceIndex}`;
-
-				const targetIndex = this.getNodeIndex(targetNodeName);
-				const targetId = `${NODE_NAME_PREFIX}${targetIndex}`;
-
-				const sourceEndpoint = CanvasHelpers.getOutputEndpointUUID(sourceIndex, sourceOutputIndex);
-				const targetEndpoint = CanvasHelpers.getInputEndpointUUID(targetIndex, targetInputIndex);
-
-				// @ts-ignore
-				const connections = this.instance.getConnections({
-					source: sourceId,
-					target: targetId,
-				}) as Connection[];
-
-				return connections.find((connection: Connection) => {
-					const uuids = connection.getUuids();
-					return uuids[0] === sourceEndpoint && uuids[1] === targetEndpoint;
-				});
-			},
-			getJSPlumbEndpoints (nodeName: string): Endpoint[] {
-				const nodeIndex = this.getNodeIndex(nodeName);
-				const nodeId = `${NODE_NAME_PREFIX}${nodeIndex}`;
-				return this.instance.getEndpoints(nodeId);
-			},
-			getPlusEndpoint (nodeName: string, outputIndex: number): Endpoint | undefined {
-				const endpoints = this.getJSPlumbEndpoints(nodeName);
-				// @ts-ignore
-				return endpoints.find((endpoint: Endpoint) => endpoint.type === 'N8nPlus' && endpoint.__meta && endpoint.__meta.index === outputIndex);
-			},
-			getIncomingOutgoingConnections(nodeName: string): {incoming: Connection[], outgoing: Connection[]} {
-				const name = `${NODE_NAME_PREFIX}${this.$store.getters.getNodeIndex(nodeName)}`;
-				// @ts-ignore
-				const outgoing = this.instance.getConnections({
-					source: name,
-				}) as Connection[];
-
-				// @ts-ignore
-				const incoming = this.instance.getConnections({
-					target: name,
-				}) as Connection[];
-
-				return {
-					incoming,
-					outgoing,
-				};
-			},
-			onNodeMoved (node: INodeUi) {
-				const {incoming, outgoing} = this.getIncomingOutgoingConnections(node.name);
-
-				[...incoming, ...outgoing].forEach((connection: Connection) => {
-					CanvasHelpers.showOrHideMidpointArrow(connection);
-					CanvasHelpers.showOrHideItemsLabel(connection);
-				});
-			},
-			onNodeRun ({name, data, waiting}: {name: string, data: ITaskData[] | null, waiting: boolean}) {
-				const sourceNodeName = name;
-				const sourceIndex = this.$store.getters.getNodeIndex(sourceNodeName);
-				const sourceId = `${NODE_NAME_PREFIX}${sourceIndex}`;
-
-				if (data === null || data.length === 0 || waiting) {
-					// @ts-ignore
-					const outgoing = this.instance.getConnections({
-						source: sourceId,
-					}) as Connection[];
-
-					outgoing.forEach((connection: Connection) => {
-						CanvasHelpers.resetConnection(connection);
-					});
-					const endpoints = this.getJSPlumbEndpoints(sourceNodeName);
-					endpoints.forEach((endpoint: Endpoint) => {
-						// @ts-ignore
-						if (endpoint.type === 'N8nPlus') {
-							(endpoint.endpoint as N8nPlusEndpoint).clearSuccessOutput();
-						}
-					});
-
-					return;
-				}
-
-				const nodeConnections = (this.$store.getters.outgoingConnectionsByNodeName(sourceNodeName) as INodeConnections).main;
-				const outputMap = CanvasHelpers.getOutputSummary(data, nodeConnections || []);
-
-				Object.keys(outputMap).forEach((sourceOutputIndex: string) => {
-					Object.keys(outputMap[sourceOutputIndex]).forEach((targetNodeName: string) => {
-						Object.keys(outputMap[sourceOutputIndex][targetNodeName]).forEach((targetInputIndex: string) => {
-							if (targetNodeName) {
-								const connection = this.getJSPlumbConnection(sourceNodeName, parseInt(sourceOutputIndex, 10), targetNodeName, parseInt(targetInputIndex, 10));
-
-								if (connection) {
-									const output = outputMap[sourceOutputIndex][targetNodeName][targetInputIndex];
-									if (!output || !output.total) {
-										CanvasHelpers.resetConnection(connection);
-									}
-									else {
-										CanvasHelpers.addConnectionOutputSuccess(connection, output);
-									}
-								}
-							}
-
-							const endpoint = this.getPlusEndpoint(sourceNodeName, parseInt(sourceOutputIndex, 10));
-							if (endpoint && endpoint.endpoint) {
-								const output = outputMap[sourceOutputIndex][NODE_OUTPUT_DEFAULT_KEY][0];
-								if (output && output.total > 0) {
-									(endpoint.endpoint as N8nPlusEndpoint).setSuccessOutput(CanvasHelpers.getRunItemsLabel(output));
-								}
-								else {
-									(endpoint.endpoint as N8nPlusEndpoint).clearSuccessOutput();
-								}
-							}
-						});
-					});
+					this.nodeSelectedByName(newNodeData.name, true);
 				});
 			},
 			removeNode (nodeName: string) {
@@ -2184,13 +1424,10 @@ export default mixins(
 					return;
 				}
 
-				const node = this.$store.getters.getNodeByName(nodeName) as INodeUi | null;
-				if (!node) {
-					return;
-				}
+				const node = this.$store.getters.nodeByName(nodeName);
 
 				// "requiredNodeTypes" are also defined in cli/commands/run.ts
-				const requiredNodeTypes = [ START_NODE_TYPE ];
+				const requiredNodeTypes = [ 'n8n-nodes-base.start' ];
 
 				if (requiredNodeTypes.includes(node.type)) {
 					// The node is of the required type so check first
@@ -2212,74 +1449,34 @@ export default mixins(
 					}
 				}
 
-				if(node.type === STICKY_NODE_TYPE) {
-					this.$telemetry.track('User deleted workflow note', { workflow_id: this.$store.getters.workflowId });
-				} else {
-					this.$externalHooks().run('node.deleteNode', { node });
-					this.$telemetry.track('User deleted node', { node_type: node.type, workflow_id: this.$store.getters.workflowId });
+				const nodeIndex = this.$store.getters.getNodeIndex(nodeName);
+				const nodeIdName = `node-${nodeIndex}`;
+
+				// Suspend drawing
+				this.instance.setSuspendDrawing(true);
+
+				// Remove all endpoints and the connections in jsplumb
+				this.instance.removeAllEndpoints(nodeIdName);
+
+				// Remove the draggable
+				// @ts-ignore
+				this.instance.destroyDraggable(nodeIdName);
+
+				// Remove the connections in data
+				this.$store.commit('removeAllNodeConnection', node);
+
+				this.$store.commit('removeNode', node);
+
+				// Now it can draw again
+				this.instance.setSuspendDrawing(false, true);
+
+				// Remove node from selected index if found in it
+				this.$store.commit('removeNodeFromSelection', node);
+
+				// Remove from node index
+				if (nodeIndex !== -1) {
+					this.$store.commit('setNodeIndex', { index: nodeIndex, name: null });
 				}
-
-				let waitForNewConnection = false;
-				// connect nodes before/after deleted node
-				const nodeType: INodeTypeDescription | null = this.$store.getters.nodeType(node.type, node.typeVersion);
-				if (nodeType && nodeType.outputs.length === 1
-					&& nodeType.inputs.length === 1) {
-					const {incoming, outgoing} = this.getIncomingOutgoingConnections(node.name);
-					if (incoming.length === 1 && outgoing.length === 1) {
-						const conn1 = incoming[0];
-						const conn2 = outgoing[0];
-						if (conn1.__meta && conn2.__meta) {
-							waitForNewConnection = true;
-							const sourceNodeName = conn1.__meta.sourceNodeName;
-							const sourceNodeOutputIndex = conn1.__meta.sourceOutputIndex;
-							const targetNodeName = conn2.__meta.targetNodeName;
-							const targetNodeOuputIndex = conn2.__meta.targetOutputIndex;
-
-							setTimeout(() => {
-								this.connectTwoNodes(sourceNodeName, sourceNodeOutputIndex, targetNodeName, targetNodeOuputIndex);
-
-								if (waitForNewConnection) {
-									this.instance.setSuspendDrawing(false, true);
-									waitForNewConnection = false;
-								}
-							}, 100); // just to make it clear to users that this is a new connection
-						}
-					}
-				}
-
-				setTimeout(() => {
-					const nodeIndex = this.$store.getters.getNodeIndex(nodeName);
-					const nodeIdName = `node-${nodeIndex}`;
-
-					// Suspend drawing
-					this.instance.setSuspendDrawing(true);
-
-					// Remove all endpoints and the connections in jsplumb
-					this.instance.removeAllEndpoints(nodeIdName);
-
-					// Remove the draggable
-					// @ts-ignore
-					this.instance.destroyDraggable(nodeIdName);
-
-					// Remove the connections in data
-					this.$store.commit('removeAllNodeConnection', node);
-
-					this.$store.commit('removeNode', node);
-					this.$store.commit('clearNodeExecutionData', node.name);
-
-					if (!waitForNewConnection) {
-						// Now it can draw again
-						this.instance.setSuspendDrawing(false, true);
-					}
-
-					// Remove node from selected index if found in it
-					this.$store.commit('removeNodeFromSelection', node);
-
-					// Remove from node index
-					if (nodeIndex !== -1) {
-						this.$store.commit('setNodeIndex', { index: nodeIndex, name: null });
-					}
-				}, 0); // allow other events to finish like drag stop
 			},
 			valueChanged (parameterData: IUpdateInformation) {
 				if (parameterData.name === 'name' && parameterData.oldValue) {
@@ -2290,17 +1487,13 @@ export default mixins(
 			},
 			async renameNodePrompt (currentName: string) {
 				try {
-					const promptResponsePromise = this.$prompt(
-						this.$locale.baseText('nodeView.prompt.newName') + ':',
-						this.$locale.baseText('nodeView.prompt.renameNode') + `: ${currentName}`,
-						{
-							customClass: 'rename-prompt',
-							confirmButtonText: this.$locale.baseText('nodeView.prompt.rename'),
-							cancelButtonText: this.$locale.baseText('nodeView.prompt.cancel'),
-							inputErrorMessage: this.$locale.baseText('nodeView.prompt.invalidName'),
-							inputValue: currentName,
-						},
-					);
+					const promptResponsePromise = this.$prompt('New Name:', `Rename Node: "${currentName}"`, {
+						customClass: 'rename-prompt',
+						confirmButtonText: 'Rename',
+						cancelButtonText: 'Cancel',
+						inputErrorMessage: 'Invalid Name',
+						inputValue: currentName,
+					});
 
 					// Wait till it had time to display
 					await Vue.nextTick();
@@ -2321,17 +1514,8 @@ export default mixins(
 				if (currentName === newName) {
 					return;
 				}
-
-				const activeNodeName = this.activeNode && this.activeNode.name;
-				const isActive = activeNodeName === currentName;
-				if (isActive) {
-					this.renamingActive = true;
-				}
-
 				// Check if node-name is unique else find one that is
-				newName = this.getUniqueNodeName({
-					originalName: newName,
-				});
+				newName = this.getUniqueNodeName(newName);
 
 				// Rename the node and update the connections
 				const workflow = this.getWorkflow(undefined, undefined, true);
@@ -2341,10 +1525,12 @@ export default mixins(
 				this.$store.commit('renameNodeSelectedAndExecution', { old: currentName, new: newName });
 
 				// Reset all nodes and connections to load the new ones
-				this.deleteEveryEndpoint();
-
+				if (this.instance) {
+					// On first load it does not exist
+					this.instance.deleteEveryEndpoint();
+				}
 				this.$store.commit('removeAllConnections');
-				this.$store.commit('removeAllNodes', {setStateDirty: true});
+				this.$store.commit('removeAllNodes');
 
 				// Wait a tick that the old nodes had time to get removed
 				await Vue.nextTick();
@@ -2355,89 +1541,29 @@ export default mixins(
 				// Make sure that the node is selected again
 				this.deselectAllNodes();
 				this.nodeSelectedByName(newName);
-
-				if (isActive) {
-					this.$store.commit('setActiveNode', newName);
-					this.renamingActive = false;
-				}
-			},
-			deleteEveryEndpoint () {
-				// Check as it does not exist on first load
-				if (this.instance) {
-					try {
-						const nodes = this.$store.getters.allNodes as INodeUi[];
-						// @ts-ignore
-						nodes.forEach((node: INodeUi) => this.instance.destroyDraggable(`${NODE_NAME_PREFIX}${this.$store.getters.getNodeIndex(node.name)}`));
-
-						this.instance.deleteEveryEndpoint();
-					} catch (e) {}
-				}
-			},
-			matchCredentials(node: INodeUi) {
-				if (!node.credentials) {
-					return;
-				}
-				Object.entries(node.credentials).forEach(([nodeCredentialType, nodeCredentials]: [string, INodeCredentialsDetails]) => {
-					const credentialOptions = this.$store.getters['credentials/getCredentialsByType'](nodeCredentialType) as ICredentialsResponse[];
-
-					// Check if workflows applies old credentials style
-					if (typeof nodeCredentials === 'string') {
-						nodeCredentials = {
-							id: null,
-							name: nodeCredentials,
-						};
-						this.credentialsUpdated = true;
-					}
-
-					if (nodeCredentials.id) {
-						// Check whether the id is matching with a credential
-						const credentialsId = nodeCredentials.id.toString(); // due to a fixed bug in the migration UpdateWorkflowCredentials (just sqlite) we have to cast to string and check later if it has been a number
-						const credentialsForId = credentialOptions.find((optionData: ICredentialsResponse) =>
-							optionData.id === credentialsId,
-						);
-						if (credentialsForId) {
-							if (credentialsForId.name !== nodeCredentials.name || typeof nodeCredentials.id === 'number') {
-								node.credentials![nodeCredentialType] = { id: credentialsForId.id, name: credentialsForId.name };
-								this.credentialsUpdated = true;
-							}
-							return;
-						}
-					}
-
-					// No match for id found or old credentials type used
-					node.credentials![nodeCredentialType] = nodeCredentials;
-
-					// check if only one option with the name would exist
-					const credentialsForName = credentialOptions.filter((optionData: ICredentialsResponse) => optionData.name === nodeCredentials.name);
-
-					// only one option exists for the name, take it
-					if (credentialsForName.length === 1) {
-						node.credentials![nodeCredentialType].id = credentialsForName[0].id;
-						this.credentialsUpdated = true;
-					}
-				});
 			},
 			async addNodes (nodes: INodeUi[], connections?: IConnections) {
 				if (!nodes || !nodes.length) {
 					return;
 				}
 
-				// Before proceeding we must check if all nodes contain the `properties` attribute.
-				// Nodes are loaded without this information so we must make sure that all nodes
-				// being added have this information.
-				await this.loadNodesProperties(nodes.map(node => ({name: node.type, version: node.typeVersion})));
-
 				// Add the node to the node-list
 				let nodeType: INodeTypeDescription | null;
 				let foundNodeIssues: INodeIssues | null;
 				nodes.forEach((node) => {
-					nodeType = this.$store.getters.nodeType(node.type, node.typeVersion) as INodeTypeDescription | null;
+					nodeType = this.$store.getters.nodeType(node.type);
 
 					// Make sure that some properties always exist
 					if (!node.hasOwnProperty('disabled')) {
 						node.disabled = false;
 					}
 
+					if (!node.hasOwnProperty('color')) {
+						// If no color is defined set the default color of the node type
+						if (nodeType && nodeType.defaults.color) {
+							node.color = nodeType.defaults.color as string;
+						}
+					}
 					if (!node.hasOwnProperty('parameters')) {
 						node.parameters = {};
 					}
@@ -2447,21 +1573,13 @@ export default mixins(
 					if (nodeType !== null) {
 						let nodeParameters = null;
 						try {
-							nodeParameters = NodeHelpers.getNodeParameters(nodeType.properties, node.parameters, true, false, node);
+							nodeParameters = NodeHelpers.getNodeParameters(nodeType.properties, node.parameters, true, false);
 						} catch (e) {
-							console.error(this.$locale.baseText('nodeView.thereWasAProblemLoadingTheNodeParametersOfNode') + `: "${node.name}"`); // eslint-disable-line no-console
+							console.error(`There was a problem loading the node-parameters of node: "${node.name}"`); // eslint-disable-line no-console
 							console.error(e); // eslint-disable-line no-console
 						}
 						node.parameters = nodeParameters !== null ? nodeParameters : {};
-
-						// if it's a webhook and the path is empty set the UUID as the default path
-						if (node.type === WEBHOOK_NODE_TYPE && node.parameters.path === '') {
-							node.parameters.path = node.webhookId as string;
-						}
 					}
-
-					// check and match credentials, apply new format if old is used
-					this.matchCredentials(node);
 
 					foundNodeIssues = this.getNodeIssues(nodeType, node);
 
@@ -2484,11 +1602,7 @@ export default mixins(
 					for (const sourceNode of Object.keys(connections)) {
 						for (const type of Object.keys(connections[sourceNode])) {
 							for (let sourceIndex = 0; sourceIndex < connections[sourceNode][type].length; sourceIndex++) {
-								const outwardConnections = connections[sourceNode][type][sourceIndex];
-								if (!outwardConnections) {
-									continue;
-								}
-								outwardConnections.forEach((
+								connections[sourceNode][type][sourceIndex].forEach((
 									targetData,
 								) => {
 									connectionData = [
@@ -2528,9 +1642,7 @@ export default mixins(
 
 				if (!data.nodes) {
 					// No nodes to add
-					throw new Error(
-						this.$locale.baseText('nodeView.noNodesGivenToAdd'),
-					);
+					throw new Error('No nodes given to add!');
 				}
 
 				// Get how many of the nodes of the types which have
@@ -2540,9 +1652,6 @@ export default mixins(
 				let oldName: string;
 				let newName: string;
 				const createNodes: INode[] = [];
-
-				await this.loadNodesProperties(data.nodes.map(node => ({name: node.type, version: node.typeVersion})));
-
 				data.nodes.forEach(node => {
 					if (nodeTypesCount[node.type] !== undefined) {
 						if (nodeTypesCount[node.type].exist >= nodeTypesCount[node.type].max) {
@@ -2561,11 +1670,7 @@ export default mixins(
 					}
 
 					oldName = node.name;
-					newName = this.getUniqueNodeName({
-						originalName: node.name,
-						additionalUsedNames: newNodeNames,
-						type: node.type,
-					});
+					newName = this.getUniqueNodeName(node.name, newNodeNames);
 
 					newNodeNames.push(newName);
 					nodeNameTable[oldName] = newName;
@@ -2590,17 +1695,16 @@ export default mixins(
 						connection[type] = [];
 						for (sourceIndex = 0; sourceIndex < currentConnections[sourceNode][type].length; sourceIndex++) {
 							const nodeSourceConnections = [];
-							if (currentConnections[sourceNode][type][sourceIndex]) {
-								for (connectionIndex = 0; connectionIndex < currentConnections[sourceNode][type][sourceIndex].length; connectionIndex++) {
-									connectionData = currentConnections[sourceNode][type][sourceIndex][connectionIndex];
-									if (!createNodeNames.includes(connectionData.node)) {
-										// Node does not get created so skip input connection
-										continue;
-									}
-
-									nodeSourceConnections.push(connectionData);
-									// Add connection
+							for (connectionIndex = 0; connectionIndex < currentConnections[sourceNode][type][sourceIndex].length; connectionIndex++) {
+								const nodeConnection: NodeInputConnections = [];
+								connectionData = currentConnections[sourceNode][type][sourceIndex][connectionIndex];
+								if (!createNodeNames.includes(connectionData.node)) {
+									// Node does not get created so skip input connection
+									continue;
 								}
+
+								nodeSourceConnections.push(connectionData);
+								// Add connection
 							}
 							connection[type].push(nodeSourceConnections);
 						}
@@ -2624,8 +1728,6 @@ export default mixins(
 
 				// Add the nodes with the changed node names, expressions and connections
 				await this.addNodes(Object.values(tempWorkflow.nodes), tempWorkflow.connectionsBySourceNode);
-
-				this.$store.commit('setStateDirty', true);
 
 				return {
 					nodes: Object.values(tempWorkflow.nodes),
@@ -2663,7 +1765,7 @@ export default mixins(
 					typeConnections: INodeConnections;
 
 				data.nodes.forEach((node) => {
-					connections = this.$store.getters.outgoingConnectionsByNodeName(node.name);
+					connections = this.$store.getters.connectionsByNodeName(node.name);
 					if (Object.keys(connections).length === 0) {
 						return;
 					}
@@ -2699,7 +1801,10 @@ export default mixins(
 			},
 			resetWorkspace () {
 				// Reset nodes
-				this.deleteEveryEndpoint();
+				if (this.instance) {
+					// On first load it does not exist
+					this.instance.deleteEveryEndpoint();
+				}
 
 				if (this.executionWaitingForWebhook === true) {
 					// Make sure that if there is a waiting test-webhook that
@@ -2710,8 +1815,8 @@ export default mixins(
 						});
 				}
 
-				this.$store.commit('removeAllConnections', {setStateDirty: false});
-				this.$store.commit('removeAllNodes', {setStateDirty: false});
+				this.$store.commit('removeAllConnections');
+				this.$store.commit('removeAllNodes');
 
 				// Reset workflow execution data
 				this.$store.commit('setWorkflowExecutionData', null);
@@ -2720,9 +1825,8 @@ export default mixins(
 
 				this.$store.commit('setActive', false);
 				this.$store.commit('setWorkflowId', PLACEHOLDER_EMPTY_WORKFLOW_ID);
-				this.$store.commit('setWorkflowName', {newName: '', setStateDirty: false});
+				this.$store.commit('setWorkflowName', '');
 				this.$store.commit('setWorkflowSettings', {});
-				this.$store.commit('setWorkflowTagIds', []);
 
 				this.$store.commit('setActiveExecutionId', null);
 				this.$store.commit('setExecutingNode', null);
@@ -2732,7 +1836,7 @@ export default mixins(
 				this.$store.commit('resetNodeIndex');
 				this.$store.commit('resetSelectedNodes');
 
-				this.$store.commit('setNodeViewOffsetPosition', {newOffset: [0, 0], setStateDirty: false});
+				this.$store.commit('setNodeViewOffsetPosition', [0, 0]);
 
 				return Promise.resolve();
 			},
@@ -2740,90 +1844,43 @@ export default mixins(
 				const activeWorkflows = await this.restApi().getActiveWorkflows();
 				this.$store.commit('setActiveWorkflows', activeWorkflows);
 			},
+			async loadSettings (): Promise<void> {
+				const settings = await this.restApi().getSettings() as IN8nUISettings;
+
+				this.$store.commit('setUrlBaseWebhook', settings.urlBaseWebhook);
+				this.$store.commit('setEndpointWebhook', settings.endpointWebhook);
+				this.$store.commit('setEndpointWebhookTest', settings.endpointWebhookTest);
+				this.$store.commit('setSaveDataErrorExecution', settings.saveDataErrorExecution);
+				this.$store.commit('setSaveDataSuccessExecution', settings.saveDataSuccessExecution);
+				this.$store.commit('setSaveManualExecutions', settings.saveManualExecutions);
+				this.$store.commit('setTimezone', settings.timezone);
+				this.$store.commit('setVersionCli', settings.versionCli);
+			},
 			async loadNodeTypes (): Promise<void> {
 				const nodeTypes = await this.restApi().getNodeTypes();
 				this.$store.commit('setNodeTypes', nodeTypes);
 			},
 			async loadCredentialTypes (): Promise<void> {
-				await this.$store.dispatch('credentials/fetchCredentialTypes');
+				const credentialTypes = await this.restApi().getCredentialTypes();
+				this.$store.commit('setCredentialTypes', credentialTypes);
 			},
 			async loadCredentials (): Promise<void> {
-				await this.$store.dispatch('credentials/fetchAllCredentials');
-			},
-			async loadNodesProperties(nodeInfos: INodeTypeNameVersion[]): Promise<void> {
-				const allNodes:INodeTypeDescription[] = this.$store.getters.allNodeTypes;
-
-				const nodesToBeFetched:INodeTypeNameVersion[] = [];
-				allNodes.forEach(node => {
-					const nodeVersions = Array.isArray(node.version) ? node.version : [node.version];
-					if(!!nodeInfos.find(n => n.name === node.name && nodeVersions.includes(n.version)) && !node.hasOwnProperty('properties')) {
-						nodesToBeFetched.push({
-							name: node.name,
-							version: Array.isArray(node.version)
-								? node.version.slice(-1)[0]
-								: node.version,
-						});
-					}
-				});
-
-				if (nodesToBeFetched.length > 0) {
-					// Only call API if node information is actually missing
-					this.startLoading();
-
-					const nodesInfo = await this.restApi().getNodesInformation(nodesToBeFetched);
-
-					nodesInfo.forEach(nodeInfo => {
-						if (nodeInfo.translation) {
-							const nodeType = this.$locale.shortNodeType(nodeInfo.name);
-
-							addNodeTranslation(
-								{ [nodeType]: nodeInfo.translation },
-								this.$store.getters.defaultLocale,
-							);
-						}
-					});
-
-					this.$store.commit('updateNodeTypes', nodesInfo);
-					this.stopLoading();
-				}
-			},
-			async onPostMessageReceived(message: MessageEvent) {
-				try {
-					const json = JSON.parse(message.data);
-					if (json && json.command === 'openWorkflow') {
-						try {
-							await this.importWorkflowExact(json);
-						} catch (e) {
-							if (window.top) {
-								window.top.postMessage(JSON.stringify({ command: 'error', message: this.$locale.baseText('openWorkflow.workflowImportError') }), '*');
-							}
-							this.$showMessage({
-								title: this.$locale.baseText('openWorkflow.workflowImportError'),
-								message: (e as Error).message,
-								type: 'error',
-							});
-						}
-					}
-				} catch (e) {
-				}
-			},
-			async onImportWorkflowDataEvent(data: IDataObject) {
-				await this.importWorkflowData(data.data as IWorkflowDataUpdate);
-			},
-			async onImportWorkflowUrlEvent(data: IDataObject) {
-				const workflowData = await this.getWorkflowDataFromUrl(data.url as string);
-				if (workflowData !== undefined) {
-					await this.importWorkflowData(workflowData);
-				}
+				const credentials = await this.restApi().getAllCredentials();
+				this.$store.commit('setCredentials', credentials);
 			},
 		},
 
 		async mounted () {
-			this.$titleReset();
-			window.addEventListener('message', this.onPostMessageReceived);
-			this.$root.$on('importWorkflowData', this.onImportWorkflowDataEvent);
-			this.$root.$on('newWorkflow', this.newWorkflow);
-			this.$root.$on('importWorkflowUrl', this.onImportWorkflowUrlEvent);
+			this.$root.$on('importWorkflowData', async (data: IDataObject) => {
+				await this.importWorkflowData(data.data as IWorkflowDataUpdate);
+			});
+
+			this.$root.$on('importWorkflowUrl', async (data: IDataObject) => {
+				const workflowData = await this.getWorkflowDataFromUrl(data.url as string);
+				if (workflowData !== undefined) {
+					await this.importWorkflowData(workflowData);
+				}
+			});
 
 			this.startLoading();
 
@@ -2832,16 +1889,13 @@ export default mixins(
 				this.loadCredentials(),
 				this.loadCredentialTypes(),
 				this.loadNodeTypes(),
+				this.loadSettings(),
 			];
 
 			try {
 				await Promise.all(loadPromises);
 			} catch (error) {
-				this.$showError(
-					error,
-					this.$locale.baseText('nodeView.showError.mounted1.title'),
-					this.$locale.baseText('nodeView.showError.mounted1.message') + ':',
-				);
+				this.$showError(error, 'Init Problem', 'There was a problem loading init data:');
 				return;
 			}
 
@@ -2849,34 +1903,15 @@ export default mixins(
 				try {
 					this.initNodeView();
 					await this.initView();
-					if (window.top) {
-						window.top.postMessage(JSON.stringify({command: 'n8nReady',version:this.$store.getters.versionCli}), '*');
-					}
 				} catch (error) {
-					this.$showError(
-						error,
-						this.$locale.baseText('nodeView.showError.mounted2.title'),
-						this.$locale.baseText('nodeView.showError.mounted2.message') + ':',
-					);
+					this.$showError(error, 'Init Problem', 'There was a problem initializing the workflow:');
 				}
 				this.stopLoading();
-
-				setTimeout(() => {
-					this.$store.dispatch('users/showPersonalizationSurvey');
-					this.checkForNewVersions();
-				}, 0);
 			});
-
-			this.$externalHooks().run('nodeView.mount');
 		},
 
 		destroyed () {
 			this.resetWorkspace();
-			this.$store.commit('setStateDirty', false);
-			window.removeEventListener('message', this.onPostMessageReceived);
-			this.$root.$off('newWorkflow', this.newWorkflow);
-			this.$root.$off('importWorkflowData', this.onImportWorkflowDataEvent);
-			this.$root.$off('importWorkflowUrl', this.onImportWorkflowUrlEvent);
 		},
 	});
 </script>
@@ -2884,56 +1919,14 @@ export default mixins(
 <style scoped lang="scss">
 
 .zoom-menu {
-	$--zoom-menu-margin: 5;
-
 	position: fixed;
-	left: $--sidebar-width + $--zoom-menu-margin;
+	left: 70px;
 	width: 200px;
 	bottom: 45px;
 	line-height: 25px;
+	z-index: 18;
 	color: #444;
 	padding-right: 5px;
-
-	&.expanded {
-		left: $--sidebar-expanded-width + $--zoom-menu-margin;
-	}
-
-	button {
-		border: var(--border-base);
-	}
-}
-
-.regular-zoom-menu {
-	@media (max-width: $--breakpoint-2xs) {
-		bottom: 90px;
-	}
-}
-
-.demo-zoom-menu {
-	left: 10px;
-	bottom: 10px;
-}
-
-.node-buttons-wrapper {
-	position: fixed;
-	width: 150px;
-	height: 200px;
-	top: 0;
-	right: 0;
-	display: flex;
-
-	.add-sticky-button {
-		margin-top: var(--spacing-2xs);
-		opacity: 0;
-		transition: .1s;
-		transition-timing-function: linear;
-	}
-
-	&:hover {
-		.add-sticky-button {
-			opacity: 1;
-		}
-	}
 }
 
 .node-creator-button {
@@ -2941,10 +1934,18 @@ export default mixins(
 	text-align: center;
 	top: 80px;
 	right: 20px;
+	z-index: 10;
 }
 
 .node-creator-button button {
 	position: relative;
+	background: $--color-primary;
+	font-size: 1.4em;
+	color: #fff;
+}
+
+.node-creator-button:hover button {
+	transform: scale(1.05);
 }
 
 .node-view-root {
@@ -2954,7 +1955,6 @@ export default mixins(
 	left: 0;
 	top: 0;
 	overflow: hidden;
-	background-color: var(--color-canvas-background);
 }
 
 .node-view-wrapper {
@@ -2967,14 +1967,16 @@ export default mixins(
 	position: relative;
 	width: 100%;
 	height: 100%;
-	transform-origin: 0 0;
 }
 
 .node-view-background {
-	background-color: var(--color-canvas-background);
 	position: absolute;
 	width: 10000px;
 	height: 10000px;
+	top: -5000px;
+	left: -5000px;
+	background-size: 50px 50px;
+	background-image: linear-gradient(to right, #eeeefe 1px, transparent 1px), linear-gradient(to bottom, #eeeefe 1px, transparent 1px);
 }
 
 .move-active {
@@ -2999,8 +2001,20 @@ export default mixins(
 	width: 300px;
 	text-align: center;
 
-	> * {
-		margin-inline-end: 0.625rem;
+	.run-icon {
+		display: inline-block;
+		transform: scale(1.4);
+		margin-right: 0.5em;
+	}
+
+	.workflow-run-button {
+		padding: 12px;
+	}
+
+	.stop-execution,
+	.workflow-run-button.running {
+		color: $--color-primary;
+		background-color: $--color-primary-light;
 	}
 }
 
@@ -3019,32 +2033,38 @@ export default mixins(
 
 <style lang="scss">
 
-.connection-run-items-label {
-	span {
-		border-radius: 7px;
-		background-color: hsla(var(--color-canvas-background-h),var( --color-canvas-background-s), var(--color-canvas-background-l), .85);
-		line-height: 1.3em;
-		padding: 0px 3px;
-		white-space: nowrap;
-		font-size: var(--font-size-s);
-		font-weight: var(--font-weight-regular);
-		color: var(--color-success);
-	}
-
-	.floating {
-		position: absolute;
-		top: -22px;
-		transform: translateX(-50%);
-	}
+.connection-input-name-label,
+.connection-output-name-label {
+	border-radius: 7px;
+	background-color: rgba( $--custom-node-view-background, 0.8 );
+	font-size: 0.7em;
+	line-height: 1.3em;
+	padding: 2px 3px;
+	white-space: nowrap;
 }
 
-.connection-input-name-label {
-	position: relative;
+.delete-connection {
+	font-weight: 500;
+}
 
-	span {
-		position: absolute;
-		top: -10px;
-		left: -60px;
+.remove-connection-label {
+	font-size: 12px;
+	color: #fff;
+	line-height: 13px;
+	border-radius: 15px;
+	height: 15px;
+	background-color: #334455;
+	position: relative;
+	height: 15px;
+	width: 15px;
+	text-align: center;
+
+	&:hover {
+		background-color: $--color-primary;
+		font-size: 20px;
+		line-height: 17px;
+		height: 20px;
+		width: 20px;
 	}
 }
 
@@ -3058,7 +2078,7 @@ export default mixins(
 
 .node-input-endpoint-label,
 .node-output-endpoint-label {
-	background-color: hsla(var(--color-canvas-background-h),var( --color-canvas-background-s), var(--color-canvas-background-l), .85);
+	background-color: $--custom-node-view-background;
 	border-radius: 7px;
 	font-size: 0.7em;
 	padding: 2px;
@@ -3083,47 +2103,6 @@ export default mixins(
 
 	&:hover {
 		transform: scale(1.1);
-	}
-}
-
-.connection-actions {
-	&:hover {
-		display: block !important;
-	}
-
-	> div {
-		color: var(--color-foreground-xdark);
-		border: 2px solid var(--color-foreground-xdark);
-		background-color: var(--color-background-xlight);
-		border-radius: var(--border-radius-base);
-		height: var(--spacing-l);
-		width: var(--spacing-l);
-		cursor: pointer;
-
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-
-		position: absolute;
-		top: -12px;
-
-		&.add {
-			right: 4px;
-		}
-
-		&.delete {
-			left: 4px;
-		}
-
-		svg {
-			pointer-events: none;
-			font-size: var(--font-size-2xs);
-		}
-
-		&:hover {
-			border-color: var(--color-primary);
-			color: var(--color-primary);
-		}
 	}
 }
 

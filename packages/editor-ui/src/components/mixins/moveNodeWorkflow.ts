@@ -1,33 +1,41 @@
 import mixins from 'vue-typed-mixins';
-// @ts-ignore
-import normalizeWheel from 'normalize-wheel';
-import { deviceSupportHelpers } from '@/components/mixins/deviceSupportHelpers';
-import { nodeIndex } from '@/components/mixins/nodeIndex';
-import { getMousePosition } from '@/views/canvasHelpers';
 
-export const moveNodeWorkflow = mixins(
-	deviceSupportHelpers,
-	nodeIndex,
-).extend({
+import { nodeIndex } from '@/components/mixins/nodeIndex';
+
+export const moveNodeWorkflow = mixins(nodeIndex).extend({
 	data () {
 		return {
 			moveLastPosition: [0, 0],
 		};
 	},
-
+	computed: {
+		controlKeyCode (): string {
+			if (this.isMacOs) {
+				return 'Meta';
+			}
+			return 'Control';
+		},
+		isMacOs (): boolean {
+			return /(ipad|iphone|ipod|mac)/i.test(navigator.platform);
+		},
+	},
 	methods: {
+		isCtrlKeyPressed (e: MouseEvent | KeyboardEvent): boolean {
+			if (this.isMacOs) {
+				return e.metaKey;
+			}
+			return e.ctrlKey;
+		},
 		moveWorkflow (e: MouseEvent) {
 			const offsetPosition = this.$store.getters.getNodeViewOffsetPosition;
 
-			const [x, y] = getMousePosition(e);
-
-			const nodeViewOffsetPositionX = offsetPosition[0] + (x - this.moveLastPosition[0]);
-			const nodeViewOffsetPositionY = offsetPosition[1] + (y - this.moveLastPosition[1]);
-			this.$store.commit('setNodeViewOffsetPosition', {newOffset: [nodeViewOffsetPositionX, nodeViewOffsetPositionY]});
+			const nodeViewOffsetPositionX = offsetPosition[0] + (e.pageX - this.moveLastPosition[0]);
+			const nodeViewOffsetPositionY = offsetPosition[1] + (e.pageY - this.moveLastPosition[1]);
+			this.$store.commit('setNodeViewOffsetPosition', [nodeViewOffsetPositionX, nodeViewOffsetPositionY]);
 
 			// Update the last position
-			this.moveLastPosition[0] = x;
-			this.moveLastPosition[1] = y;
+			this.moveLastPosition[0] = e.pageX;
+			this.moveLastPosition[1] = e.pageY;
 		},
 		mouseDownMoveWorkflow (e: MouseEvent) {
 			if (this.isCtrlKeyPressed(e) === false) {
@@ -43,10 +51,8 @@ export const moveNodeWorkflow = mixins(
 
 			this.$store.commit('setNodeViewMoveInProgress', true);
 
-			const [x, y] = getMousePosition(e);
-
-			this.moveLastPosition[0] = x;
-			this.moveLastPosition[1] = y;
+			this.moveLastPosition[0] = e.pageX;
+			this.moveLastPosition[1] = e.pageY;
 
 			// @ts-ignore
 			this.$el.addEventListener('mousemove', this.mouseMoveNodeWorkflow);
@@ -66,15 +72,6 @@ export const moveNodeWorkflow = mixins(
 			// Nothing else to do. Simply leave the node view at the current offset
 		},
 		mouseMoveNodeWorkflow (e: MouseEvent) {
-			// @ts-ignore
-			if (e.target && !e.target.id.includes('node-view')) {
-				return;
-			}
-
-			if (this.$store.getters.isActionActive('dragActive')) {
-				return;
-			}
-
 			if (e.buttons === 0) {
 				// Mouse button is not pressed anymore so stop selection mode
 				// Happens normally when mouse leave the view pressed and then
@@ -87,11 +84,10 @@ export const moveNodeWorkflow = mixins(
 			this.moveWorkflow(e);
 		},
 		wheelMoveWorkflow (e: WheelEvent) {
-			const normalized = normalizeWheel(e);
 			const offsetPosition = this.$store.getters.getNodeViewOffsetPosition;
-			const nodeViewOffsetPositionX = offsetPosition[0] - (e.shiftKey ? normalized.pixelY : normalized.pixelX);
-			const nodeViewOffsetPositionY = offsetPosition[1] - (e.shiftKey ? normalized.pixelX : normalized.pixelY);
-			this.$store.commit('setNodeViewOffsetPosition', {newOffset: [nodeViewOffsetPositionX, nodeViewOffsetPositionY]});
+			const nodeViewOffsetPositionX = offsetPosition[0] - e.deltaX;
+			const nodeViewOffsetPositionY = offsetPosition[1] - e.deltaY;
+			this.$store.commit('setNodeViewOffsetPosition', [nodeViewOffsetPositionX, nodeViewOffsetPositionY]);
 		},
 	},
 });

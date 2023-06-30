@@ -1,6 +1,6 @@
-import { INodeProperties } from 'n8n-workflow';
+import { INodeProperties } from "n8n-workflow";
 
-export const streamOperations: INodeProperties[] = [
+export const streamOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -16,35 +16,35 @@ export const streamOperations: INodeProperties[] = [
 			{
 				name: 'Create',
 				value: 'create',
-				description: 'Create a stream',
+				description: 'Create a stream.',
 			},
 			{
 				name: 'Delete',
 				value: 'delete',
-				description: 'Delete a stream',
+				description: 'Delete a stream.',
 			},
 			{
 				name: 'Get All',
 				value: 'getAll',
-				description: 'Get all streams',
+				description: 'Get all streams.',
 			},
 			{
 				name: 'Get Subscribed',
 				value: 'getSubscribed',
-				description: 'Get subscribed streams',
+				description: 'Get subscribed streams.',
 			},
 			{
 				name: 'Update',
 				value: 'update',
-				description: 'Update a stream',
+				description: 'Update a stream.',
 			},
 		],
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const streamFields: INodeProperties[] = [
+export const streamFields = [
 	/* -------------------------------------------------------------------------- */
 	/*                                stream:create                               */
 	/* -------------------------------------------------------------------------- */
@@ -53,6 +53,7 @@ export const streamFields: INodeProperties[] = [
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				resource: [
@@ -85,7 +86,7 @@ export const streamFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'JSON format parameters for stream creation',
+		description: `JSON format parameters for stream creation.`,
 	},
 	{
 		displayName: 'Subscriptions',
@@ -121,7 +122,7 @@ export const streamFields: INodeProperties[] = [
 						type: 'string',
 						required: true,
 						default: '',
-						description: 'Name of Subscription',
+						description: 'Name of Subscription.',
 					},
 					{
 						displayName: 'Description',
@@ -129,8 +130,8 @@ export const streamFields: INodeProperties[] = [
 						type: 'string',
 						required: true,
 						default: '',
-						description: 'Description of Subscription',
-					},
+						description: 'Description of Subscription.',
+					}
 				],
 			},
 		],
@@ -174,14 +175,14 @@ export const streamFields: INodeProperties[] = [
 				name: 'historyPublicToSubscribers',
 				type: 'boolean',
 				default: false,
-				description: 'Whether the streams message history should be available to newly subscribed members, or users can only access messages they actually received while subscribed to the stream',
+				description: 'Whether the streams message history should be available to newly subscribed members, or users can only access messages they actually received while subscribed to the stream.',
 			},
 			{
 				displayName: 'Invite Only',
 				name: 'inviteOnly',
 				type: 'boolean',
 				default: false,
-				description: 'A boolean specifying whether the streams specified in subscriptions are invite-only or not',
+				description: 'A boolean specifying whether the streams specified in subscriptions are invite-only or not.',
 			},
 			{
 				displayName: 'Principals',
@@ -203,8 +204,8 @@ export const streamFields: INodeProperties[] = [
 								type: 'string',
 								required: true,
 								default: '',
-								description: 'Principal email address',
-							},
+								description: 'Principal email address.',
+							}
 						],
 					},
 				],
@@ -214,26 +215,26 @@ export const streamFields: INodeProperties[] = [
 				name: 'streamPostPolicy',
 				type: 'options',
 				default: '',
-				description: 'Policy for which users can post messages to the stream',
+				description: 'Policy for which users can post messages to the stream.',
 				options: [
 					{
 						name: '1',
 						value: 1,
-						description: 'Any user can post',
+						description: 'Any user can post.'
 					},
 					{
 						name: '2',
 						value: 2,
-						description: 'Only administrators can post',
+						description: 'Only administrators can post.'
 					},
 					{
 						name: '3',
 						value: 3,
-						description: 'Only new members can post',
+						description: 'Only new members can post.'
 					},
 				],
-			},
-		],
+			}
+		]
 	},
 
 	/* -------------------------------------------------------------------------- */
@@ -268,30 +269,30 @@ export const streamFields: INodeProperties[] = [
 				name: 'includeDefault',
 				type: 'boolean',
 				default: true,
-				description: 'Include all default streams for the users realm',
+				description: 'Include all default streams for the users realm.',
 			},
 			{
 				displayName: 'Include Owner Subscribed',
 				name: 'includeOwnersubscribed',
 				type: 'boolean',
 				default: true,
-				description: 'If the user is a bot, include all streams that the bots owner is subscribed to',
+				description: 'If the user is a bot, include all streams that the bots owner is subscribed to.',
 			},
 			{
 				displayName: 'Include Public',
 				name: 'includePublic',
 				type: 'boolean',
 				default: true,
-				description: 'Include all public streams',
+				description: 'Include all public streams.',
 			},
 			{
 				displayName: 'Include Subscribed',
 				name: 'includeSubscribed',
 				type: 'boolean',
 				default: true,
-				description: 'Include all streams that the user is subscribed to',
+				description: 'Include all streams that the user is subscribed to.',
 			},
-		],
+		]
 	},
 
 	/* -------------------------------------------------------------------------- */
@@ -319,9 +320,9 @@ export const streamFields: INodeProperties[] = [
 				name: 'includeSubscribers',
 				type: 'boolean',
 				default: true,
-				description: 'Whether each returned stream object should include a subscribers field containing a list of the user IDs of its subscribers',
-			},
-		],
+				description: 'Whether each returned stream object should include a subscribers field containing a list of the user IDs of its subscribers.',
+			}
+		]
 	},
 
 	/* -------------------------------------------------------------------------- */
@@ -343,13 +344,14 @@ export const streamFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'ID of stream to update',
+		description: 'ID of stream to update.',
 	},
 	{
 		displayName: 'JSON Parameters',
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				resource: [
@@ -383,7 +385,7 @@ export const streamFields: INodeProperties[] = [
 			},
 		},
 
-		description: 'JSON format parameters for stream creation',
+		description: `JSON format parameters for stream creation.`,
 	},
 
 	{
@@ -411,63 +413,63 @@ export const streamFields: INodeProperties[] = [
 				name: 'isAnnouncementOnly',
 				type: 'boolean',
 				default: false,
-				description: 'Whether the stream is limited to announcements',
+				description: 'Whether the stream is limited to announcements.',
 			},
 			{
 				displayName: 'Description',
 				name: 'description',
 				type: 'string',
 				default: '',
-				description: 'The new description for the stream',
-				placeholder: 'Place of discussion',
+				description: 'The new description for the stream.',
+				placeholder: 'Place of discussion'
 			},
 			{
 				displayName: 'Is Private',
 				name: 'isPrivate',
 				type: 'boolean',
 				default: false,
-				description: 'Change whether the stream is a private stream',
+				description: 'Change whether the stream is a private stream.',
 			},
 			{
 				displayName: 'History Public to Subscribers',
 				name: 'historyPublicToSubscribers',
 				type: 'boolean',
 				default: false,
-				description: 'Whether the streams message history should be available to newly subscribed members, or users can only access messages they actually received while subscribed to the stream',
+				description: 'Whether the streams message history should be available to newly subscribed members, or users can only access messages they actually received while subscribed to the stream.',
 			},
 			{
 				displayName: 'New Name',
 				name: 'newName',
 				type: 'string',
 				default: '',
-				description: 'The new name for the stream',
-				placeholder: 'Italy',
+				description: 'The new name for the stream.',
+				placeholder: 'Italy'
 			},
 			{
 				displayName: 'Stream Post Policy',
 				name: 'streamPostPolicy',
 				type: 'options',
 				default: '',
-				description: 'Policy for which users can post messages to the stream',
+				description: 'Policy for which users can post messages to the stream.',
 				options: [
 					{
 						name: '1',
 						value: 1,
-						description: 'Any user can post',
+						description: 'Any user can post.'
 					},
 					{
 						name: '2',
 						value: 2,
-						description: 'Only administrators can post',
+						description: 'Only administrators can post.'
 					},
 					{
 						name: '3',
 						value: 3,
-						description: 'Only new members can post',
+						description: 'Only new members can post.'
 					},
 				],
 			},
-		],
+		]
 	},
 	/* -------------------------------------------------------------------------- */
 	/*                                stream:delete                               */
@@ -488,7 +490,7 @@ export const streamFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'ID of stream to delete',
+		description: 'ID of stream to delete.',
 	},
 
-];
+] as INodeProperties[];

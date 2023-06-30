@@ -4,34 +4,31 @@ import {
 } from 'n8n-core';
 
 import {
+	INodeTypeDescription,
+	INodeType,
+	IWebhookResponseData,
 	ILoadOptionsFunctions,
 	INodePropertyOptions,
-	INodeType,
-	INodeTypeDescription,
-	IWebhookResponseData,
-	NodeApiError,
-	NodeOperationError,
 } from 'n8n-workflow';
 
 import {
 	awsApiRequestSOAP,
 } from './GenericFunctions';
 
-import {
-	get,
-} from 'lodash';
+import { get } from 'lodash';
 
 export class AwsSnsTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'AWS SNS Trigger',
 		subtitle: `={{$parameter["topic"].split(':')[5]}}`,
 		name: 'awsSnsTrigger',
-		icon: 'file:sns.svg',
+		icon: 'file:sns.png',
 		group: ['trigger'],
 		version: 1,
 		description: 'Handle AWS SNS events via webhooks',
 		defaults: {
 			name: 'AWS-SNS-Trigger',
+			color: '#FF9900',
 		},
 		inputs: [],
 		outputs: ['main'],
@@ -39,7 +36,7 @@ export class AwsSnsTrigger implements INodeType {
 			{
 				name: 'aws',
 				required: true,
-			},
+			}
 		],
 		webhooks: [
 			{
@@ -69,7 +66,12 @@ export class AwsSnsTrigger implements INodeType {
 			// select them easily
 			async getTopics(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
 				const returnData: INodePropertyOptions[] = [];
-				const data = await awsApiRequestSOAP.call(this, 'sns', 'GET', '/?Action=ListTopics');
+				let data;
+				try {
+					data = await awsApiRequestSOAP.call(this, 'sns', 'GET', '/?Action=ListTopics');
+				} catch (err) {
+					throw new Error(`AWS Error: ${err}`);
+				}
 
 				let topics = data.ListTopicsResponse.ListTopicsResult.Topics.member;
 
@@ -89,7 +91,7 @@ export class AwsSnsTrigger implements INodeType {
 					});
 				}
 				return returnData;
-			},
+			}
 		},
 	};
 	// @ts-ignore
@@ -106,18 +108,8 @@ export class AwsSnsTrigger implements INodeType {
 					'Version=2010-03-31',
 				];
 				const data = await awsApiRequestSOAP.call(this, 'sns', 'GET', '/?Action=ListSubscriptionsByTopic&' + params.join('&'));
-				const subscriptions = get(data, 'ListSubscriptionsByTopicResponse.ListSubscriptionsByTopicResult.Subscriptions');
-				if (!subscriptions || !subscriptions.member) {
-					return false;
-				}
-
-				let subscriptionMembers = subscriptions.member;
-
-				if (!Array.isArray(subscriptionMembers)) {
-					subscriptionMembers = [subscriptionMembers];
-				}
-
-				for (const subscription of subscriptionMembers) {
+				const subscriptions = get(data, 'ListSubscriptionsByTopicResponse.ListSubscriptionsByTopicResult.Subscriptions.member');
+				for (const subscription of subscriptions) {
 					if (webhookData.webhookId === subscription.SubscriptionArn) {
 						return true;
 					}
@@ -130,7 +122,7 @@ export class AwsSnsTrigger implements INodeType {
 				const topic = this.getNodeParameter('topic') as string;
 
 				if (webhookUrl.includes('%20')) {
-					throw new NodeOperationError(this.getNode(), 'The name of the SNS Trigger Node is not allowed to contain any spaces!');
+					throw new Error('The name of the SNS Trigger Node is not allowed to contain any spaces!');
 				}
 
 				const params = [

@@ -1,23 +1,16 @@
 <template>
-	<n8n-input-label
-		:label="$locale.nodeText().inputLabelDisplayName(parameter, path)"
-		:tooltipText="$locale.nodeText().inputLabelDescription(parameter, path)"
-		:showTooltip="focused"
-		:bold="false"
-		size="small"
-	>
-		<parameter-input
-			:parameter="parameter"
-			:value="value"
-			:displayOptions="displayOptions"
-			:path="path"
-			:isReadOnly="isReadOnly"
-			@valueChanged="valueChanged"
-			@focus="focused = true"
-			@blur="focused = false"
-			inputSize="small" />
-		<input-hint :class="$style.hint" :hint="$locale.nodeText().hint(parameter, path)" />
-	</n8n-input-label>
+	<el-row class="parameter-wrapper">
+		<el-col :span="isMultiLineParameter ? 24 : 10" class="parameter-name" :class="{'multi-line': isMultiLineParameter}">
+			<span class="title" :title="parameter.displayName">{{parameter.displayName}}</span>:
+			<el-tooltip class="parameter-info" placement="top" v-if="parameter.description" effect="light">
+				<div slot="content" v-html="parameter.description"></div>
+				<font-awesome-icon icon="question-circle" />
+			</el-tooltip>
+		</el-col>
+		<el-col :span="isMultiLineParameter ? 24 : 14" class="parameter-value">
+			<parameter-input :parameter="parameter" :value="value" :displayOptions="displayOptions" :path="path" @valueChanged="valueChanged" />
+		</el-col>
+	</el-row>
 </template>
 
 <script lang="ts">
@@ -28,23 +21,31 @@ import {
 } from '@/Interface';
 
 import ParameterInput from '@/components/ParameterInput.vue';
-import InputHint from './ParameterInputHint.vue';
 
 export default Vue
 	.extend({
 		name: 'ParameterInputFull',
 		components: {
 			ParameterInput,
-			InputHint,
 		},
-		data() {
-			return {
-				focused: false,
-			};
+		computed: {
+			isMultiLineParameter () {
+				if (this.level > 4) {
+					return true;
+				}
+				const rows = this.getArgument('rows');
+				if (rows !== undefined && rows > 1) {
+					return true;
+				}
+
+				return false;
+			},
+			level (): number {
+				return this.path.split('.').length;
+			},
 		},
 		props: [
 			'displayOptions',
-			'isReadOnly',
 			'parameter',
 			'path',
 			'value',
@@ -68,8 +69,42 @@ export default Vue
 	});
 </script>
 
-<style lang="scss" module>
-	.hint {
-		margin-top: var(--spacing-4xs);
+<style lang="scss">
+
+.parameter-wrapper {
+	line-height: 2.5em;
+
+	.option {
+		margin: 1em;
 	}
+
+	.parameter-info {
+		background-color: #ffffffaa;
+		border-radius: 6px;
+		display: none;
+		padding: 4px;
+		position: absolute;
+		right: 0px;
+		top: 8px;
+	}
+
+	.parameter-name {
+		position: relative;
+
+		&:hover {
+			.parameter-info {
+				display: inline;
+			}
+		}
+
+		&.multi-line {
+			line-height: 1.5em;
+		}
+	}
+
+	.title {
+		font-weight: 400;
+	}
+}
+
 </style>

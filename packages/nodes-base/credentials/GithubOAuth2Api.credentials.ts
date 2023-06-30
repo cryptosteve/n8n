@@ -1,6 +1,6 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 
@@ -10,45 +10,44 @@ export class GithubOAuth2Api implements ICredentialType {
 		'oAuth2Api',
 	];
 	displayName = 'Github OAuth2 API';
-	documentationUrl = 'github';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Github Server',
 			name: 'server',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: 'https://api.github.com',
-			description: 'The server to connect to. Only has to be set if Github Enterprise is used.',
+			description: 'The server to connect to. Does only have to get changed if Github Enterprise gets used.',
 		},
 		{
 			displayName: 'Authorization URL',
 			name: 'authUrl',
-			type: 'hidden',
-			default: '={{$self["server"] === "https://api.github.com" ? "https://github.com" : $self["server"]}}/login/oauth/authorize',
+			type: 'hidden' as NodePropertyTypes,
+			default: 'https://github.com/login/oauth/authorize',
 			required: true,
 		},
 		{
 			displayName: 'Access Token URL',
 			name: 'accessTokenUrl',
-			type: 'hidden',
-			default: '={{$self["server"] === "https://api.github.com" ? "https://github.com" : $self["server"]}}/login/oauth/access_token',
+			type: 'hidden' as NodePropertyTypes,
+			default: 'https://github.com/login/oauth/access_token',
 			required: true,
 		},
 		{
 			displayName: 'Scope',
 			name: 'scope',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'repo,admin:repo_hook,admin:org,admin:org_hook,gist,notifications,user,write:packages,read:packages,delete:packages,worfklow',
 		},
 		{
 			displayName: 'Auth URI Query Parameters',
 			name: 'authQueryParameters',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Authentication',
 			name: 'authentication',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'header',
 		},
 	];

@@ -4,15 +4,10 @@ import {
 } from 'n8n-core';
 
 import {
-	ICredentialsDecrypted,
-	ICredentialTestFunctions,
-	IDataObject,
-	INodeCredentialTestResult,
-	INodeType,
 	INodeTypeDescription,
+	INodeType,
 	IWebhookResponseData,
-	JsonObject,
-	NodeApiError,
+	IDataObject,
 } from 'n8n-workflow';
 
 import {
@@ -27,13 +22,14 @@ export class TypeformTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Typeform Trigger',
 		name: 'typeformTrigger',
-		icon: 'file:typeform.svg',
+		icon: 'file:typeform.png',
 		group: ['trigger'],
 		version: 1,
 		subtitle: '=Form ID: {{$parameter["formId"]}}',
-		description: 'Starts the workflow on a Typeform form submission',
+		description: 'Starts the workflow on a Typeform form submission.',
 		defaults: {
 			name: 'Typeform Trigger',
+			color: '#404040',
 		},
 		inputs: [],
 		outputs: ['main'],
@@ -48,7 +44,6 @@ export class TypeformTrigger implements INodeType {
 						],
 					},
 				},
-				testedBy: 'testTypeformTokenAuth',
 			},
 			{
 				name: 'typeformOAuth2Api',
@@ -98,21 +93,21 @@ export class TypeformTrigger implements INodeType {
 				options: [],
 				default: '',
 				required: true,
-				description: 'Form which should trigger workflow on submission',
+				description: 'Form which should trigger workflow on submission.',
 			},
 			{
 				displayName: 'Simplify Answers',
 				name: 'simplifyAnswers',
 				type: 'boolean',
 				default: true,
-				description: 'Converts the answers to a key:value pair ("FIELD_TITLE":"USER_ANSER") to be easily processable',
+				description: 'Converts the answers to a key:value pair ("FIELD_TITLE":"USER_ANSER") to be easily processable.',
 			},
 			{
 				displayName: 'Only Answers',
 				name: 'onlyAnswers',
 				type: 'boolean',
 				default: true,
-				description: 'Returns only the answers of the form and not any of the other data',
+				description: 'Returns only the answers of the form and not any of the other data.',
 			},
 		],
 	};
@@ -120,38 +115,6 @@ export class TypeformTrigger implements INodeType {
 	methods = {
 		loadOptions: {
 			getForms,
-		},
-		credentialTest: {
-			async testTypeformTokenAuth(this: ICredentialTestFunctions, credential: ICredentialsDecrypted): Promise<INodeCredentialTestResult> {
-				const credentials = credential.data;
-
-				const options = {
-					headers: {
-						authorization: `bearer ${credentials!.accessToken}`,
-					},
-					uri: 'https://api.typeform.com/workspaces',
-					json: true,
-				};
-				try {
-					const response = await this.helpers.request(options);
-					if (!response.items) {
-						return {
-							status: 'Error',
-							message: 'Token is not valid.',
-						};
-					}
-				} catch(err) {
-					return {
-						status: 'Error',
-						message: `Token is not valid; ${err.message}`,
-					};
-				}
-
-				return {
-					status: 'OK',
-					message: 'Authentication successful!',
-				};
-			},
 		},
 	};
 
@@ -170,10 +133,10 @@ export class TypeformTrigger implements INodeType {
 
 				for (const item of items) {
 					if (item.form_id === formId
-						&& item.url === webhookUrl) {
+					 && item.url === webhookUrl) {
 						webhookData.webhookId = item.tag;
 						return true;
-					}
+					 }
 				}
 
 				return false;
@@ -211,7 +174,7 @@ export class TypeformTrigger implements INodeType {
 					try {
 						const body = {};
 						await apiRequest.call(this, 'DELETE', endpoint, body);
-					} catch (error) {
+					} catch (e) {
 						return false;
 					}
 					// Remove from the static workflow data so that it is clear
@@ -236,7 +199,7 @@ export class TypeformTrigger implements INodeType {
 			(bodyData.form_response as IDataObject).definition === undefined ||
 			(bodyData.form_response as IDataObject).answers === undefined
 		) {
-			throw new NodeApiError(this.getNode(), bodyData as JsonObject, { message: 'Expected definition/answers data is missing!' });
+			throw new Error('Expected definition/answers data is missing!');
 		}
 
 		const answers = (bodyData.form_response as IDataObject).answers as ITypeformAnswer[];
@@ -254,7 +217,7 @@ export class TypeformTrigger implements INodeType {
 			// Create a dictionary to get the field title by its ID
 			const defintitionsById: { [key: string]: string; } = {};
 			for (const field of definition.fields) {
-				defintitionsById[field.id] = field.title.replace(/\{\{/g, '[').replace(/\}\}/g, ']');
+				defintitionsById[field.id] = field.title;
 			}
 
 			// Convert the answers to key -> value pair

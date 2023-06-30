@@ -3,19 +3,17 @@ import {
 } from 'n8n-core';
 import {
 	IDataObject,
+	INodeTypeDescription,
 	INodeExecutionData,
 	INodeType,
-	INodeTypeDescription,
-	NodeApiError,
-	NodeOperationError,
 } from 'n8n-workflow';
 import {
 	flowApiRequest,
 	FlowApiRequestAllItems,
 } from './GenericFunctions';
 import {
-	taskFields,
 	taskOpeations,
+	taskFields,
 } from './TaskDescription';
 import {
 	ITask, TaskInfo,
@@ -32,6 +30,7 @@ export class Flow implements INodeType {
 		description: 'Consume Flow API',
 		defaults: {
 			name: 'Flow',
+			color: '#c02428',
 		},
 		inputs: ['main'],
 		outputs: ['main'],
@@ -39,7 +38,7 @@ export class Flow implements INodeType {
 			{
 				name: 'flowApi',
 				required: true,
-			},
+			}
 		],
 		properties: [
 			{
@@ -50,7 +49,9 @@ export class Flow implements INodeType {
 					{
 						name: 'Task',
 						value: 'task',
-						description: 'Tasks are units of work that can be private or assigned to a list. Through this endpoint, you can manipulate your tasks in Flow, including creating new ones.',
+						description: `The primary unit within Flow; tasks track units of work and can be assigned, sorted, nested, and tagged.</br>
+						Tasks can either be part of a List, or "private" (meaning "without a list", essentially).</br>
+						Through this endpoint you are able to do anything you wish to your tasks in Flow, including create new ones.`,
 					},
 				],
 				default: 'task',
@@ -62,11 +63,15 @@ export class Flow implements INodeType {
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
-		const credentials = await this.getCredentials('flowApi');
+		const credentials = this.getCredentials('flowApi');
+
+		if (credentials === undefined) {
+			throw new Error('No credentials got returned!');
+		}
 
 		const items = this.getInputData();
 		const returnData: IDataObject[] = [];
-		const length = items.length;
+		const length = items.length as unknown as number;
 		let responseData;
 		const qs: IDataObject = {};
 		const resource = this.getNodeParameter('resource', 0) as string;
@@ -84,7 +89,7 @@ export class Flow implements INodeType {
 					};
 					const task: TaskInfo = {
 						name,
-						workspace_id: parseInt(workspaceId, 10),
+						workspace_id: parseInt(workspaceId, 10)
 					};
 					if (additionalFields.ownerId) {
 						task.owner_id = parseInt(additionalFields.ownerId as string, 10);
@@ -132,8 +137,8 @@ export class Flow implements INodeType {
 					try {
 						responseData = await flowApiRequest.call(this, 'POST', '/tasks', body);
 						responseData = responseData.task;
-					} catch (error) {
-						throw new NodeApiError(this.getNode(), error);
+					} catch (err) {
+						throw new Error(`Flow Error: ${err.message}`);
 					}
 				}
 				//https://developer.getflow.com/api/#tasks_update-a-task
@@ -200,8 +205,8 @@ export class Flow implements INodeType {
 					try {
 						responseData = await flowApiRequest.call(this, 'PUT', `/tasks/${taskId}`, body);
 						responseData = responseData.task;
-					} catch (error) {
-						throw new NodeApiError(this.getNode(), error);
+					} catch (err) {
+						throw new Error(`Flow Error: ${err.message}`);
 					}
 				}
 				//https://developer.getflow.com/api/#tasks_get-task
@@ -214,8 +219,8 @@ export class Flow implements INodeType {
 					}
 					try {
 						responseData = await flowApiRequest.call(this,'GET', `/tasks/${taskId}`, {}, qs);
-					} catch (error) {
-						throw new NodeApiError(this.getNode(), error);
+					} catch (err) {
+						throw new Error(`Flow Error: ${err.message}`);
 					}
 				}
 				//https://developer.getflow.com/api/#tasks_get-tasks
@@ -258,8 +263,8 @@ export class Flow implements INodeType {
 							responseData = await flowApiRequest.call(this, 'GET', '/tasks', {}, qs);
 							responseData = responseData.tasks;
 						}
-					} catch (error) {
-						throw new NodeApiError(this.getNode(), error);
+					} catch (err) {
+						throw new Error(`Flow Error: ${err.message}`);
 					}
 				}
 			}

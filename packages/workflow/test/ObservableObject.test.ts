@@ -1,6 +1,11 @@
-import { IDataObject, ObservableObject } from '../src';
+import {
+	IDataObject,
+	ObservableObject,
+} from '../src';
+
 
 describe('ObservableObject', () => {
+
 	test('should recognize that item on parent level got added (init empty)', () => {
 		const testObject = ObservableObject.create({});
 		expect(testObject.__dataChanged).toBeFalsy();
@@ -71,9 +76,7 @@ describe('ObservableObject', () => {
 	});
 
 	test('should recognize that item on first child level changed if it is now empty and option "ignoreEmptyOnFirstChild" === true (init data exists)', () => {
-		const testObject = ObservableObject.create({ a: { b: 1 } }, undefined, {
-			ignoreEmptyOnFirstChild: true,
-		});
+		const testObject = ObservableObject.create({ a: { b: 1 } }, undefined, { ignoreEmptyOnFirstChild: true });
 		expect(testObject.__dataChanged).toBeFalsy();
 		expect((testObject.a! as IDataObject).b).toEqual(1);
 		testObject.a = {};
@@ -82,9 +85,7 @@ describe('ObservableObject', () => {
 	});
 
 	test('should recognize that item on first child level changed if it is now empty and option "ignoreEmptyOnFirstChild" === false (init data exists)', () => {
-		const testObject = ObservableObject.create({ a: { b: 1 } }, undefined, {
-			ignoreEmptyOnFirstChild: false,
-		});
+		const testObject = ObservableObject.create({ a: { b: 1 } }, undefined, { ignoreEmptyOnFirstChild: false });
 		expect(testObject.__dataChanged).toBeFalsy();
 		expect((testObject.a! as IDataObject).b).toEqual(1);
 		testObject.a = {};
@@ -104,7 +105,7 @@ describe('ObservableObject', () => {
 	test('should recognize that item on second child level changed (init data exists)', () => {
 		const testObject = ObservableObject.create({ a: { b: { c: 1 } } });
 		expect(testObject.__dataChanged).toBeFalsy();
-		expect((testObject.a! as IDataObject).b).toEqual({ c: 1 });
+		expect((testObject.a! as IDataObject).b).toEqual({c: 1});
 		expect(((testObject.a! as IDataObject).b! as IDataObject).c).toEqual(1);
 		((testObject.a! as IDataObject).b! as IDataObject).c = 2;
 		expect(testObject.__dataChanged).toBeTruthy();
@@ -122,9 +123,7 @@ describe('ObservableObject', () => {
 	});
 
 	test('should recognize that item on parent level got deleted even with and option "ignoreEmptyOnFirstChild" === true (init data exists)', () => {
-		const testObject = ObservableObject.create({ a: 1 }, undefined, {
-			ignoreEmptyOnFirstChild: true,
-		});
+		const testObject = ObservableObject.create({ a: 1 }, undefined, { ignoreEmptyOnFirstChild: true });
 		expect(testObject.__dataChanged).toBeFalsy();
 		expect(testObject.a!).toEqual(1);
 		delete testObject.a;
@@ -143,15 +142,11 @@ describe('ObservableObject', () => {
 		expect(testObject).toEqual({ a: {} });
 	});
 
-	test('should recognize that item on second child level changed with null (init data exists)', () => {
-		const testObject = ObservableObject.create({ a: { b: { c: null } } });
-		expect(testObject.__dataChanged).toBeFalsy();
-		expect((testObject.a! as IDataObject).b).toEqual({ c: null });
-		expect(((testObject.a! as IDataObject).b! as IDataObject).c).toEqual(null);
-		((testObject.a! as IDataObject).b! as IDataObject).c = 2;
-		expect(testObject.__dataChanged).toBeTruthy();
-		expect((testObject.a! as IDataObject).b).toEqual({ c: 2 });
-	});
+
+
+
+
+
 
 	// test('xxxxxx', () => {
 	// 	const testObject = ObservableObject.create({ a: { } }, undefined, { ignoreEmptyOnFirstChild: true });
@@ -163,9 +158,12 @@ describe('ObservableObject', () => {
 
 	// 	// expect(testObject.a).toEqual({});
 
+
+
 	// 	// expect((testObject.a! as DataObject).b).toEqual({ c: 1 });
 	// 	// expect(((testObject.a! as DataObject).b! as DataObject).c).toEqual(1);
 	// 	// ((testObject.a! as DataObject).b! as DataObject).c = 2;
 	// 	// expect((testObject.a! as DataObject).b).toEqual({ c: 2 });
 	// });
+
 });

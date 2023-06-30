@@ -1,8 +1,8 @@
 import {
 	INodeProperties,
-} from 'n8n-workflow';
+ } from 'n8n-workflow';
 
-export const guestOperations: INodeProperties[] = [
+export const guestOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -39,13 +39,13 @@ export const guestOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const guestFields: INodeProperties[] = [
+export const guestFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                guest:create                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                guest:create                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Team ID',
 		name: 'team',
@@ -119,10 +119,9 @@ export const guestFields: INodeProperties[] = [
 			},
 		],
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                guest:delete                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                guest:delete                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Team ID',
 		name: 'team',
@@ -160,10 +159,9 @@ export const guestFields: INodeProperties[] = [
 		},
 		required: true,
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                guest:get                                   */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                guest:get                                   */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Team ID',
 		name: 'team',
@@ -201,10 +199,9 @@ export const guestFields: INodeProperties[] = [
 		},
 		required: true,
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                guest:update                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                guest:update                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Team ID',
 		name: 'team',
@@ -285,4 +282,4 @@ export const guestFields: INodeProperties[] = [
 			},
 		],
 	},
-];
+] as INodeProperties[];

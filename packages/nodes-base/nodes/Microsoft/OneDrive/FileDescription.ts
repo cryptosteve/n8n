@@ -1,8 +1,6 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from 'n8n-workflow';
 
-export const fileOperations: INodeProperties[] = [
+export const fileOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -41,11 +39,6 @@ export const fileOperations: INodeProperties[] = [
 				description: 'Search a file',
 			},
 			{
-				name: 'Share',
-				value: 'share',
-				description: 'Share a file',
-			},
-			{
 				name: 'Upload',
 				value: 'upload',
 				description: 'Upload a file up to 4MB in size',
@@ -54,9 +47,9 @@ export const fileOperations: INodeProperties[] = [
 		default: 'upload',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const fileFields: INodeProperties[] = [
+export const fileFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                 file:copy                                  */
@@ -76,6 +69,7 @@ export const fileFields: INodeProperties[] = [
 			},
 		},
 		default: '',
+		description: 'File ID',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -99,7 +93,7 @@ export const fileFields: INodeProperties[] = [
 				name: 'name',
 				type: 'string',
 				default: '',
-				description: 'The new name for the copy. If this isn\'t provided, the same name will be used as the original.',
+				description: `The new name for the copy. If this isn't provided, the same name will be used as the original.`,
 			},
 		],
 	},
@@ -126,28 +120,28 @@ export const fileFields: INodeProperties[] = [
 				name: 'driveId',
 				type: 'string',
 				default: '',
-				description: 'Identifier of the drive instance that contains the item',
+				description: 'Identifier of the drive instance that contains the item.',
 			},
 			{
 				displayName: 'Drive Type',
 				name: 'driveType',
 				type: 'string',
 				default: '',
-				description: 'Identifies the type of drive',
+				description: 'Identifies the type of drive.',
 			},
 			{
 				displayName: 'ID',
 				name: 'id',
 				type: 'string',
 				default: '',
-				description: 'Identifier of the item in the drive',
+				description: 'Identifier of the item in the drive.',
 			},
 			{
 				displayName: 'List ID',
 				name: 'listId',
 				type: 'string',
 				default: '',
-				description: 'Identifier of the list',
+				description: 'Identifier of the list.',
 			},
 			{
 				displayName: 'Name',
@@ -168,14 +162,14 @@ export const fileFields: INodeProperties[] = [
 				name: 'shareId',
 				type: 'string',
 				default: '',
-				description: 'Identifier for a shared resource that can be accessed via the Shares API',
+				description: 'Identifier for a shared resource that can be accessed via the Shares API.',
 			},
 			{
 				displayName: 'Site ID',
 				name: 'siteId',
 				type: 'string',
 				default: '',
-				description: 'Identifier of the site',
+				description: 'Identifier of the site.',
 			},
 		],
 	},
@@ -217,6 +211,7 @@ export const fileFields: INodeProperties[] = [
 			},
 		},
 		default: '',
+		description: 'File ID',
 	},
 	{
 		displayName: 'Binary Property',
@@ -227,14 +222,14 @@ export const fileFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'download',
+					'download'
 				],
 				resource: [
 					'file',
 				],
 			},
 		},
-		description: 'Name of the binary property to which to write the data of the read file',
+		description: 'Name of the binary property to which to<br />write the data of the read file.',
 	},
 /* -------------------------------------------------------------------------- */
 /*                                 file:get                                   */
@@ -274,84 +269,8 @@ export const fileFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The query text used to search for items. Values may be matched across several fields including filename, metadata, and file content.',
-	},
-/* -------------------------------------------------------------------------- */
-/*                                 file:share                                 */
-/* -------------------------------------------------------------------------- */
-	{
-		displayName: 'File ID',
-		name: 'fileId',
-		type: 'string',
-		displayOptions: {
-			show: {
-				operation: [
-					'share',
-				],
-				resource: [
-					'file',
-				],
-			},
-		},
-		default: '',
-	},
-	{
-		displayName: 'Type',
-		name: 'type',
-		type: 'options',
-		options: [
-			{
-				name: 'View',
-				value: 'view',
-			},
-			{
-				name: 'Edit',
-				value: 'edit',
-			},
-			{
-				name: 'Embed',
-				value: 'embed',
-			},
-		],
-		displayOptions: {
-			show: {
-				operation: [
-					'share',
-				],
-				resource: [
-					'file',
-				],
-			},
-		},
-		default: '',
-		description: 'The type of sharing link to create',
-	},
-	{
-		displayName: 'Scope',
-		name: 'scope',
-		type: 'options',
-		options: [
-			{
-				name: 'Anonymous',
-				value: 'anonymous',
-			},
-			{
-				name: 'Organization',
-				value: 'organization',
-			},
-		],
-		displayOptions: {
-			show: {
-				operation: [
-					'share',
-				],
-				resource: [
-					'file',
-				],
-			},
-		},
-		default: '',
-		description: 'The type of sharing link to create',
+		description: `The query text used to search for items. Values may be matched
+		across several fields including filename, metadata, and file content.`,
 	},
 /* -------------------------------------------------------------------------- */
 /*                                 file:upload                                */
@@ -371,7 +290,7 @@ export const fileFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The name the file should be saved as',
+		description: 'The name the file should be saved as.',
 	},
 	{
 		displayName: 'Parent ID',
@@ -389,7 +308,7 @@ export const fileFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'ID of the parent folder that will contain the file',
+		description: 'ID of the parent folder that will contain the file.',
 	},
 	{
 		displayName: 'Binary Data',
@@ -407,7 +326,7 @@ export const fileFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'If the data to upload should be taken from binary field',
+		description: 'If the data to upload should be taken from binary field.',
 	},
 	{
 		displayName: 'File Content',
@@ -430,7 +349,7 @@ export const fileFields: INodeProperties[] = [
 
 		},
 		placeholder: '',
-		description: 'The text content of the file',
+		description: 'The text content of the file.',
 	},
 	{
 		displayName: 'Binary Property',
@@ -453,6 +372,6 @@ export const fileFields: INodeProperties[] = [
 
 		},
 		placeholder: '',
-		description: 'Name of the binary property which contains the data for the file',
+		description: 'Name of the binary property which contains<br />the data for the file.',
 	},
-];
+] as INodeProperties[];

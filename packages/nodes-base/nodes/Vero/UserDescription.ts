@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const userOperations: INodeProperties[] = [
+export const userOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -16,45 +16,46 @@ export const userOperations: INodeProperties[] = [
 			{
 				name: 'Create/Update',
 				value: 'create',
-				description: 'Create or update a user profile',
+				description: `Creates a new user profile if the user doesn’t exist yet.
+				Otherwise, the user profile is updated based on the properties provided.`,
 			},
 			{
 				name: 'Alias',
 				value: 'alias',
-				description: 'Change a users identifier',
+				description: 'Changes a user’s identifier.',
 			},
 			{
 				name: 'Unsubscribe',
 				value: 'unsubscribe',
-				description: 'Unsubscribe a user',
+				description: 'Unsubscribes a single user.',
 			},
 			{
 				name: 'Re-subscribe',
 				value: 'resubscribe',
-				description: 'Resubscribe a user',
+				description: 'Resubscribe a single user.',
 			},
 			{
 				name: 'Delete',
 				value: 'delete',
-				description: 'Delete a user',
+				description: 'Delete a single user.',
 			},
 			{
 				name: 'Add Tags',
 				value: 'addTags',
-				description: 'Adds a tag to a users profile',
+				description: 'Adds a tag to a user’s profile.',
 			},
 			{
 				name: 'Remove Tags',
 				value: 'removeTags',
-				description: 'Removes a tag from a users profile',
+				description: 'Removes a tag from a user’s profile.',
 			},
 		],
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const userFields: INodeProperties[] = [
+export const userFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                user:create                                 */
@@ -73,7 +74,7 @@ export const userFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-				],
+				]
 			},
 		},
 		description: 'The unique identifier of the customer',
@@ -83,6 +84,7 @@ export const userFields: INodeProperties[] = [
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				resource: [
@@ -90,9 +92,9 @@ export const userFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-				],
+				]
 			},
-		},
+		}
 	},
 	{
 		displayName: 'Additional Fields',
@@ -116,9 +118,9 @@ export const userFields: INodeProperties[] = [
 				name: 'email',
 				type: 'string',
 				default: '',
-				description: 'The table to create the row in',
+				description: 'The table to create the row in.',
 			},
-		],
+		]
 	},
 	{
 		displayName: 'Data',
@@ -153,16 +155,16 @@ export const userFields: INodeProperties[] = [
 						name: 'key',
 						type: 'string',
 						default: '',
-						description: 'Name of the property to set',
+						description: 'Name of the property to set.',
 					},
 					{
 						displayName: 'Value',
 						name: 'value',
 						type: 'string',
 						default: '',
-						description: 'Value of the property to set',
+						description: 'Value of the property to set.',
 					},
-				],
+				]
 			},
 		],
 	},
@@ -171,6 +173,7 @@ export const userFields: INodeProperties[] = [
 		name: 'dataAttributesJson',
 		type: 'json',
 		default: '',
+		required: false,
 		typeOptions: {
 			alwaysOpenEditWindow: true,
 		},
@@ -206,7 +209,7 @@ export const userFields: INodeProperties[] = [
 				],
 				operation: [
 					'alias',
-				],
+				]
 			},
 		},
 		description: 'The old unique identifier of the user',
@@ -224,7 +227,7 @@ export const userFields: INodeProperties[] = [
 				],
 				operation: [
 					'alias',
-				],
+				]
 			},
 		},
 		description: 'The new unique identifier of the user',
@@ -245,7 +248,7 @@ export const userFields: INodeProperties[] = [
 				],
 				operation: [
 					'unsubscribe',
-				],
+				]
 			},
 		},
 		description: 'The unique identifier of the user',
@@ -266,7 +269,7 @@ export const userFields: INodeProperties[] = [
 				],
 				operation: [
 					'resubscribe',
-				],
+				]
 			},
 		},
 		description: 'The unique identifier of the user',
@@ -287,7 +290,7 @@ export const userFields: INodeProperties[] = [
 				],
 				operation: [
 					'delete',
-				],
+				]
 			},
 		},
 		description: 'The unique identifier of the user',
@@ -308,7 +311,7 @@ export const userFields: INodeProperties[] = [
 				],
 				operation: [
 					'addTags',
-				],
+				]
 			},
 		},
 		description: 'The unique identifier of the user',
@@ -326,7 +329,7 @@ export const userFields: INodeProperties[] = [
 				],
 				operation: [
 					'addTags',
-				],
+				]
 			},
 		},
 		description: 'Tags to add separated by ","',
@@ -347,7 +350,7 @@ export const userFields: INodeProperties[] = [
 				],
 				operation: [
 					'removeTags',
-				],
+				]
 			},
 		},
 		description: 'The unique identifier of the user',
@@ -365,9 +368,9 @@ export const userFields: INodeProperties[] = [
 				],
 				operation: [
 					'removeTags',
-				],
+				]
 			},
 		},
 		description: 'Tags to remove separated by ","',
 	},
-];
+] as INodeProperties[];

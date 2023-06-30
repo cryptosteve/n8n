@@ -2,7 +2,7 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export const imageOperations: INodeProperties[] = [
+export const imageOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -29,9 +29,9 @@ export const imageOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const imageFields: INodeProperties[] = [
+export const imageFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                image:create                                */
@@ -55,7 +55,7 @@ export const imageFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The template ID you want to use',
+		description: 'The template id you want to use',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -86,7 +86,9 @@ export const imageFields: INodeProperties[] = [
 				name: 'waitForImage',
 				type: 'boolean',
 				default: false,
-				description: 'Wait for the image to be proccesed before returning. If after three tries the images is not ready, an error will be thrown. Number of tries can be increased by setting "Wait Max Tries".',
+				description: `Wait for the image to be proccesed before returning.<br />
+				If after three tries the images is not ready, an error will be thrown.<br />
+				Number of tries can be increased by setting "Wait Max Tries".`,
 			},
 			{
 				displayName: 'Wait Max Tries',
@@ -104,7 +106,7 @@ export const imageFields: INodeProperties[] = [
 					},
 				},
 				default: 3,
-				description: 'How often it should check if the image is available before it fails',
+				description: `How often it should check if the image is available before it fails.`,
 			},
 			{
 				displayName: 'Webhook URL',
@@ -179,7 +181,7 @@ export const imageFields: INodeProperties[] = [
 						type: 'string',
 						default: '',
 						description: 'Replacement image url you want to use (must be publicly viewable)',
-					},
+					}
 				],
 			},
 		],
@@ -200,9 +202,9 @@ export const imageFields: INodeProperties[] = [
 				],
 				operation: [
 					'get',
-				],
+				]
 			},
 		},
-		description: 'Unique identifier for the image',
+		description: 'Unique identifier for the image.',
 	},
-];
+] as INodeProperties[];

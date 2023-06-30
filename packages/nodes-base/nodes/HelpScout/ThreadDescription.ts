@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const threadOperations: INodeProperties[] = [
+export const threadOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -27,9 +27,9 @@ export const threadOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const threadFields: INodeProperties[] = [
+export const threadFields = [
 /* -------------------------------------------------------------------------- */
 /*                                thread:create                               */
 /* -------------------------------------------------------------------------- */
@@ -49,6 +49,7 @@ export const threadFields: INodeProperties[] = [
 				],
 			},
 		},
+		description: 'conversation ID',
 	},
 	{
 		displayName: 'Type',
@@ -68,23 +69,23 @@ export const threadFields: INodeProperties[] = [
 		options: [
 			{
 				name: 'Chat',
-				value: 'chat',
+				value: 'chat'
 			},
 			{
 				name: 'Customer',
-				value: 'customer',
+				value: 'customer'
 			},
 			{
 				name: 'Note',
-				value: 'note',
+				value: 'note'
 			},
 			{
 				name: 'Phone',
-				value: 'phone',
+				value: 'phone'
 			},
 			{
 				name: 'Reply',
-				value: 'reply',
+				value: 'reply'
 			},
 		],
 		default: '',
@@ -164,9 +165,9 @@ export const threadFields: INodeProperties[] = [
 				name: 'imported',
 				type: 'boolean',
 				default: false,
-				description: 'When imported is set to true, no outgoing emails or notifications will be generated',
+				description: 'When imported is set to true, no outgoing emails or notifications will be generated.',
 			},
-		],
+		]
 	},
 	{
 		displayName: 'Attachments',
@@ -211,7 +212,7 @@ export const threadFields: INodeProperties[] = [
 						type: 'string',
 						default: '',
 						placeholder: 'ZXhhbXBsZSBmaWxl',
-						description: 'Base64-encoded stream of data',
+						description: 'Base64-encoded stream of data.',
 					},
 				],
 			},
@@ -229,8 +230,8 @@ export const threadFields: INodeProperties[] = [
 				],
 			},
 		],
-		default: {},
-		description: 'Array of supported attachments to add to the message',
+		default: '',
+		description: 'Array of supported attachments to add to the message.',
 	},
 /* -------------------------------------------------------------------------- */
 /*                                thread:getAll                               */
@@ -251,6 +252,7 @@ export const threadFields: INodeProperties[] = [
 				],
 			},
 		},
+		description: 'conversation ID',
 	},
 	{
 		displayName: 'Return All',
@@ -267,7 +269,7 @@ export const threadFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -290,6 +292,6 @@ export const threadFields: INodeProperties[] = [
 			minValue: 1,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
-];
+] as INodeProperties[];

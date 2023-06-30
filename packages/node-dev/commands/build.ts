@@ -1,7 +1,12 @@
-import { UserSettings } from 'n8n-core';
+import {
+	UserSettings,
+} from "n8n-core";
 import { Command, flags } from '@oclif/command';
 
-import { buildFiles, IBuildOptions } from '../src';
+import {
+	buildFiles,
+	IBuildOptions,
+} from '../src';
 
 export class Build extends Command {
 	static description = 'Builds credentials and nodes and copies it to n8n custom extension folder';
@@ -19,14 +24,11 @@ export class Build extends Command {
 			description: `The path to copy the compiles files to [default: ${UserSettings.getUserN8nFolderCustomExtensionPath()}]`,
 		}),
 		watch: flags.boolean({
-			description:
-				'Starts in watch mode and automatically builds and copies file whenever they change',
+			description: 'Starts in watch mode and automatically builds and copies file whenever they change',
 		}),
 	};
 
-	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 	async run() {
-		// eslint-disable-next-line @typescript-eslint/no-shadow
 		const { flags } = this.parse(Build);
 
 		this.log('\nBuild credentials and nodes');
@@ -45,12 +47,13 @@ export class Build extends Command {
 			const outputDirectory = await buildFiles(options);
 
 			this.log(`The nodes got build and saved into the following folder:\n${outputDirectory}`);
+
 		} catch (error) {
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
 			this.log(`\nGOT ERROR: "${error.message}"`);
 			this.log('====================================');
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
 			this.log(error.stack);
+			return;
 		}
+
 	}
 }

@@ -1,8 +1,8 @@
 import {
 	INodeProperties,
-} from 'n8n-workflow';
+ } from 'n8n-workflow';
 
-export const taskOperations: INodeProperties[] = [
+export const taskOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -31,17 +31,12 @@ export const taskOperations: INodeProperties[] = [
 				description: 'Get a task',
 			},
 			{
-				name: 'Get All',
+				name: 'Get all',
 				value: 'getAll',
 				description: 'Get all tasks',
 			},
 			{
-				name: 'Member',
-				value: 'member',
-				description: 'Get task members',
-			},
-			{
-				name: 'Set Custom Field',
+				name: 'Set custom field',
 				value: 'setCustomField',
 				description: 'Set a custom field',
 			},
@@ -54,13 +49,13 @@ export const taskOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const taskFields: INodeProperties[] = [
+export const taskFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                task:create                                 */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                task:create                                 */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Team ID',
 		name: 'team',
@@ -100,7 +95,7 @@ export const taskFields: INodeProperties[] = [
 			loadOptionsMethod: 'getSpaces',
 			loadOptionsDependsOn: [
 				'team',
-			],
+			]
 		},
 		required: true,
 	},
@@ -195,7 +190,7 @@ export const taskFields: INodeProperties[] = [
 			loadOptionsMethod: 'getLists',
 			loadOptionsDependsOn: [
 				'folder',
-			],
+			]
 		},
 		required: true,
 	},
@@ -238,12 +233,13 @@ export const taskFields: INodeProperties[] = [
 				displayName: 'Assignees',
 				name: 'assignees',
 				type: 'multiOptions',
+				loadOptionsDependsOn: [
+					'list',
+				],
 				typeOptions: {
 					loadOptionsMethod: 'getAssignees',
-					loadOptionsDependsOn: [
-						'list',
-					],
 				},
+
 				default: [],
 			},
 			{
@@ -254,8 +250,7 @@ export const taskFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				// eslint-disable-next-line n8n-nodes-base/node-param-description-miscased-id
-				description: 'Custom fields to set as JSON in the format: <code>[ {"id": "", "value": ""} ]</code>',
+				description: 'Custom fields to set as JSON in the format:<br />[{"id": "", "value": ""}]',
 			},
 			{
 				displayName: 'Content',
@@ -308,12 +303,6 @@ export const taskFields: INodeProperties[] = [
 				default: 3,
 			},
 			{
-				displayName: 'Start Date',
-				name: 'startDate',
-				type: 'dateTime',
-				default: '',
-			},
-			{
 				displayName: 'Start Date Time',
 				name: 'startDateTime',
 				type: 'boolean',
@@ -323,11 +312,11 @@ export const taskFields: INodeProperties[] = [
 				displayName: 'Status',
 				name: 'status',
 				type: 'options',
+				loadOptionsDependsOn: [
+					'list',
+				],
 				typeOptions: {
 					loadOptionsMethod: 'getStatuses',
-					loadOptionsDependsOn: [
-						'list',
-					],
 				},
 				default: '',
 			},
@@ -335,11 +324,11 @@ export const taskFields: INodeProperties[] = [
 				displayName: 'Tags',
 				name: 'tags',
 				type: 'multiOptions',
+				loadOptionsDependsOn: [
+					'space',
+				],
 				typeOptions: {
 					loadOptionsMethod: 'getTags',
-					loadOptionsDependsOn: [
-						'space',
-					],
 				},
 				default: [],
 				description: 'The array of tags applied to this task',
@@ -353,10 +342,9 @@ export const taskFields: INodeProperties[] = [
 			},
 		],
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                task:update                                 */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                task:update                                 */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Task ID',
 		name: 'id',
@@ -373,6 +361,7 @@ export const taskFields: INodeProperties[] = [
 				],
 			},
 		},
+		description: 'Task ID',
 	},
 	{
 		displayName: 'Update Fields',
@@ -396,7 +385,7 @@ export const taskFields: INodeProperties[] = [
 				name: 'addAssignees',
 				type: 'string',
 				default: '',
-				description: 'Assignees IDs. Multiple ca be added separated by comma.',
+				description: 'Assignees IDs. Multiple ca be added separated by comma'
 			},
 			{
 				displayName: 'Content',
@@ -459,19 +448,14 @@ export const taskFields: INodeProperties[] = [
 				name: 'removeAssignees',
 				type: 'string',
 				default: '',
-				description: 'Assignees IDs. Multiple ca be added separated by comma.',
+				description: 'Assignees IDs. Multiple ca be added separated by comma'
 			},
 			{
 				displayName: 'Status',
 				name: 'status',
 				type: 'string',
 				default: '',
-			},
-			{
-				displayName: 'Start Date',
-				name: 'startDate',
-				type: 'dateTime',
-				default: '',
+				description: 'status'
 			},
 			{
 				displayName: 'Start Date Time',
@@ -489,10 +473,9 @@ export const taskFields: INodeProperties[] = [
 		],
 
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 task:get                                   */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 task:get                                   */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Task ID',
 		name: 'id',
@@ -509,11 +492,11 @@ export const taskFields: INodeProperties[] = [
 				],
 			},
 		},
+		description: 'Task ID',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 task:getAll                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 task:getAll                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Team ID',
 		name: 'team',
@@ -553,7 +536,7 @@ export const taskFields: INodeProperties[] = [
 			loadOptionsMethod: 'getSpaces',
 			loadOptionsDependsOn: [
 				'team',
-			],
+			]
 		},
 		required: true,
 	},
@@ -648,7 +631,7 @@ export const taskFields: INodeProperties[] = [
 			loadOptionsMethod: 'getLists',
 			loadOptionsDependsOn: [
 				'folder',
-			],
+			]
 		},
 		required: true,
 	},
@@ -667,7 +650,7 @@ export const taskFields: INodeProperties[] = [
 			},
 		},
 		default: true,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -691,7 +674,7 @@ export const taskFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Filters',
@@ -720,99 +703,14 @@ export const taskFields: INodeProperties[] = [
 				displayName: 'Assignees',
 				name: 'assignees',
 				type: 'multiOptions',
+				loadOptionsDependsOn: [
+					'list',
+				],
 				typeOptions: {
 					loadOptionsMethod: 'getAssignees',
-					loadOptionsDependsOn: [
-						'list',
-					],
 				},
 
 				default: [],
-			},
-			{
-				displayName: 'Custom Fields',
-				name: 'customFieldsUi',
-				placeholder: 'Add Custom Field',
-				type: 'fixedCollection',
-				typeOptions: {
-					multipleValues: true,
-				},
-				description: 'Filter by custom fields',
-				default: {},
-				options: [
-					{
-						name: 'customFieldsValues',
-						displayName: 'Custom Field',
-						values: [
-							{
-								displayName: 'Field ID',
-								name: 'fieldId',
-								type: 'options',
-								typeOptions: {
-									loadOptionsMethod: 'getCustomFields',
-								},
-								default: '',
-								description: 'The ID of the field to add custom field to',
-							},
-							{
-								displayName: 'Operator',
-								name: 'operator',
-								type: 'options',
-								options: [
-									{
-										name: 'Equal',
-										value: 'equal',
-									},
-									{
-										name: '<',
-										value: '<',
-									},
-									{
-										name: '<=',
-										value: '<=',
-									},
-									{
-										name: '>',
-										value: '>',
-									},
-									{
-										name: '>=',
-										value: '>=',
-									},
-									{
-										name: '!=',
-										value: '!=',
-									},
-									{
-										name: 'Is Null',
-										value: 'IS NULL',
-									},
-									{
-										name: 'Is Not Null',
-										value: 'IS NOT NULL',
-									},
-								],
-								default: 'equal',
-								description: 'The value to set on custom field',
-							},
-							{
-								displayName: 'Value',
-								name: 'value',
-								type: 'string',
-								displayOptions: {
-									hide: {
-										operator: [
-											'IS NULL',
-											'IS NOT NULL',
-										],
-									},
-								},
-								default: '',
-								description: 'The value to set on custom field',
-							},
-						],
-					},
-				],
 			},
 			{
 				displayName: 'Date Created Greater Than',
@@ -891,11 +789,11 @@ export const taskFields: INodeProperties[] = [
 				displayName: 'Statuses',
 				name: 'statuses',
 				type: 'multiOptions',
+				loadOptionsDependsOn: [
+					'list',
+				],
 				typeOptions: {
 					loadOptionsMethod: 'getStatuses',
-					loadOptionsDependsOn: [
-						'list',
-					],
 				},
 				default: [],
 			},
@@ -910,21 +808,20 @@ export const taskFields: INodeProperties[] = [
 				displayName: 'Tags',
 				name: 'tags',
 				type: 'multiOptions',
+				loadOptionsDependsOn: [
+					'space',
+				],
 				typeOptions: {
 					loadOptionsMethod: 'getTags',
-					loadOptionsDependsOn: [
-						'space',
-					],
 				},
 				default: [],
 				description: 'The array of tags applied to this task',
 			},
 		],
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                task:delete                                 */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                task:delete                                 */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Task ID',
 		name: 'id',
@@ -941,73 +838,11 @@ export const taskFields: INodeProperties[] = [
 				],
 			},
 		},
+		description: 'task ID',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                task:member                                 */
-	/* -------------------------------------------------------------------------- */
-	{
-		displayName: 'Task ID',
-		name: 'id',
-		type: 'string',
-		default: '',
-		required: true,
-		displayOptions: {
-			show: {
-				resource: [
-					'task',
-				],
-				operation: [
-					'member',
-				],
-			},
-		},
-	},
-	{
-		displayName: 'Return All',
-		name: 'returnAll',
-		type: 'boolean',
-		displayOptions: {
-			show: {
-				resource: [
-					'task',
-				],
-				operation: [
-					'member',
-				],
-			},
-		},
-		default: true,
-		description: 'Whether to return all results or only up to a given limit',
-	},
-	{
-		displayName: 'Limit',
-		name: 'limit',
-		type: 'number',
-		displayOptions: {
-			show: {
-				resource: [
-					'task',
-				],
-				operation: [
-					'member',
-				],
-				returnAll: [
-					false,
-				],
-			},
-		},
-		typeOptions: {
-			minValue: 1,
-			maxValue: 100,
-		},
-		default: 50,
-		description: 'Max number of results to return',
-	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                task:setCustomField                         */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                task:setCustomField                         */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Task ID',
 		name: 'task',
@@ -1024,7 +859,7 @@ export const taskFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the task to add custom field to',
+		description: 'The ID of the task to add custom field to.',
 	},
 	{
 		displayName: 'Field ID',
@@ -1042,7 +877,7 @@ export const taskFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the field to add custom field to',
+		description: 'The ID of the field to add custom field to.',
 	},
 	{
 		displayName: 'Value is JSON',
@@ -1055,11 +890,13 @@ export const taskFields: INodeProperties[] = [
 				],
 				operation: [
 					'setCustomField',
-				],
+				]
 			},
 		},
 		default: false,
-		description: 'The value is JSON and will be parsed as such. Is needed if for example needed for labels which expects the value to be an array.',
+		description: `The value is JSON and will be parsed as such. Is needed<br />
+		if for example needed for labels which expects the value<br />
+		to be an array.`,
 	},
 	{
 		displayName: 'Value',
@@ -1077,6 +914,6 @@ export const taskFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The value to set on custom field',
+		description: 'The value to set on custom field.',
 	},
-];
+] as INodeProperties[];

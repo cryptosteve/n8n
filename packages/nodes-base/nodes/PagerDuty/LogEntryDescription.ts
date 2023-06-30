@@ -2,7 +2,7 @@ import {
 	INodeProperties,
  } from 'n8n-workflow';
 
-export const logEntryOperations: INodeProperties[] = [
+export const logEntryOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -29,9 +29,9 @@ export const logEntryOperations: INodeProperties[] = [
 		default: 'get',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const logEntryFields: INodeProperties[] = [
+export const logEntryFields = [
 /* -------------------------------------------------------------------------- */
 /*                                 logEntry:get                               */
 /* -------------------------------------------------------------------------- */
@@ -48,10 +48,10 @@ export const logEntryFields: INodeProperties[] = [
 				],
 				operation: [
 					'get',
-				],
+				]
 			},
 		},
-		description: 'Unique identifier for the log entry',
+		description: 'Unique identifier for the log entry.',
 	},
 /* -------------------------------------------------------------------------- */
 /*                                 logEntry:getAll                            */
@@ -71,7 +71,7 @@ export const logEntryFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -95,7 +95,7 @@ export const logEntryFields: INodeProperties[] = [
 			maxValue: 500,
 		},
 		default: 100,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -137,21 +137,21 @@ export const logEntryFields: INodeProperties[] = [
 					},
 				],
 				default: [],
-				description: 'Additional details to include',
+				description: 'Additional details to include.',
 			},
 			{
 				displayName: 'Is Overview',
 				name: 'isOverview',
 				type: 'boolean',
 				default: false,
-				description: 'If true, will return a subset of log entries that show only the most important changes to the incident',
+				description: 'If true, will return a subset of log entries that show only the most important changes to the incident.',
 			},
 			{
 				displayName: 'Since',
 				name: 'since',
 				type: 'dateTime',
 				default: '',
-				description: 'The start of the date range over which you want to search. (the limit on date ranges is 6 months).',
+				description: 'The start of the date range over which you want to search. (the limit on date ranges is 6 months)',
 			},
 			{
 				displayName: 'Timezone',
@@ -161,15 +161,15 @@ export const logEntryFields: INodeProperties[] = [
 					loadOptionsMethod: 'getTimezones',
 				},
 				default: '',
-				description: 'Time zone in which dates in the result will be rendered. If not set dates will return UTC.',
+				description: 'Time zone in which dates in the result will be rendered. If not set dates will return UTC',
 			},
 			{
 				displayName: 'Until',
 				name: 'until',
 				type: 'dateTime',
 				default: '',
-				description: 'The end of the date range over which you want to search. (the limit on date ranges is 6 months).',
+				description: 'The end of the date range over which you want to search. (the limit on date ranges is 6 months)',
 			},
 		],
 	},
-];
+] as INodeProperties[];

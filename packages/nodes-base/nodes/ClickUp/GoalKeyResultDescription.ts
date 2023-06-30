@@ -1,8 +1,8 @@
 import {
 	INodeProperties,
-} from 'n8n-workflow';
+ } from 'n8n-workflow';
 
-export const goalKeyResultOperations: INodeProperties[] = [
+export const goalKeyResultOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -34,13 +34,13 @@ export const goalKeyResultOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const goalKeyResultFields: INodeProperties[] = [
+export const goalKeyResultFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                goalKeyResult:create                        */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                goalKeyResult:create                        */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Goal ID',
 		name: 'goal',
@@ -174,14 +174,13 @@ export const goalKeyResultFields: INodeProperties[] = [
 				name: 'unit',
 				type: 'string',
 				default: '',
-				description: 'Only matters for type Number and Currency. For Currency the unit must be a valid currency code.',
+				description: `Only matters for type Number and Currency. For Currency the unit must be a valid currency code.`,
 			},
 		],
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                goalKeyResult:delete                        */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                goalKeyResult:delete                        */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Key Result ID',
 		name: 'keyResult',
@@ -199,10 +198,9 @@ export const goalKeyResultFields: INodeProperties[] = [
 		},
 		required: true,
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                goalKeyResult:update                        */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                goalKeyResult:update                        */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Key Result ID',
 		name: 'keyResult',
@@ -284,8 +282,8 @@ export const goalKeyResultFields: INodeProperties[] = [
 				name: 'unit',
 				type: 'string',
 				default: '',
-				description: 'Only matters for type Number and Currency. For Currency the unit must be a valid currency code.',
+				description: `Only matters for type Number and Currency. For Currency the unit must be a valid currency code.`,
 			},
 		],
 	},
-];
+] as INodeProperties[];

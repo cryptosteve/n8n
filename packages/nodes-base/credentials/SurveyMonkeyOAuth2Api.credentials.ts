@@ -1,6 +1,6 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 const scopes = [
@@ -18,39 +18,38 @@ export class SurveyMonkeyOAuth2Api implements ICredentialType {
 		'oAuth2Api',
 	];
 	displayName = 'SurveyMonkey OAuth2 API';
-	documentationUrl = 'surveyMonkey';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Authorization URL',
 			name: 'authUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://api.surveymonkey.com/oauth/authorize',
 			required: true,
 		},
 		{
 			displayName: 'Access Token URL',
 			name: 'accessTokenUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://api.surveymonkey.com/oauth/token',
 			required: true,
 		},
 		{
 			displayName: 'Scope',
 			name: 'scope',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: scopes.join(','),
 		},
 		{
 			displayName: 'Auth URI Query Parameters',
 			name: 'authQueryParameters',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Authentication',
 			name: 'authentication',
-			type: 'hidden',
-			default: 'body',
+			type: 'hidden' as NodePropertyTypes,
+			default: 'body'
 		},
 	];
 }

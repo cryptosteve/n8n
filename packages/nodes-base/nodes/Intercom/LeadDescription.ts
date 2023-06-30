@@ -1,6 +1,6 @@
-import { INodeProperties } from 'n8n-workflow';
+import { INodeProperties } from "n8n-workflow";
 
-export const leadOpeations: INodeProperties[] = [
+export const leadOpeations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -19,11 +19,6 @@ export const leadOpeations: INodeProperties[] = [
 				description: 'Create a new lead',
 			},
 			{
-				name: 'Delete',
-				value: 'delete',
-				description: 'Delete a lead',
-			},
-			{
 				name: 'Get',
 				value: 'get',
 				description: 'Get data of a lead',
@@ -38,17 +33,23 @@ export const leadOpeations: INodeProperties[] = [
 				value: 'update',
 				description: 'Update new lead',
 			},
+			{
+				name: 'Delete',
+				value: 'delete',
+				description: 'Delete a lead',
+			}
 		],
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const leadFields: INodeProperties[] = [
+export const leadFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                 lead:delete                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 lead:delete                                */
+/* -------------------------------------------------------------------------- */
+
 	{
 		displayName: 'Delete By',
 		name: 'deleteBy',
@@ -67,7 +68,7 @@ export const leadFields: INodeProperties[] = [
 			{
 				name: 'ID',
 				value: 'id',
-				description: 'The Intercom defined ID representing the Lead',
+				description: 'The Intercom defined id representing the Lead',
 			},
 			{
 				name: 'User ID',
@@ -76,12 +77,12 @@ export const leadFields: INodeProperties[] = [
 			},
 		],
 		default: '',
+		description: 'Delete by',
 	},
 	{
 		displayName: 'Value',
 		name: 'value',
 		type: 'string',
-		default: '',
 		required: true,
 		displayOptions: {
 			show: {
@@ -96,9 +97,10 @@ export const leadFields: INodeProperties[] = [
 		description: 'Delete by value',
 	},
 
-	/* -------------------------------------------------------------------------- */
-	/*                                  lead:get                                 */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                  lead:get                                 */
+/* -------------------------------------------------------------------------- */
+
 	{
 		displayName: 'Select By',
 		name: 'selectBy',
@@ -122,7 +124,7 @@ export const leadFields: INodeProperties[] = [
 			{
 				name: 'ID',
 				value: 'id',
-				description: 'The Intercom defined ID representing the Lead',
+				description: 'The Intercom defined id representing the Lead',
 			},
 			{
 				name: 'User ID',
@@ -136,7 +138,7 @@ export const leadFields: INodeProperties[] = [
 			},
 		],
 		default: '',
-		description: 'The property to select the lead by',
+		description: 'The property to select the lead by.',
 	},
 	{
 		displayName: 'Value',
@@ -157,9 +159,10 @@ export const leadFields: INodeProperties[] = [
 		description: 'View by value',
 	},
 
-	/* -------------------------------------------------------------------------- */
-	/*                                  lead:getAll                                 */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                  lead:getAll                                 */
+/* -------------------------------------------------------------------------- */
+
 	{
 		displayName: 'Return All',
 		name: 'returnAll',
@@ -175,7 +178,7 @@ export const leadFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -199,7 +202,7 @@ export const leadFields: INodeProperties[] = [
 			maxValue: 60,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Filters',
@@ -232,12 +235,13 @@ export const leadFields: INodeProperties[] = [
 				default: '',
 				description: 'The phone number of the lead',
 			},
-		],
+		]
 	},
 
-	/* -------------------------------------------------------------------------- */
-	/*                                 lead:update                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 lead:update                                */
+/* -------------------------------------------------------------------------- */
+
 	{
 		displayName: 'Update By',
 		name: 'updateBy',
@@ -261,11 +265,11 @@ export const leadFields: INodeProperties[] = [
 			{
 				name: 'ID',
 				value: 'id',
-				description: 'The Intercom defined ID representing the Lead',
+				description: 'The Intercom defined id representing the Lead',
 			},
 		],
 		default: 'id',
-		description: 'The property via which to query the lead',
+		description: 'The property via which to query the lead.',
 	},
 	{
 		displayName: 'Value',
@@ -286,9 +290,10 @@ export const leadFields: INodeProperties[] = [
 		description: 'Value of the property to identify the lead to update',
 	},
 
-	/* -------------------------------------------------------------------------- */
-	/*                                 lead:create                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 lead:create                                */
+/* -------------------------------------------------------------------------- */
+
 	{
 		displayName: 'Email',
 		name: 'email',
@@ -305,13 +310,14 @@ export const leadFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The email of the user',
+		description: 'The email of the user.',
 	},
 	{
 		displayName: 'JSON Parameters',
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				operation: [
@@ -350,33 +356,6 @@ export const leadFields: INodeProperties[] = [
 				description: 'An avatar image URL. note: the image url needs to be https.',
 			},
 			{
-				displayName: 'Companies',
-				name: 'companies',
-				type: 'multiOptions',
-				typeOptions: {
-					loadOptionsMethod: 'getCompanies',
-				},
-				default: [],
-				description: 'Identifies the companies this user belongs to',
-			},
-			{
-				displayName: 'Email',
-				name: 'email',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						'/resource': [
-							'lead',
-						],
-						'/operation': [
-							'update',
-						],
-					},
-				},
-				description: 'The email of the user',
-			},
-			{
 				displayName: 'Name',
 				name: 'name',
 				type: 'string',
@@ -402,28 +381,34 @@ export const leadFields: INodeProperties[] = [
 				name: 'updateLastRequestAt',
 				type: 'boolean',
 				default: false,
-				description: 'A boolean value, which if true, instructs Intercom to update the users last_request_at value to the current API service time in UTC. default value if not sent is false.',
+				description: 'A boolean value, which if true, instructs Intercom to update the<br />users last_request_at value to the current API service time in<br />UTC. default value if not sent is false.',
 			},
 			{
-				displayName: 'UTM Campaign',
-				name: 'utmCampaign',
-				type: 'string',
-				default: '',
-				description: 'Identifies a specific product promotion or strategic campaign',
+				displayName: 'Companies',
+				name: 'companies',
+				type: 'multiOptions',
+				typeOptions: {
+					loadOptionsMethod: 'getCompanies',
+				},
+				default: [],
+				description: 'Identifies the companies this user belongs to.',
 			},
 			{
-				displayName: 'UTM Content',
-				name: 'utmContent',
+				displayName: 'Email',
+				name: 'email',
 				type: 'string',
 				default: '',
-				description: 'Identifies what specifically was clicked to bring the user to the site',
-			},
-			{
-				displayName: 'UTM Medium',
-				name: 'utmMedium',
-				type: 'string',
-				default: '',
-				description: 'Identifies what type of link was used',
+				displayOptions: {
+					show: {
+						'/resource': [
+							'lead',
+						],
+						'/operation': [
+							'update',
+						],
+					},
+				},
+				description: 'The email of the user.',
 			},
 			{
 				displayName: 'UTM Source',
@@ -433,18 +418,40 @@ export const leadFields: INodeProperties[] = [
 				description: 'An avatar image URL. note: the image url needs to be https.',
 			},
 			{
+				displayName: 'UTM Medium',
+				name: 'utmMedium',
+				type: 'string',
+				default: '',
+				description: 'Identifies what type of link was used',
+			},
+			{
+				displayName: 'UTM Campaign',
+				name: 'utmCampaign',
+				type: 'string',
+				default: '',
+				description: 'Identifies a specific product promotion or strategic campaign',
+			},
+			{
 				displayName: 'UTM Term',
 				name: 'utmTerm',
 				type: 'string',
 				default: '',
 				description: 'Identifies search terms',
 			},
-		],
+			{
+				displayName: 'UTM Content',
+				name: 'utmContent',
+				type: 'string',
+				default: '',
+				description: 'Identifies what specifically was clicked to bring the user to the site',
+			},
+		]
 	},
 	{
 		displayName: 'Custom Attributes',
 		name: 'customAttributesJson',
 		type: 'json',
+		required: false,
 		typeOptions: {
 			alwaysOpenEditWindow: true,
 		},
@@ -463,17 +470,18 @@ export const leadFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'A hash of key/value pairs to represent custom data you want to attribute to a user',
+		description: 'A hash of key/value pairs to represent custom data you want to attribute to a user.',
 	},
 	{
 		displayName: 'Custom Attributes',
 		name: 'customAttributesUi',
 		type: 'fixedCollection',
-		default: {},
+		default: '',
 		placeholder: 'Add Attribute',
 		typeOptions: {
 			multipleValues: true,
 		},
+		required: false,
 		displayOptions: {
 			show: {
 				resource: [
@@ -506,8 +514,8 @@ export const leadFields: INodeProperties[] = [
 						default: '',
 					},
 				],
-			},
+			}
 		],
-		description: 'A hash of key/value pairs to represent custom data you want to attribute to a user',
+		description: 'A hash of key/value pairs to represent custom data you want to attribute to a user.',
 	},
-];
+] as INodeProperties[];

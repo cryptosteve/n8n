@@ -1,83 +1,56 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable import/no-dynamic-require */
-/* eslint-disable no-restricted-syntax */
-// eslint-disable-next-line import/no-cycle
-import { Db, IExternalHooksClass, IExternalHooksFileData, IExternalHooksFunctions } from '.';
+import {
+	Db,
+	IExternalHooksFunctions,
+	IExternalHooksClass,
+} from './';
 
-import config from '../config';
+import * as config from '../config';
+
 
 class ExternalHooksClass implements IExternalHooksClass {
-	externalHooks: {
-		[key: string]: Array<() => {}>;
-	} = {};
 
+	externalHooks: {
+		[key: string]: Array<() => {}>
+	} = {};
 	initDidRun = false;
 
+
 	async init(): Promise<void> {
-		if (this.initDidRun) {
+		if (this.initDidRun === true) {
 			return;
 		}
 
-		await this.loadHooksFiles();
-
-		this.initDidRun = true;
-	}
-
-	async reload(externalHooks?: IExternalHooksFileData) {
-		this.externalHooks = {};
-
-		if (externalHooks === undefined) {
-			await this.loadHooksFiles(true);
-		} else {
-			this.loadHooks(externalHooks);
-		}
-	}
-
-	async loadHooksFiles(reload = false) {
-		const externalHookFiles = config.getEnv('externalHookFiles').split(':');
+		const externalHookFiles = config.get('externalHookFiles').split(':');
 
 		// Load all the provided hook-files
 		for (let hookFilePath of externalHookFiles) {
 			hookFilePath = hookFilePath.trim();
 			if (hookFilePath !== '') {
 				try {
-					if (reload) {
-						delete require.cache[require.resolve(hookFilePath)];
-					}
+					const hookFile = require(hookFilePath);
 
-					// eslint-disable-next-line import/no-dynamic-require
-					// eslint-disable-next-line global-require
-					const hookFile = require(hookFilePath) as IExternalHooksFileData;
-					this.loadHooks(hookFile);
+					for (const resource of Object.keys(hookFile)) {
+						for (const operation of Object.keys(hookFile[resource])) {
+							// Save all the hook functions directly under their string
+							// format in an array
+							const hookString = `${resource}.${operation}`;
+							if (this.externalHooks[hookString] === undefined) {
+								this.externalHooks[hookString] = [];
+							}
+
+							this.externalHooks[hookString].push.apply(this.externalHooks[hookString], hookFile[resource][operation]);
+						}
+					}
 				} catch (error) {
-					// eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
 					throw new Error(`Problem loading external hook file "${hookFilePath}": ${error.message}`);
 				}
 			}
 		}
+
+		this.initDidRun = true;
 	}
 
-	loadHooks(hookFileData: IExternalHooksFileData) {
-		for (const resource of Object.keys(hookFileData)) {
-			for (const operation of Object.keys(hookFileData[resource])) {
-				// Save all the hook functions directly under their string
-				// format in an array
-				const hookString = `${resource}.${operation}`;
-				if (this.externalHooks[hookString] === undefined) {
-					this.externalHooks[hookString] = [];
-				}
-
-				// eslint-disable-next-line prefer-spread
-				this.externalHooks[hookString].push.apply(
-					this.externalHooks[hookString],
-					hookFileData[resource][operation],
-				);
-			}
-		}
-	}
-
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	async run(hookName: string, hookParameters?: any[]): Promise<void> {
+	async run(hookName: string, hookParameters?: any[]): Promise<void> { // tslint:disable-line:no-any
 		const externalHookFunctions: IExternalHooksFunctions = {
 			dbCollections: Db.collections,
 		};
@@ -86,20 +59,17 @@ class ExternalHooksClass implements IExternalHooksClass {
 			return;
 		}
 
-		for (const externalHookFunction of this.externalHooks[hookName]) {
-			// eslint-disable-next-line no-await-in-loop
+		for(const externalHookFunction of this.externalHooks[hookName]) {
 			await externalHookFunction.apply(externalHookFunctions, hookParameters);
 		}
 	}
 
-	exists(hookName: string): boolean {
-		return !!this.externalHooks[hookName];
-	}
 }
+
+
 
 let externalHooksInstance: ExternalHooksClass | undefined;
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function ExternalHooks(): ExternalHooksClass {
 	if (externalHooksInstance === undefined) {
 		externalHooksInstance = new ExternalHooksClass();

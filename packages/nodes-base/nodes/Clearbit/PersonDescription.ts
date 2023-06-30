@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const personOperations: INodeProperties[] = [
+export const personOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -16,19 +16,19 @@ export const personOperations: INodeProperties[] = [
 			{
 				name: 'Enrich',
 				value: 'enrich',
-				description: 'Look up a person and company data based on an email or domain',
+				description: 'Lets you look up person and company data based on an email or domain',
 			},
 		],
 		default: 'enrich',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const personFields: INodeProperties[] = [
+export const personFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                 person:enrich                                 */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 person:enrich                                 */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Email',
 		name: 'email',
@@ -45,7 +45,7 @@ export const personFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The email address to look up',
+		description: 'The email address to look up.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -69,21 +69,21 @@ export const personFields: INodeProperties[] = [
 				name: 'company',
 				type: 'string',
 				default: '',
-				description: 'The name of the person’s employer',
+				description: 'The name of the person’s employer.',
 			},
 			{
 				displayName: 'Company Domain',
 				name: 'companyDomain',
 				type: 'string',
 				default: '',
-				description: 'The domain for the person’s employer',
+				description: 'The domain for the person’s employer.',
 			},
 			{
 				displayName: 'Facebook',
 				name: 'facebook',
 				type: 'string',
 				default: '',
-				description: 'The Facebook URL for the person',
+				description: 'The Facebook URL for the person.',
 			},
 			{
 				displayName: 'Family Name',
@@ -97,7 +97,7 @@ export const personFields: INodeProperties[] = [
 				name: 'givenName',
 				type: 'string',
 				default: '',
-				description: 'First name of person',
+				description: 'First name of person.',
 			},
 			{
 				displayName: 'IP Address',
@@ -111,22 +111,22 @@ export const personFields: INodeProperties[] = [
 				name: 'location',
 				type: 'string',
 				default: '',
-				description: 'The city or country where the person resides',
+				description: 'The city or country where the person resides.',
 			},
 			{
 				displayName: 'LinkedIn',
 				name: 'linkedIn',
 				type: 'string',
 				default: '',
-				description: 'The LinkedIn URL for the person',
+				description: 'The LinkedIn URL for the person.',
 			},
 			{
 				displayName: 'Twitter',
 				name: 'twitter',
 				type: 'string',
 				default: '',
-				description: 'The Twitter handle for the person',
+				description: 'The Twitter handle for the person.',
 			},
 		],
 	},
-];
+] as INodeProperties[];

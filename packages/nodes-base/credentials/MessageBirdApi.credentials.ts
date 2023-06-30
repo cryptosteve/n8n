@@ -1,15 +1,14 @@
-import { ICredentialType, INodeProperties } from 'n8n-workflow';
+import { ICredentialType, NodePropertyTypes } from 'n8n-workflow';
 
 export class MessageBirdApi implements ICredentialType {
 	name = 'messageBirdApi';
 	displayName = 'MessageBird API';
-	documentationUrl = 'messageBird';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'API Key',
 			name: 'accessKey',
-			type: 'string',
-			default: '',
-		},
+			type: 'string' as NodePropertyTypes,
+			default: ''
+		}
 	];
 }

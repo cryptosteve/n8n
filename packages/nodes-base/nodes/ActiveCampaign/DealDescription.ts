@@ -1,16 +1,8 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from "n8n-workflow";
 
-import {
-	allCurrencies,
-} from './currencies';
+import { allCurrencies } from './currencies';
 
-import {
-	activeCampaignDefaultGetAllProperties,
-} from './GenericFunctions';
-
-export const dealOperations: INodeProperties[] = [
+export const dealOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -63,9 +55,9 @@ export const dealOperations: INodeProperties[] = [
 		description: 'The operation to perform.',
 	},
 
-];
+] as INodeProperties[];
 
-export const dealFields: INodeProperties[] = [
+export const dealFields = [
 	// ----------------------------------
 	//         deal:create
 	// ----------------------------------
@@ -232,7 +224,7 @@ export const dealFields: INodeProperties[] = [
 				default: 0,
 				description: 'The status of the deal',
 			},
-		],
+		]
 	},
 
 	// ----------------------------------
@@ -254,13 +246,13 @@ export const dealFields: INodeProperties[] = [
 		},
 		default: 0,
 		required: true,
-		description: 'ID of the deal to update',
+		description: 'ID of the deal to update.',
 	},
 	{
 		displayName: 'Update Fields',
 		name: 'updateFields',
 		type: 'collection',
-		description: 'The fields to update',
+		description: 'The fields to update.',
 		placeholder: 'Add Field',
 		displayOptions: {
 			show: {
@@ -345,7 +337,7 @@ export const dealFields: INodeProperties[] = [
 				default: 0,
 				description: 'The status of the deal',
 			},
-		],
+		]
 	},
 
 	// ----------------------------------
@@ -367,7 +359,7 @@ export const dealFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the deal to delete',
+		description: 'The ID of the deal to delete.',
 	},
 
 	// ----------------------------------
@@ -389,13 +381,53 @@ export const dealFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the deal to get',
+		description: 'The ID of the deal to get.',
 	},
 
 	// ----------------------------------
 	//         deal:getAll
 	// ----------------------------------
-	...activeCampaignDefaultGetAllProperties('deal', 'getAll'),
+	{
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
+		displayOptions: {
+			show: {
+				operation: [
+					'getAll',
+				],
+				resource: [
+					'deal',
+				],
+			},
+		},
+		default: false,
+		description: 'If all results should be returned or only up to a given limit.',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		displayOptions: {
+			show: {
+				operation: [
+					'getAll',
+				],
+				resource: [
+					'deal',
+				],
+				returnAll: [
+					false,
+				],
+			},
+		},
+		typeOptions: {
+			minValue: 1,
+			maxValue: 500,
+		},
+		default: 100,
+		description: 'How many results to return.',
+	},
 
 	// ----------------------------------
 	//         dealNote:create
@@ -494,4 +526,4 @@ export const dealFields: INodeProperties[] = [
 		description: 'The content of the deal note',
 	},
 
-];
+] as INodeProperties[];

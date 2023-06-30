@@ -1,6 +1,6 @@
-import moment from 'moment-timezone';
+import * as moment from 'moment-timezone';
 
-import { IPollFunctions } from 'n8n-core';
+import {IPollFunctions} from 'n8n-core';
 import {
 	IDataObject,
 	ILoadOptionsFunctions,
@@ -15,20 +15,21 @@ import {
 } from './GenericFunctions';
 
 import { EntryTypeEnum } from './EntryTypeEnum';
-import { IUserDto } from './UserDtos';
+import { ICurrentUserDto } from './UserDtos';
 import { IWorkspaceDto } from './WorkpaceInterfaces';
 
 
 export class ClockifyTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Clockify Trigger',
-		icon: 'file:clockify.svg',
+		icon: 'file:clockify.png',
 		name: 'clockifyTrigger',
 		group: ['trigger'],
 		version: 1,
-		description: 'Listens to Clockify events',
+		description: 'Watches Clockify For Events',
 		defaults: {
 			name: 'Clockify Trigger',
+			color: '#00FF00',
 		},
 		inputs: [],
 		outputs: ['main'],
@@ -36,7 +37,7 @@ export class ClockifyTrigger implements INodeType {
 			{
 				name: 'clockifyApi',
 				required: true,
-			},
+			}
 		],
 		polling: true,
 		properties: [
@@ -50,7 +51,6 @@ export class ClockifyTrigger implements INodeType {
 				required: true,
 				default: '',
 			},
-			// eslint-disable-next-line n8n-nodes-base/node-param-default-missing
 			{
 				displayName: 'Trigger',
 				name: 'watchField',
@@ -59,26 +59,26 @@ export class ClockifyTrigger implements INodeType {
 					{
 						name: 'New Time Entry',
 						value: EntryTypeEnum.NEW_TIME_ENTRY,
-					},
+					}
 				],
 				required: true,
 				default: EntryTypeEnum.NEW_TIME_ENTRY,
 			},
-		],
+		]
 	};
 
 	methods = {
 		loadOptions: {
-			async listWorkspaces(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-				const rtv: INodePropertyOptions[] = [];
-				const workspaces: IWorkspaceDto[] = await clockifyApiRequest.call(this, 'GET', 'workspaces');
-				if (undefined !== workspaces) {
+			async listWorkspaces(this: ILoadOptionsFunctions) : Promise<INodePropertyOptions[]> {
+				const rtv : INodePropertyOptions[] = [];
+				const  workspaces: IWorkspaceDto[] = await clockifyApiRequest.call(this,'GET', 'workspaces');
+				if(undefined !== workspaces) {
 					workspaces.forEach(value => {
 						rtv.push(
-							{
-								name: value.name,
-								value: value.id,
-							});
+						{
+							name: value.name,
+							value: value.id,
+						});
 					});
 				}
 				return rtv;
@@ -89,20 +89,20 @@ export class ClockifyTrigger implements INodeType {
 	async poll(this: IPollFunctions): Promise<INodeExecutionData[][] | null> {
 		const webhookData = this.getWorkflowStaticData('node');
 		const triggerField = this.getNodeParameter('watchField') as EntryTypeEnum;
-		const workspaceId = this.getNodeParameter('workspaceId');
+		const workspaceId  = this.getNodeParameter('workspaceId');
 
 		if (!webhookData.userId) {
 			// Cache the user-id that we do not have to request it every time
-			const userInfo: IUserDto = await clockifyApiRequest.call(this, 'GET', 'user');
+			const userInfo: ICurrentUserDto = await clockifyApiRequest.call(this, 'GET', 'user');
 			webhookData.userId = userInfo.id;
 		}
 
-		const qs: IDataObject = {};
+		const qs : IDataObject = {};
 		let resource: string;
 		let result = null;
 
 		switch (triggerField) {
-			case EntryTypeEnum.NEW_TIME_ENTRY:
+			case EntryTypeEnum.NEW_TIME_ENTRY :
 			default:
 				const workflowTimezone = this.getTimezone();
 				resource = `workspaces/${workspaceId}/user/${webhookData.userId}/time-entries`;
@@ -110,14 +110,14 @@ export class ClockifyTrigger implements INodeType {
 				qs.end = moment().tz(workflowTimezone).format('YYYY-MM-DDTHH:mm:ss') + 'Z';
 				qs.hydrated = true;
 				qs['in-progress'] = false;
-				break;
+			break;
 		}
 
-		result = await clockifyApiRequest.call(this, 'GET', resource, {}, qs);
+		result = await clockifyApiRequest.call(this, 'GET', resource, {}, qs );
 		webhookData.lastTimeChecked = qs.end;
 
 		if (Array.isArray(result) && result.length !== 0) {
-			return [this.helpers.returnJsonArray(result)];
+			result = [this.helpers.returnJsonArray(result)];
 		}
 		return null;
 	}

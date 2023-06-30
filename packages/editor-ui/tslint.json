@@ -2,8 +2,7 @@
 	"linterOptions": {
 		"exclude": [
 			"node_modules/**/*",
-			"../../node_modules/**/*",
-			"**/*.json"
+			"../../node_modules/**/*"
 		]
 	},
 	"defaultSeverity": "error",
@@ -48,7 +47,6 @@
 		"forin": true,
 		"jsdoc-format": true,
 		"label-position": true,
-		"indent": [true, "tabs", 2],
 		"member-access": [
 			true,
 			"no-public"
@@ -85,18 +83,6 @@
 			"ignore-bound-class-methods"
 		],
 		"switch-default": true,
-		"trailing-comma": [
-			true,
-			{
-				"multiline": {
-					"objects": "always",
-					"arrays": "always",
-					"functions": "always",
-					"typeLiterals": "ignore"
-				},
-				"esSpecCompliant": true
-			}
-		],
 		"triple-equals": [
 			true,
 			"allow-null-check"

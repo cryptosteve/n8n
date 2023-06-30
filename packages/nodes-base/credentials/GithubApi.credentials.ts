@@ -1,30 +1,29 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 export class GithubApi implements ICredentialType {
 	name = 'githubApi';
 	displayName = 'Github API';
-	documentationUrl = 'github';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Github Server',
 			name: 'server',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: 'https://api.github.com',
-			description: 'The server to connect to. Only has to be set if Github Enterprise is used.',
+			description: 'The server to connect to. Does only have to get changed if Github Enterprise gets used.',
 		},
 		{
 			displayName: 'User',
 			name: 'user',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Access Token',
 			name: 'accessToken',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 	];

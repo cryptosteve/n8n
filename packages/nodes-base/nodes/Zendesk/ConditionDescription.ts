@@ -2,7 +2,7 @@ import {
 	INodeProperties,
  } from 'n8n-workflow';
 
-export const conditionFields: INodeProperties[] = [
+export const conditionFields = [
 	{
 		displayName: 'Resource',
 		name: 'resource',
@@ -22,9 +22,9 @@ export const conditionFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				'resource': [
-					'ticket',
-				],
-			},
+					'ticket'
+				]
+			}
 		},
 		options: [
 			{
@@ -100,8 +100,8 @@ export const conditionFields: INodeProperties[] = [
 			hide: {
 				field: [
 					'assignee',
-				],
-			},
+				]
+			}
 		},
 		default: 'is',
 	},
@@ -147,8 +147,8 @@ export const conditionFields: INodeProperties[] = [
 			show: {
 				field: [
 					'assignee',
-				],
-			},
+				]
+			}
 		},
 		default: 'is',
 	},
@@ -159,7 +159,7 @@ export const conditionFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				field: [
-					'status',
+					'status'
 				],
 			},
 			hide: {
@@ -173,7 +173,7 @@ export const conditionFields: INodeProperties[] = [
 					'priority',
 					'type',
 				],
-			},
+			}
 		},
 		options: [
 			{
@@ -206,7 +206,7 @@ export const conditionFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				field: [
-					'type',
+					'type'
 				],
 			},
 			hide: {
@@ -220,7 +220,7 @@ export const conditionFields: INodeProperties[] = [
 					'priority',
 					'status',
 				],
-			},
+			}
 		},
 		options: [
 			{
@@ -249,7 +249,7 @@ export const conditionFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				field: [
-					'priority',
+					'priority'
 				],
 			},
 			hide: {
@@ -263,7 +263,7 @@ export const conditionFields: INodeProperties[] = [
 					'type',
 					'status',
 				],
-			},
+			}
 		},
 		options: [
 			{
@@ -295,7 +295,7 @@ export const conditionFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				field: [
-					'group',
+					'group'
 				],
 			},
 			hide: {
@@ -319,7 +319,7 @@ export const conditionFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				field: [
-					'assignee',
+					'assignee'
 				],
 			},
 			hide: {
@@ -333,4 +333,4 @@ export const conditionFields: INodeProperties[] = [
 		},
 		default: '',
 	},
-];
+] as INodeProperties[];

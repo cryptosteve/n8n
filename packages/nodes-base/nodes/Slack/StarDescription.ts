@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const starOperations: INodeProperties[] = [
+export const starOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -16,29 +16,29 @@ export const starOperations: INodeProperties[] = [
 			{
 				name: 'Add',
 				value: 'add',
-				description: 'Add a star to an item',
+				description: 'Add a star to an item.',
 			},
 			{
 				name: 'Delete',
 				value: 'delete',
-				description: 'Delete a star from an item',
+				description: 'Delete a star from an item.',
 			},
 			{
 				name: 'Get All',
 				value: 'getAll',
-				description: 'Get all stars of autenticated user',
+				description: 'Get all stars of autenticated user.',
 			},
 		],
 		default: 'add',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const starFields: INodeProperties[] = [
+export const starFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                star:add                                    */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                star:add                                    */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Options',
 		name: 'options',
@@ -46,7 +46,7 @@ export const starFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'add',
+					'add'
 				],
 				resource: [
 					'star',
@@ -65,35 +65,34 @@ export const starFields: INodeProperties[] = [
 					loadOptionsMethod: 'getChannels',
 				},
 				default: '',
-				description: 'Channel to add star to, or channel where the message to add star to was posted (used with timestamp)',
-			},
-			{
-				displayName: 'File Comment',
-				name: 'fileComment',
-				type: 'string',
-				default: '',
-				description: 'File comment to add star to',
+				description: 'Channel to add star to, or channel where the message to add star to was posted (used with timestamp).',
 			},
 			{
 				displayName: 'File ID',
 				name: 'fileId',
 				type: 'string',
 				default: '',
-				description: 'File to add star to',
+				description: 'File to add star to.',
+			},
+			{
+				displayName: 'File Comment',
+				name: 'fileComment',
+				type: 'string',
+				default: '',
+				description: 'File comment to add star to.',
 			},
 			{
 				displayName: 'Timestamp',
 				name: 'timestamp',
 				type: 'string',
 				default: '',
-				description: 'Timestamp of the message to add star to',
+				description: 'Timestamp of the message to add star to.',
 			},
 		],
 	},
-
-	/* ----------------------------------------------------------------------- */
-	/*                                 star:delete                             */
-	/* ----------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------- */
+/*                                 star:delete                             */
+/* ----------------------------------------------------------------------- */
 	{
 		displayName: 'Options',
 		name: 'options',
@@ -101,7 +100,7 @@ export const starFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'delete',
+					'delete'
 				],
 				resource: [
 					'star',
@@ -120,35 +119,34 @@ export const starFields: INodeProperties[] = [
 					loadOptionsMethod: 'getChannels',
 				},
 				default: '',
-				description: 'Channel to add star to, or channel where the message to add star to was posted (used with timestamp)',
+				description: 'Channel to add star to, or channel where the message to add star to was posted (used with timestamp).',
 			},
 			{
 				displayName: 'File ID',
 				name: 'fileId',
 				type: 'string',
 				default: '',
-				description: 'File to add star to',
+				description: 'File to add star to.',
 			},
 			{
 				displayName: 'File Comment',
 				name: 'fileComment',
 				type: 'string',
 				default: '',
-				description: 'File comment to add star to',
+				description: 'File comment to add star to.',
 			},
 			{
 				displayName: 'Timestamp',
 				name: 'timestamp',
 				type: 'string',
 				default: '',
-				description: 'Timestamp of the message to add star to',
+				description: 'Timestamp of the message to add star to.',
 			},
 		],
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 star:getAll                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 star:getAll                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Return All',
 		name: 'returnAll',
@@ -164,7 +162,7 @@ export const starFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -188,6 +186,6 @@ export const starFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
-];
+] as INodeProperties[];

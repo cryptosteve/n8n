@@ -2,7 +2,7 @@ import {
 	INodeProperties,
  } from 'n8n-workflow';
 
-export const ticketFieldOperations: INodeProperties[] = [
+export const ticketFieldOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -29,9 +29,9 @@ export const ticketFieldOperations: INodeProperties[] = [
 		default: 'get',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const ticketFieldFields: INodeProperties[] = [
+export const ticketFieldFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                 ticketField:get                            */
@@ -73,7 +73,7 @@ export const ticketFieldFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -97,6 +97,6 @@ export const ticketFieldFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 100,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
-];
+] as INodeProperties[];

@@ -1,19 +1,10 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 const scopes = [
-	'crm.schemas.deals.read',
-	'crm.objects.owners.read',
-	'crm.objects.contacts.write',
-	'crm.objects.companies.write',
-	'crm.objects.companies.read',
-	'crm.objects.deals.read',
-	'crm.schemas.contacts.read',
-	'crm.objects.deals.write',
-	'crm.objects.contacts.read',
-	'crm.schemas.companies.read',
+	'contacts',
 	'forms',
 	'tickets',
 ];
@@ -24,39 +15,39 @@ export class HubspotOAuth2Api implements ICredentialType {
 		'oAuth2Api',
 	];
 	displayName = 'Hubspot OAuth2 API';
-	documentationUrl = 'hubspot';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Authorization URL',
 			name: 'authUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://app.hubspot.com/oauth/authorize',
 			required: true,
 		},
 		{
 			displayName: 'Access Token URL',
 			name: 'accessTokenUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'https://api.hubapi.com/oauth/v1/token',
 			required: true,
 		},
 		{
 			displayName: 'Scope',
 			name: 'scope',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: scopes.join(' '),
 		},
 		{
 			displayName: 'Auth URI Query Parameters',
 			name: 'authQueryParameters',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'grant_type=authorization_code',
 		},
 		{
-			displayName: 'Authentication',
-			name: 'authentication',
-			type: 'hidden',
-			default: 'body',
-		},
+            displayName: 'Authentication',
+            name: 'authentication',
+            type: 'hidden' as NodePropertyTypes,
+            default: 'body',
+            description: 'Resource to consume.',
+        },
 	];
 }

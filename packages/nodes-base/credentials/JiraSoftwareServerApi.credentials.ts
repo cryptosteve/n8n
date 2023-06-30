@@ -1,17 +1,16 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 export class JiraSoftwareServerApi implements ICredentialType {
 	name = 'jiraSoftwareServerApi';
 	displayName = 'Jira SW Server API';
-	documentationUrl = 'jira';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'Email',
 			name: 'email',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
@@ -20,13 +19,13 @@ export class JiraSoftwareServerApi implements ICredentialType {
 			typeOptions: {
 				password: true,
 			},
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'Domain',
 			name: 'domain',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 			placeholder: 'https://example.com',
 		},

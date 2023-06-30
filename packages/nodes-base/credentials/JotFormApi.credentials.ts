@@ -1,23 +1,22 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 export class JotFormApi implements ICredentialType {
 	name = 'jotFormApi';
 	displayName = 'JotForm API';
-	documentationUrl = 'jotForm';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'API Key',
 			name: 'apiKey',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 		{
 			displayName: 'API Domain',
 			name: 'apiDomain',
-			type: 'options',
+			type: 'options' as NodePropertyTypes,
 			options: [
 				{
 					name: 'api.jotform.com',

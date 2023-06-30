@@ -5,8 +5,8 @@ import {
 
 import {
 	IDataObject,
-	INodeType,
 	INodeTypeDescription,
+	INodeType,
 	IWebhookResponseData,
 } from 'n8n-workflow';
 
@@ -24,6 +24,7 @@ export class AcuitySchedulingTrigger implements INodeType {
 		description: 'Handle Acuity Scheduling events via webhooks',
 		defaults: {
 			name: 'Acuity Scheduling Trigger',
+			color: '#000000',
 		},
 		inputs: [],
 		outputs: ['main'],
@@ -31,25 +32,7 @@ export class AcuitySchedulingTrigger implements INodeType {
 			{
 				name: 'acuitySchedulingApi',
 				required: true,
-				displayOptions: {
-					show: {
-						authentication: [
-							'apiKey',
-						],
-					},
-				},
-			},
-			{
-				name: 'acuitySchedulingOAuth2Api',
-				required: true,
-				displayOptions: {
-					show: {
-						authentication: [
-							'oAuth2',
-						],
-					},
-				},
-			},
+			}
 		],
 		webhooks: [
 			{
@@ -60,23 +43,6 @@ export class AcuitySchedulingTrigger implements INodeType {
 			},
 		],
 		properties: [
-			{
-				displayName: 'Authentication',
-				name: 'authentication',
-				type: 'options',
-				options: [
-					{
-						name: 'API Key',
-						value: 'apiKey',
-					},
-					{
-						name: 'OAuth2',
-						value: 'oAuth2',
-					},
-				],
-				default: 'apiKey',
-				description: 'Method of authentication.',
-			},
 			{
 				displayName: 'Event',
 				name: 'event',
@@ -116,7 +82,7 @@ export class AcuitySchedulingTrigger implements INodeType {
 				name: 'resolveData',
 				type: 'boolean',
 				default: true,
-				description: 'By default does the webhook-data only contain the ID of the object. If this option gets activated, it will resolve the data automatically.',
+				description: 'By default does the webhook-data only contain the ID of the object.<br />If this option gets activated it will resolve the data automatically.',
 			},
 		],
 	};

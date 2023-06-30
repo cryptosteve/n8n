@@ -1,6 +1,5 @@
+
 export interface IOpportunity {
-	// tslint:disable-next-line: no-any
-	[key: string]: any;
 	Name?: string;
 	StageName?: string;
 	CloseDate?: string;
@@ -13,6 +12,6 @@ export interface IOpportunity {
 	LeadSource?: string;
 	Description?: string;
 	Probability?: number;
-	Pricebook2Id?: string;
+	Pricebook2Id?:string;
 	ForecastCategoryName?: string;
 }

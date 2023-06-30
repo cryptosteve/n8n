@@ -1,184 +1,107 @@
 <template>
-	<el-dialog
-		:visible="(!!node || renaming) && !isActiveStickyNode"
-		:before-close="close"
-		:show-close="false"
-		custom-class="data-display-wrapper"
-		width="85%"
-		append-to-body
-	>
-		<n8n-tooltip placement="bottom-start" :value="showTriggerWaitingWarning" :disabled="!showTriggerWaitingWarning" :manual="true">
-			<div slot="content" :class="$style.triggerWarning">{{ $locale.baseText('ndv.backToCanvas.waitingForTriggerWarning') }}</div>
-			<div :class="$style.backToCanvas" @click="close">
-				<n8n-icon icon="arrow-left" color="text-xlight" size="medium" />
-				<n8n-text color="text-xlight" size="medium" :bold="true">{{ $locale.baseText('ndv.backToCanvas') }}</n8n-text>
+	<transition name="el-fade-in">
+		<div class="data-display-wrapper close-on-click" v-show="node" @click="close">
+			<div class="data-display" >
+				<NodeSettings @valueChanged="valueChanged" />
+				<RunData />
+				<div class="close-button clickable close-on-click" title="Close">
+					<i class="el-icon-close close-on-click"></i>
+				</div>
 			</div>
-		</n8n-tooltip>
-
-		<div class="data-display" v-if="node" >
-			<NodeSettings :eventBus="settingsEventBus" @valueChanged="valueChanged" @execute="onNodeExecute" />
-			<RunData @openSettings="openSettings" />
 		</div>
-	</el-dialog>
+	</transition>
 </template>
 
 <script lang="ts">
+
+import Vue from 'vue';
+
 import {
-	INodeTypeDescription,
+	IRunData,
 } from 'n8n-workflow';
 import {
 	INodeUi,
 	IUpdateInformation,
 } from '../Interface';
 
-import { externalHooks } from '@/components/mixins/externalHooks';
-import { nodeHelpers } from '@/components/mixins/nodeHelpers';
-import { workflowHelpers } from '@/components/mixins/workflowHelpers';
-
 import NodeSettings from '@/components/NodeSettings.vue';
 import RunData from '@/components/RunData.vue';
 
-import mixins from 'vue-typed-mixins';
-import Vue from 'vue';
-import { mapGetters } from 'vuex';
-import { STICKY_NODE_TYPE } from '@/constants';
-
-export default mixins(externalHooks, nodeHelpers, workflowHelpers).extend({
+export default Vue.extend({
 	name: 'DataDisplay',
 	components: {
 		NodeSettings,
 		RunData,
 	},
-	props: {
-		renaming: {
-			type: Boolean,
-		},
-	},
-	data () {
-		return {
-			settingsEventBus: new Vue(),
-			triggerWaitingWarningEnabled: false,
-		};
-	},
 	computed: {
-		...mapGetters(['executionWaitingForWebhook']),
-		workflowRunning (): boolean {
-			return this.$store.getters.isActionActive('workflowRunning');
-		},
-		showTriggerWaitingWarning(): boolean {
-			return this.triggerWaitingWarningEnabled && !!this.nodeType && !this.nodeType.group.includes('trigger') && this.workflowRunning && this.executionWaitingForWebhook;
-		},
 		node (): INodeUi {
 			return this.$store.getters.activeNode;
 		},
-		nodeType (): INodeTypeDescription | null {
-			if (this.node) {
-				return this.$store.getters.nodeType(this.node.type, this.node.typeVersion);
-			}
-			return null;
-		},
-		isActiveStickyNode(): boolean {
-			return !!this.$store.getters.activeNode && this.$store.getters.activeNode.type === STICKY_NODE_TYPE;
-		},
-	},
-	watch: {
-		node (node, oldNode) {
-			if(node && !oldNode && !this.isActiveStickyNode) {
-				this.triggerWaitingWarningEnabled = false;
-				this.$externalHooks().run('dataDisplay.nodeTypeChanged', { nodeSubtitle: this.getNodeSubtitle(node, this.nodeType, this.getWorkflow()) });
-				this.$telemetry.track('User opened node modal', { node_type: this.nodeType ? this.nodeType.name : '', workflow_id: this.$store.getters.workflowId });
-			}
-			if (window.top && !this.isActiveStickyNode) {
-				window.top.postMessage(JSON.stringify({command: (node? 'openNDV': 'closeNDV')}), '*');
-			}
-		},
 	},
 	methods: {
-		onNodeExecute() {
-			setTimeout(() => {
-				if (!this.node || !this.workflowRunning) {
-					return;
-				}
-				this.triggerWaitingWarningEnabled = true;
-			}, 1000);
-		},
-		openSettings() {
-			this.settingsEventBus.$emit('openSettings');
-		},
 		valueChanged (parameterData: IUpdateInformation) {
 			this.$emit('valueChanged', parameterData);
 		},
 		nodeTypeSelected (nodeTypeName: string) {
 			this.$emit('nodeTypeSelected', nodeTypeName);
 		},
-		close () {
-			this.$externalHooks().run('dataDisplay.nodeEditingFinished');
-			this.triggerWaitingWarningEnabled = false;
-			this.$store.commit('setActiveNode', null);
+		close (e: MouseEvent) {
+			// @ts-ignore
+			if (e.target.className && e.target.className.includes && e.target.className.includes('close-on-click')) {
+				this.$store.commit('setActiveNode', null);
+			}
 		},
 	},
 });
-
 </script>
 
 <style lang="scss">
+
 .data-display-wrapper {
-	height: 85%;
-	margin-top: 48px !important;
-
-	.el-dialog__header {
-		padding: 0 !important;
-	}
-
-	.el-dialog__body {
-		padding: 0 !important;
-		height: 100%;
-		min-height: 400px;
-		overflow: hidden;
-		border-radius: 8px;
-	}
-}
-
-.data-display {
-	background-color: #fff;
-	border-radius: 8px;
-	display: flex;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
 	height: 100%;
-}
+	z-index: 20;
+	background-color: #9d8d9dd8;
 
-.fade-enter-active, .fade-enter-to, .fade-leave-active {
-	transition: all .75s ease;
-	opacity: 1;
-}
+	.close-button {
+		position: absolute;
+		top: 0;
+		right: -50px;
+		color: #fff;
+		background-color: $--custom-header-background;
+		border-radius: 0 18px 18px 0;
+		z-index: 110;
+		font-size: 1.7em;
+		text-align: center;
+		line-height: 50px;
+		height: 50px;
+		width: 50px;
 
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-	opacity: 0;
-}
-</style>
+		.close-on-click {
+			color: #fff;
+			font-weight: 400;
+		}
 
-<style lang="scss" module>
-.triggerWarning {
-	max-width: 180px;
-}
-
-.backToCanvas {
-	position: absolute;
-	top: -40px;
-
-	&:hover {
-		cursor: pointer;
+		.close-on-click:hover {
+			transform: scale(1.2);
+		}
 	}
 
-	> * {
-		margin-right: var(--spacing-3xs);
+	.data-display {
+		position: relative;
+		width: 80%;
+		height: 80%;
+		margin: 6em auto;
+		background-color: #fff;
+		border-radius: 2px;
+		@media (max-height: 720px) {
+			margin: 1em auto;
+			height: 95%;
+		}
 	}
 }
 
-@media (min-width: $--breakpoint-lg) {
-	.backToCanvas {
-		position: fixed;
-		top: 10px;
-		left: 20px;
-	}
-}
 </style>

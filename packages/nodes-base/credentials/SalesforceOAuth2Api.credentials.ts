@@ -1,6 +1,6 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 export class SalesforceOAuth2Api implements ICredentialType {
@@ -9,55 +9,32 @@ export class SalesforceOAuth2Api implements ICredentialType {
 		'oAuth2Api',
 	];
 	displayName = 'Salesforce OAuth2 API';
-	documentationUrl = 'salesforce';
-	properties: INodeProperties[] = [
-		{
-			displayName: 'Environment Type',
-			name: 'environment',
-			type: 'options',
-			options: [
-				{
-					name: 'Production',
-					value: 'production',
-				},
-				{
-					name: 'Sandbox',
-					value: 'sandbox',
-				},
-			],
-			default: 'production',
-		},
+	properties = [
 		{
 			displayName: 'Authorization URL',
 			name: 'authUrl',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
+			default: 'https://login.salesforce.com/services/oauth2/authorize',
 			required: true,
-			default: '={{ $self["environment"] === "sandbox" ? "https://test.salesforce.com/services/oauth2/authorize" : "https://login.salesforce.com/services/oauth2/authorize" }}',
 		},
 		{
 			displayName: 'Access Token URL',
 			name: 'accessTokenUrl',
-			type: 'hidden',
+			type: 'string' as NodePropertyTypes,
+			default: 'https://yourcompany.salesforce.com/services/oauth2/token',
 			required: true,
-			default: '={{ $self["environment"] === "sandbox" ? "https://test.salesforce.com/services/oauth2/token" : "https://login.salesforce.com/services/oauth2/token" }}',
 		},
 		{
 			displayName: 'Scope',
 			name: 'scope',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: 'full refresh_token',
 		},
 		{
 			displayName: 'Auth URI Query Parameters',
 			name: 'authQueryParameters',
-			type: 'hidden',
+			type: 'hidden' as NodePropertyTypes,
 			default: '',
-		},
-		{
-			displayName: 'Authentication',
-			name: 'authentication',
-			type: 'hidden',
-			default: 'header',
 		},
 	];
 }

@@ -1,8 +1,6 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from 'n8n-workflow';
 
-export const leadOperations: INodeProperties[] = [
+export const leadOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -31,11 +29,6 @@ export const leadOperations: INodeProperties[] = [
 				description: 'Create a lead',
 			},
 			{
-				name: 'Create or Update',
-				value: 'upsert',
-				description: 'Create a new lead, or update the current one if it already exists (upsert)',
-			},
-			{
 				name: 'Delete',
 				value: 'delete',
 				description: 'Delete a lead',
@@ -53,7 +46,7 @@ export const leadOperations: INodeProperties[] = [
 			{
 				name: 'Get Summary',
 				value: 'getSummary',
-				description: 'Returns an overview of Lead\'s metadata',
+				description: `Returns an overview of Lead's metadata.`,
 			},
 			{
 				name: 'Update',
@@ -64,55 +57,13 @@ export const leadOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const leadFields: INodeProperties[] = [
+export const leadFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                lead:create                                 */
-	/* -------------------------------------------------------------------------- */
-	{
-		displayName: 'Match Against',
-		name: 'externalId',
-		type: 'options',
-		typeOptions: {
-			loadOptionsMethod: 'getExternalIdFields',
-			loadOptionsDependsOn: [
-				'resource',
-			],
-		},
-		required: true,
-		default: '',
-		displayOptions: {
-			show: {
-				resource: [
-					'lead',
-				],
-				operation: [
-					'upsert',
-				],
-			},
-		},
-		description: 'The field to check to see if the lead already exists',
-	},
-	{
-		displayName: 'Value to Match',
-		name: 'externalIdValue',
-		type: 'string',
-		required: true,
-		default: '',
-		displayOptions: {
-			show: {
-				resource: [
-					'lead',
-				],
-				operation: [
-					'upsert',
-				],
-			},
-		},
-		description: 'If this value exists in the \'match against\' field, update the lead. Otherwise create a new one.',
-	},
+/* -------------------------------------------------------------------------- */
+/*                                lead:create                                 */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Company',
 		name: 'company',
@@ -126,8 +77,7 @@ export const leadFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-					'upsert',
-				],
+				]
 			},
 		},
 		description: 'Company of the lead. If person account record types have been enabled, and if the value of Company is null, the lead converts to a person account.',
@@ -145,8 +95,7 @@ export const leadFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-					'upsert',
-				],
+				]
 			},
 		},
 		description: 'Required. Last name of the lead. Limited to 80 characters.',
@@ -164,7 +113,6 @@ export const leadFields: INodeProperties[] = [
 				],
 				operation: [
 					'create',
-					'upsert',
 				],
 			},
 		},
@@ -175,52 +123,17 @@ export const leadFields: INodeProperties[] = [
 				type: 'number',
 				typeOptions: {
 					numberPrecision: 2,
+					numberStepSize: 1,
 				},
 				default: '',
-				description: 'Annual revenue for the company of the lead',
+				description: 'Annual revenue for the company of the lead.',
 			},
 			{
 				displayName: 'City',
 				name: 'city',
 				type: 'string',
 				default: '',
-				description: 'City for the address of the lead',
-			},
-			{
-				displayName: 'Custom Fields',
-				name: 'customFieldsUi',
-				placeholder: 'Add Custom Field',
-				type: 'fixedCollection',
-				typeOptions: {
-					multipleValues: true,
-				},
-				description: 'Filter by custom fields',
-				default: {},
-				options: [
-					{
-						name: 'customFieldsValues',
-						displayName: 'Custom Field',
-						values: [
-							{
-								displayName: 'Field ID',
-								name: 'fieldId',
-								type: 'options',
-								typeOptions: {
-									loadOptionsMethod: 'getCustomFields',
-								},
-								default: '',
-								description: 'The ID of the field to add custom field to',
-							},
-							{
-								displayName: 'Value',
-								name: 'value',
-								type: 'string',
-								default: '',
-								description: 'The value to set on custom field',
-							},
-						],
-					},
-				],
+				description: 'City for the address of the lead.',
 			},
 			{
 				displayName: 'Description',
@@ -230,14 +143,14 @@ export const leadFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Description of the lead',
+				description: 'Description of the lead.',
 			},
 			{
 				displayName: 'Email',
 				name: 'email',
 				type: 'string',
 				default: '',
-				description: 'Email address for the lead',
+				description: 'Email address for the lead.',
 			},
 			{
 				displayName: 'Fist Name',
@@ -251,12 +164,12 @@ export const leadFields: INodeProperties[] = [
 				name: 'industry',
 				type: 'string',
 				default: '',
-				description: 'Website for the lead',
+				description: 'Website for the lead.',
 			},
 			{
 				displayName: 'Is Unread By Owner',
 				name: 'IsUnreadByOwner',
-				type: 'boolean',
+				type: 'Boolean',
 				default: false,
 				description: 'If true, lead has been assigned, but not yet viewed. See Unread Leads for more information. Label is Unread By Owner.',
 			},
@@ -265,7 +178,8 @@ export const leadFields: INodeProperties[] = [
 				name: 'jigsaw',
 				type: 'string',
 				default: '',
-				description: 'references the ID of a contact in Data.com. If a lead has a value in this field, it means that a contact was imported as a lead from Data.com.',
+				description: `references the ID of a contact in Data.com.
+				If a lead has a value in this field, it means that a contact was imported as a lead from Data.com.`,
 			},
 			{
 				displayName: 'Lead Source',
@@ -275,19 +189,15 @@ export const leadFields: INodeProperties[] = [
 					loadOptionsMethod: 'getLeadSources',
 				},
 				default: '',
-				description: 'Source from which the lead was obtained',
-			},
-			{
-				displayName: 'Mobile Phone',
-				name: 'mobilePhone',
-				type: 'string',
-				default: '',
-				description: 'Contact’s mobile phone number',
+				description: 'Source from which the lead was obtained.',
 			},
 			{
 				displayName: 'Number Of Employees',
 				name: 'numberOfEmployees',
 				type: 'number',
+				typeOptions: {
+					numberStepSize: 1,
+				},
 				default: '',
 				description: 'Number of employees at the lead’s company. Label is Employees.',
 			},
@@ -296,17 +206,17 @@ export const leadFields: INodeProperties[] = [
 				name: 'owner',
 				type: 'options',
 				typeOptions: {
-					loadOptionsMethod: 'getLeadOwners',
+					loadOptionsMethod: 'getUsers',
 				},
 				default: '',
-				description: 'The owner of the lead',
+				description: 'The owner of the lead.',
 			},
 			{
 				displayName: 'Phone',
 				name: 'phone',
 				type: 'string',
 				default: '',
-				description: 'Phone number for the lead',
+				description: 'Phone number for the lead.',
 			},
 			{
 				displayName: 'Postal Code',
@@ -316,34 +226,25 @@ export const leadFields: INodeProperties[] = [
 				description: 'Postal code for the address of the lead. Label is Zip/Postal Code.',
 			},
 			{
-				displayName: 'Record Type ID',
-				name: 'recordTypeId',
-				type: 'options',
-				typeOptions: {
-					loadOptionsMethod: 'getRecordTypes',
-				},
-				default: '',
-			},
-			{
 				displayName: 'Rating',
 				name: 'rating',
 				type: 'string',
 				default: '',
-				description: 'Rating of the lead',
+				description: 'Rating of the lead.',
 			},
 			{
 				displayName: 'Salutation',
 				name: 'salutation',
 				type: 'string',
 				default: '',
-				description: 'Salutation for the lead',
+				description: 'Salutation for the lead.',
 			},
 			{
 				displayName: 'State',
 				name: 'state',
 				type: 'string',
 				default: '',
-				description: 'State for the address of the lead',
+				description: 'State for the address of the lead.',
 			},
 			{
 				displayName: 'Status',
@@ -353,7 +254,7 @@ export const leadFields: INodeProperties[] = [
 					loadOptionsMethod: 'getLeadStatuses',
 				},
 				default: '',
-				description: 'Status code for this converted lead',
+				description: 'Status code for this converted lead.',
 			},
 			{
 				displayName: 'Street',
@@ -367,21 +268,20 @@ export const leadFields: INodeProperties[] = [
 				name: 'title',
 				type: 'string',
 				default: '',
-				description: 'Title for the lead, for example CFO or CEO',
+				description: 'Title for the lead, for example CFO or CEO.',
 			},
 			{
 				displayName: 'Website',
 				name: 'website',
 				type: 'string',
 				default: '',
-				description: 'Website for the lead',
+				description: 'Website for the lead.',
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 lead:update                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 lead:update                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Lead ID',
 		name: 'leadId',
@@ -395,10 +295,10 @@ export const leadFields: INodeProperties[] = [
 				],
 				operation: [
 					'update',
-				],
+				]
 			},
 		},
-		description: 'ID of Lead that needs to be fetched',
+		description: 'Id of Lead that needs to be fetched',
 	},
 	{
 		displayName: 'Update Fields',
@@ -423,16 +323,17 @@ export const leadFields: INodeProperties[] = [
 				type: 'number',
 				typeOptions: {
 					numberPrecision: 2,
+					numberStepSize: 1,
 				},
 				default: '',
-				description: 'Annual revenue for the company of the lead',
+				description: 'Annual revenue for the company of the lead.',
 			},
 			{
 				displayName: 'City',
 				name: 'city',
 				type: 'string',
 				default: '',
-				description: 'City for the address of the lead',
+				description: 'City for the address of the lead.',
 			},
 			{
 				displayName: 'Company',
@@ -442,42 +343,6 @@ export const leadFields: INodeProperties[] = [
 				description: 'Company of the lead. If person account record types have been enabled, and if the value of Company is null, the lead converts to a person account.',
 			},
 			{
-				displayName: 'Custom Fields',
-				name: 'customFieldsUi',
-				placeholder: 'Add Custom Field',
-				type: 'fixedCollection',
-				typeOptions: {
-					multipleValues: true,
-				},
-				description: 'Filter by custom fields',
-				default: {},
-				options: [
-					{
-						name: 'customFieldsValues',
-						displayName: 'Custom Field',
-						values: [
-							{
-								displayName: 'Field ID',
-								name: 'fieldId',
-								type: 'options',
-								typeOptions: {
-									loadOptionsMethod: 'getCustomFields',
-								},
-								default: '',
-								description: 'The ID of the field to add custom field to',
-							},
-							{
-								displayName: 'Value',
-								name: 'value',
-								type: 'string',
-								default: '',
-								description: 'The value to set on custom field',
-							},
-						],
-					},
-				],
-			},
-			{
 				displayName: 'Description',
 				name: 'description',
 				type: 'string',
@@ -485,14 +350,14 @@ export const leadFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'Description of the lead',
+				description: 'Description of the lead.',
 			},
 			{
 				displayName: 'Email',
 				name: 'email',
 				type: 'string',
 				default: '',
-				description: 'Email address for the lead',
+				description: 'Email address for the lead.',
 			},
 			{
 				displayName: 'Fist Name',
@@ -506,12 +371,12 @@ export const leadFields: INodeProperties[] = [
 				name: 'industry',
 				type: 'string',
 				default: '',
-				description: 'Website for the lead',
+				description: 'Website for the lead.',
 			},
 			{
 				displayName: 'Is Unread By Owner',
 				name: 'IsUnreadByOwner',
-				type: 'boolean',
+				type: 'Boolean',
 				default: false,
 				description: 'If true, lead has been assigned, but not yet viewed. See Unread Leads for more information. Label is Unread By Owner.',
 			},
@@ -520,7 +385,8 @@ export const leadFields: INodeProperties[] = [
 				name: 'jigsaw',
 				type: 'string',
 				default: '',
-				description: 'references the ID of a contact in Data.com. If a lead has a value in this field, it means that a contact was imported as a lead from Data.com.',
+				description: `references the ID of a contact in Data.com.
+				If a lead has a value in this field, it means that a contact was imported as a lead from Data.com.`,
 			},
 			{
 				displayName: 'Last Name',
@@ -537,19 +403,15 @@ export const leadFields: INodeProperties[] = [
 					loadOptionsMethod: 'getLeadSources',
 				},
 				default: '',
-				description: 'Source from which the lead was obtained',
-			},
-			{
-				displayName: 'Mobile Phone',
-				name: 'mobilePhone',
-				type: 'string',
-				default: '',
-				description: 'Contact’s mobile phone number',
+				description: 'Source from which the lead was obtained.',
 			},
 			{
 				displayName: 'Number Of Employees',
 				name: 'numberOfEmployees',
 				type: 'number',
+				typeOptions: {
+					numberStepSize: 1,
+				},
 				default: '',
 				description: 'Number of employees at the lead’s company. Label is Employees.',
 			},
@@ -558,10 +420,10 @@ export const leadFields: INodeProperties[] = [
 				name: 'owner',
 				type: 'options',
 				typeOptions: {
-					loadOptionsMethod: 'getLeadOwners',
+					loadOptionsMethod: 'getUsers',
 				},
 				default: '',
-				description: 'The owner of the lead',
+				description: 'The owner of the lead.',
 			},
 			{
 				displayName: 'Postal Code',
@@ -575,37 +437,28 @@ export const leadFields: INodeProperties[] = [
 				name: 'phone',
 				type: 'string',
 				default: '',
-				description: 'Phone number for the lead',
-			},
-			{
-				displayName: 'Record Type ID',
-				name: 'recordTypeId',
-				type: 'options',
-				typeOptions: {
-					loadOptionsMethod: 'getRecordTypes',
-				},
-				default: '',
+				description: 'Phone number for the lead.',
 			},
 			{
 				displayName: 'Rating',
 				name: 'rating',
 				type: 'string',
 				default: '',
-				description: 'Rating of the lead',
+				description: 'Rating of the lead.',
 			},
 			{
 				displayName: 'Salutation',
 				name: 'salutation',
 				type: 'string',
 				default: '',
-				description: 'Salutation for the lead',
+				description: 'Salutation for the lead.',
 			},
 			{
 				displayName: 'State',
 				name: 'state',
 				type: 'string',
 				default: '',
-				description: 'State for the address of the lead',
+				description: 'State for the address of the lead.',
 			},
 			{
 				displayName: 'Status',
@@ -615,7 +468,7 @@ export const leadFields: INodeProperties[] = [
 					loadOptionsMethod: 'getLeadStatuses',
 				},
 				default: '',
-				description: 'Status code for this converted lead',
+				description: 'Status code for this converted lead.',
 			},
 			{
 				displayName: 'Street',
@@ -629,21 +482,21 @@ export const leadFields: INodeProperties[] = [
 				name: 'title',
 				type: 'string',
 				default: '',
-				description: 'Title for the lead, for example CFO or CEO',
+				description: 'Title for the lead, for example CFO or CEO.',
 			},
 			{
 				displayName: 'Website',
 				name: 'website',
 				type: 'string',
 				default: '',
-				description: 'Website for the lead',
+				description: 'Website for the lead.',
 			},
-		],
+		]
 	},
 
-	/* -------------------------------------------------------------------------- */
-	/*                                  lead:get                                  */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                  lead:get                                  */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Lead ID',
 		name: 'leadId',
@@ -657,15 +510,14 @@ export const leadFields: INodeProperties[] = [
 				],
 				operation: [
 					'get',
-				],
+				]
 			},
 		},
-		description: 'ID of Lead that needs to be fetched',
+		description: 'Id of Lead that needs to be fetched',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                  lead:delete                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                  lead:delete                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Lead ID',
 		name: 'leadId',
@@ -679,15 +531,14 @@ export const leadFields: INodeProperties[] = [
 				],
 				operation: [
 					'delete',
-				],
+				]
 			},
 		},
-		description: 'ID of Lead that needs to be fetched',
+		description: 'Id of Lead that needs to be fetched',
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                                 lead:getAll                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 lead:getAll                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Return All',
 		name: 'returnAll',
@@ -703,7 +554,7 @@ export const leadFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -727,7 +578,7 @@ export const leadFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -747,81 +598,17 @@ export const leadFields: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Conditions',
-				name: 'conditionsUi',
-				placeholder: 'Add Condition',
-				type: 'fixedCollection',
-				typeOptions: {
-					multipleValues: true,
-				},
-				description: 'The condition to set',
-				default: {},
-				options: [
-					{
-						name: 'conditionValues',
-						displayName: 'Condition',
-						values: [
-							{
-								displayName: 'Field',
-								name: 'field',
-								type: 'options',
-								typeOptions: {
-									loadOptionsMethod: 'getLeadFields',
-								},
-								default: '',
-								description: 'For date, number, or boolean, please use expressions',
-							},
-							{
-								displayName: 'Operation',
-								name: 'operation',
-								type: 'options',
-								options: [
-									{
-										name: '=',
-										value: 'equal',
-									},
-									{
-										name: '>',
-										value: '>',
-									},
-									{
-										name: '<',
-										value: '<',
-									},
-									{
-										name: '>=',
-										value: '>=',
-									},
-									{
-										name: '<=',
-										value: '<=',
-									},
-								],
-								default: 'equal',
-							},
-							{
-								displayName: 'Value',
-								name: 'value',
-								type: 'string',
-								default: '',
-							},
-						],
-					},
-				],
-			},
-			{
 				displayName: 'Fields',
 				name: 'fields',
 				type: 'string',
 				default: '',
 				description: 'Fields to include separated by ,',
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                            contact:addToCampaign                           */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                            contact:addToCampaign                           */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Lead ID',
 		name: 'leadId',
@@ -835,10 +622,10 @@ export const leadFields: INodeProperties[] = [
 				],
 				operation: [
 					'addToCampaign',
-				],
+				]
 			},
 		},
-		description: 'ID of contact that needs to be fetched',
+		description: 'Id of contact that needs to be fetched',
 	},
 	{
 		displayName: 'Campaign',
@@ -856,10 +643,10 @@ export const leadFields: INodeProperties[] = [
 				],
 				operation: [
 					'addToCampaign',
-				],
+				]
 			},
 		},
-		description: 'ID of the campaign that needs to be fetched',
+		description: 'Id of the campaign that needs to be fetched',
 	},
 	{
 		displayName: 'Options',
@@ -885,12 +672,11 @@ export const leadFields: INodeProperties[] = [
 				default: '',
 				description: 'Controls the HasResponded flag on this object',
 			},
-		],
+		]
 	},
-
-	/* -------------------------------------------------------------------------- */
-	/*                             lead:addNote                                   */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                             lead:addNote                                   */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Lead ID',
 		name: 'leadId',
@@ -904,10 +690,10 @@ export const leadFields: INodeProperties[] = [
 				],
 				operation: [
 					'addNote',
-				],
+				]
 			},
 		},
-		description: 'ID of lead that needs to be fetched',
+		description: 'Id of lead that needs to be fetched',
 	},
 	{
 		displayName: 'Title',
@@ -922,10 +708,10 @@ export const leadFields: INodeProperties[] = [
 				],
 				operation: [
 					'addNote',
-				],
+				]
 			},
 		},
-		description: 'Title of the note',
+		description: 'Title of the note.',
 	},
 	{
 		displayName: 'Options',
@@ -969,8 +755,8 @@ export const leadFields: INodeProperties[] = [
 					loadOptionsMethod: 'getUsers',
 				},
 				default: '',
-				description: 'ID of the user who owns the note',
+				description: 'ID of the user who owns the note.',
 			},
-		],
+		]
 	},
-];
+] as INodeProperties[];

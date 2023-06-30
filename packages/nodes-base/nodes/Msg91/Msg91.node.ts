@@ -4,7 +4,6 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
-	NodeOperationError,
 } from 'n8n-workflow';
 
 import {
@@ -14,15 +13,16 @@ import {
 
 export class Msg91 implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'MSG91',
+		displayName: 'Msg91',
 		name: 'msg91',
 		icon: 'file:msg91.png',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Sends transactional SMS via MSG91',
+		description: 'Send Transactional SMS',
 		defaults: {
 			name: 'Msg91',
+			color: '#0000ff',
 		},
 		inputs: ['main'],
 		outputs: ['main'],
@@ -30,7 +30,7 @@ export class Msg91 implements INodeType {
 			{
 				name: 'msg91Api',
 				required: true,
-			},
+			}
 		],
 		properties: [
 			{
@@ -68,7 +68,7 @@ export class Msg91 implements INodeType {
 				description: 'The operation to perform.',
 			},
 			{
-				displayName: 'Sender ID',
+				displayName: 'From',
 				name: 'from',
 				type: 'string',
 				default: '',
@@ -84,7 +84,7 @@ export class Msg91 implements INodeType {
 						],
 					},
 				},
-				description: 'The number from which to send the message',
+				description: 'The number from which to send the message.',
 			},
 			{
 				displayName: 'To',
@@ -103,7 +103,7 @@ export class Msg91 implements INodeType {
 						],
 					},
 				},
-				description: 'The number, with coutry code, to which to send the message',
+				description: 'The number, with coutry code, to which to send the message.',
 			},
 			{
 				displayName: 'Message',
@@ -123,7 +123,7 @@ export class Msg91 implements INodeType {
 				},
 				description: 'The message to send',
 			},
-		],
+		]
 	};
 
 
@@ -167,10 +167,10 @@ export class Msg91 implements INodeType {
 					qs.message = this.getNodeParameter('message', i) as string;
 
 				} else {
-					throw new NodeOperationError(this.getNode(), `The operation "${operation}" is not known!`);
+					throw new Error(`The operation "${operation}" is not known!`);
 				}
 			} else {
-				throw new NodeOperationError(this.getNode(), `The resource "${resource}" is not known!`);
+				throw new Error(`The resource "${resource}" is not known!`);
 			}
 
 			const responseData = await msg91ApiRequest.call(this, requestMethod, endpoint, body, qs);

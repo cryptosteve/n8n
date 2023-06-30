@@ -1,8 +1,8 @@
 import {
 	INodeProperties,
-} from 'n8n-workflow';
+ } from 'n8n-workflow';
 
-export const orderOperations: INodeProperties[] = [
+export const orderOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -44,13 +44,13 @@ export const orderOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const orderFields: INodeProperties[] = [
+export const orderFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                order:create                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                order:create                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Additional Fields',
 		name: 'additionalFields',
@@ -73,10 +73,11 @@ export const orderFields: INodeProperties[] = [
 				name: 'billingAddressUi',
 				placeholder: 'Add Billing Address',
 				type: 'fixedCollection',
-				default: {},
+				default: '',
 				typeOptions: {
 					multipleValues: false,
 				},
+				description: 'Billing address',
 				options: [
 					{
 						name: 'billingAddressValues',
@@ -151,7 +152,7 @@ export const orderFields: INodeProperties[] = [
 				name: 'discountCodesUi',
 				placeholder: 'Add Discount Code',
 				type: 'fixedCollection',
-				default: {},
+				default: '',
 				typeOptions: {
 					multipleValues: true,
 				},
@@ -165,7 +166,7 @@ export const orderFields: INodeProperties[] = [
 								name: 'amount',
 								type: 'string',
 								default: '',
-								description: 'The amount that\'s deducted from the order total',
+								description: `The amount that's deducted from the order total.`,
 							},
 							{
 								displayName: 'Code',
@@ -182,17 +183,17 @@ export const orderFields: INodeProperties[] = [
 									{
 										name: 'Fixed Amount',
 										value: 'fixedAmount',
-										description: 'Applies amount as a unit of the store\'s currency',
+										description: `Applies amount as a unit of the store's currency.`,
 									},
 									{
 										name: 'Percentage',
 										value: 'percentage',
-										description: 'Applies a discount of amount as a percentage of the order total',
+										description: `Applies a discount of amount as a percentage of the order total.`,
 									},
 									{
 										name: 'Shipping',
 										value: 'shipping',
-										description: 'Applies a free shipping discount on orders that have a shipping rate less than or equal to amount',
+										description: `Applies a free shipping discount on orders that have a shipping rate less than or equal to amount.`,
 									},
 								],
 								default: 'fixedAmount',
@@ -207,7 +208,7 @@ export const orderFields: INodeProperties[] = [
 				name: 'email',
 				type: 'string',
 				default: '',
-				description: 'The customer\'s email address',
+				description: `The customer's email address.`,
 			},
 			{
 				displayName: 'Fulfillment Status',
@@ -217,26 +218,26 @@ export const orderFields: INodeProperties[] = [
 					{
 						name: 'Fulfilled',
 						value: 'fulfilled',
-						description: 'Every line item in the order has been fulfilled',
+						description: 'Every line item in the order has been fulfilled.',
 					},
 					{
 						name: 'Null',
 						value: 'null',
-						description: 'None of the line items in the order have been fulfilled',
+						description: 'None of the line items in the order have been fulfilled.',
 					},
 					{
 						name: 'Partial',
 						value: 'partial',
-						description: 'At least one line item in the order has been fulfilled',
+						description: 'At least one line item in the order has been fulfilled.',
 					},
 					{
 						name: 'Restocked',
 						value: 'restocked',
-						description: 'Every line item in the order has been restocked and the order canceled',
+						description: 'Every line item in the order has been restocked and the order canceled.',
 					},
 				],
 				default: '',
-				description: 'The order\'s status in terms of fulfilled line items',
+				description: `The order's status in terms of fulfilled line items`,
 			},
 			{
 				displayName: 'Inventory Behaviour',
@@ -246,21 +247,21 @@ export const orderFields: INodeProperties[] = [
 					{
 						name: 'Bypass',
 						value: 'bypass',
-						description: 'Do not claim inventory',
+						description: 'Do not claim inventory.',
 					},
 					{
 						name: 'Decrement Ignoring Policy',
 						value: 'decrementIgnoringPolicy',
-						description: 'Ignore the product\'s inventory policy and claim inventory',
+						description: `Ignore the product's inventory policy and claim inventory.`,
 					},
 					{
 						name: 'Decrement Obeying Policy',
 						value: 'decrementObeyingPolicy',
-						description: 'Follow the product\'s inventory policy and claim inventory, if possible',
+						description: `Follow the product's inventory policy and claim inventory, if possible.`,
 					},
 				],
 				default: 'bypass',
-				description: 'The behaviour to use when updating inventory',
+				description: `The behaviour to use when updating inventory.`,
 			},
 			{
 				displayName: 'Location ID',
@@ -270,7 +271,7 @@ export const orderFields: INodeProperties[] = [
 					loadOptionsMethod: 'getLocations',
 				},
 				default: '',
-				description: 'The ID of the physical location where the order was processed',
+				description: 'The ID of the physical location where the order was processed.',
 			},
 			{
 				displayName: 'Note',
@@ -280,31 +281,32 @@ export const orderFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'An optional note that a shop owner can attach to the order',
+				description: 'An optional note that a shop owner can attach to the order.',
 			},
 			{
 				displayName: 'Send Fulfillment Receipt',
 				name: 'sendFulfillmentReceipt',
 				type: 'boolean',
 				default: false,
-				description: 'Whether to send a shipping confirmation to the customer',
+				description: 'Whether to send a shipping confirmation to the customer.',
 			},
 			{
 				displayName: 'Send Receipt',
 				name: 'sendReceipt',
 				type: 'boolean',
 				default: false,
-				description: 'Whether to send an order confirmation to the customer',
+				description: 'Whether to send an order confirmation to the customer.',
 			},
 			{
 				displayName: 'Shipping Address',
 				name: 'shippingAddressUi',
 				placeholder: 'Add Shipping',
 				type: 'fixedCollection',
-				default: {},
+				default: '',
 				typeOptions: {
 					multipleValues: false,
 				},
+				description: 'Shipping Address',
 				options: [
 					{
 						name: 'shippingAddressValues',
@@ -379,21 +381,21 @@ export const orderFields: INodeProperties[] = [
 				name: 'sourceName',
 				type: 'string',
 				default: '',
-				description: 'Where the order originated. Can be set only during order creation, and is not writeable afterwards.',
+				description: 'Where the order originated. Can be set only during order creation, and is not writeable afterwards',
 			},
 			{
 				displayName: 'Tags',
 				name: 'tags',
 				type: 'string',
 				default: '',
-				description: 'Tags attached to the order, formatted as a string of comma-separated values',
+				description: 'Tags attached to the order, formatted as a string of comma-separated values.',
 			},
 			{
 				displayName: 'Test',
 				name: 'test',
 				type: 'boolean',
-				default: false,
-				description: 'Whether this is a test order',
+				default: '',
+				description: 'Whether this is a test order.',
 			},
 		],
 	},
@@ -436,21 +438,21 @@ export const orderFields: INodeProperties[] = [
 						name: 'variantId',
 						type: 'string',
 						default: '',
-						description: 'The ID of the product variant',
+						description: 'The ID of the product variant.',
 					},
 					{
 						displayName: 'Title',
 						name: 'title',
 						type: 'string',
 						default: '',
-						description: 'The title of the product',
+						description: 'The title of the product.',
 					},
 					{
 						displayName: 'Grams',
 						name: 'grams',
 						type: 'string',
 						default: '',
-						description: 'The weight of the item in grams',
+						description: 'The weight of the item in grams.',
 					},
 					{
 						displayName: 'Quantity',
@@ -460,7 +462,7 @@ export const orderFields: INodeProperties[] = [
 							minValue: 1,
 						},
 						default: 1,
-						description: 'The number of items that were purchased',
+						description: 'The number of items that were purchased.',
 					},
 					{
 						displayName: 'Price',
@@ -472,9 +474,9 @@ export const orderFields: INodeProperties[] = [
 			},
 		],
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                order:delete                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                order:delete                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Order ID',
 		name: 'orderId',
@@ -492,9 +494,9 @@ export const orderFields: INodeProperties[] = [
 		},
 		required: true,
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                order:get                                   */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                order:get                                   */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Order ID',
 		name: 'orderId',
@@ -534,13 +536,13 @@ export const orderFields: INodeProperties[] = [
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Fields the order will return, formatted as a string of comma-separated values. By default all the fields are returned.',
+				description: 'Fields the order will return, formatted as a string of comma-separated values. By default all the fields are returned',
 			},
 		],
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                order:getAll                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                order:getAll                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Return All',
 		name: 'returnAll',
@@ -556,7 +558,7 @@ export const orderFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -580,7 +582,7 @@ export const orderFields: INodeProperties[] = [
 			maxValue: 250,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -611,7 +613,7 @@ export const orderFields: INodeProperties[] = [
 				name: 'createdAtMin',
 				type: 'dateTime',
 				default: '',
-				description: 'Show orders created at or after date',
+				description: 'Show orders created at or after date ',
 			},
 			{
 				displayName: 'Created At Max',
@@ -628,7 +630,7 @@ export const orderFields: INodeProperties[] = [
 					{
 						name: 'Any',
 						value: 'any',
-						description: 'Show orders of any financial status',
+						description: 'Show orders of any financial status.',
 					},
 					{
 						name: 'Authorized',
@@ -668,11 +670,11 @@ export const orderFields: INodeProperties[] = [
 					{
 						name: 'Unpaid',
 						value: 'unpaid',
-						description: 'Show authorized and partially paid orders',
+						description: 'Show authorized and partially paid orders.',
 					},
 				],
 				default: 'any',
-				description: 'Filter orders by their financial status',
+				description: 'Filter orders by their financial status.',
 			},
 			{
 				displayName: 'Fulfillment Status',
@@ -682,12 +684,12 @@ export const orderFields: INodeProperties[] = [
 					{
 						name: 'Any',
 						value: 'any',
-						description: 'Show orders of any fulfillment status',
+						description: 'Show orders of any fulfillment status.',
 					},
 					{
 						name: 'Partial',
 						value: 'partial',
-						description: 'Show partially shipped orders',
+						description: 'Show partially shipped orders.',
 					},
 					{
 						name: 'Shipped',
@@ -702,25 +704,25 @@ export const orderFields: INodeProperties[] = [
 					{
 						name: 'Unfulfilled',
 						value: 'unfulfilled',
-						description: 'Returns orders with fulfillment_status of null or partial',
+						description: 'Returns orders with fulfillment_status of null or partial.',
 					},
 				],
 				default: 'any',
-				description: 'Filter orders by their fulfillment status',
+				description: 'Filter orders by their fulfillment status.',
 			},
 			{
 				displayName: 'Fields',
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Fields the orders will return, formatted as a string of comma-separated values. By default all the fields are returned.',
+				description: 'Fields the orders will return, formatted as a string of comma-separated values. By default all the fields are returned',
 			},
 			{
 				displayName: 'IDs',
 				name: 'ids',
 				type: 'string',
 				default: '',
-				description: 'Retrieve only orders specified by a comma-separated list of order IDs',
+				description: 'Retrieve only orders specified by a comma-separated list of order IDs.',
 			},
 			{
 				displayName: 'Processed At Max',
@@ -744,33 +746,33 @@ export const orderFields: INodeProperties[] = [
 					{
 						name: 'Any',
 						value: 'any',
-						description: 'Show orders of any status, including archived orders',
+						description: 'Show orders of any status, including archived orders.',
 					},
 					{
 						name: 'Cancelled',
 						value: 'Cancelled',
-						description: 'Show only canceled orders',
+						description: 'Show only canceled orders.',
 					},
 					{
 						name: 'Closed',
 						value: 'closed',
-						description: 'Show only closed orders',
+						description: 'Show only closed orders.',
 					},
 					{
 						name: 'Open',
 						value: 'open',
-						description: 'Show only open orders',
+						description: 'Show only open orders.',
 					},
 				],
 				default: 'open',
-				description: 'Filter orders by their status',
+				description: 'Filter orders by their status.',
 			},
 			{
 				displayName: 'Since ID',
 				name: 'sinceId',
 				type: 'string',
 				default: '',
-				description: 'Show orders after the specified ID',
+				description: 'Show orders after the specified ID.',
 			},
 			{
 				displayName: 'Updated At Max',
@@ -788,9 +790,9 @@ export const orderFields: INodeProperties[] = [
 			},
 		],
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                order:update                                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                order:update                                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Order ID',
 		name: 'orderId',
@@ -830,7 +832,7 @@ export const orderFields: INodeProperties[] = [
 				name: 'email',
 				type: 'string',
 				default: '',
-				description: 'The customer\'s email address',
+				description: `The customer's email address.`,
 			},
 			{
 				displayName: 'Location ID',
@@ -840,7 +842,7 @@ export const orderFields: INodeProperties[] = [
 					loadOptionsMethod: 'getLocations',
 				},
 				default: '',
-				description: 'The ID of the physical location where the order was processed',
+				description: 'The ID of the physical location where the order was processed.',
 			},
 			{
 				displayName: 'Note',
@@ -850,17 +852,18 @@ export const orderFields: INodeProperties[] = [
 					alwaysOpenEditWindow: true,
 				},
 				default: '',
-				description: 'An optional note that a shop owner can attach to the order',
+				description: 'An optional note that a shop owner can attach to the order.',
 			},
 			{
 				displayName: 'Shipping Address',
 				name: 'shippingAddressUi',
 				placeholder: 'Add Shipping',
 				type: 'fixedCollection',
-				default: {},
+				default: '',
 				typeOptions: {
 					multipleValues: false,
 				},
+				description: 'Shipping Address',
 				options: [
 					{
 						name: 'shippingAddressValues',
@@ -935,15 +938,15 @@ export const orderFields: INodeProperties[] = [
 				name: 'sourceName',
 				type: 'string',
 				default: '',
-				description: 'Where the order originated. Can be set only during order creation, and is not writeable afterwards.',
+				description: 'Where the order originated. Can be set only during order creation, and is not writeable afterwards',
 			},
 			{
 				displayName: 'Tags',
 				name: 'tags',
 				type: 'string',
 				default: '',
-				description: 'Tags attached to the order, formatted as a string of comma-separated values',
+				description: 'Tags attached to the order, formatted as a string of comma-separated values.',
 			},
 		],
 	},
-];
+] as INodeProperties[];

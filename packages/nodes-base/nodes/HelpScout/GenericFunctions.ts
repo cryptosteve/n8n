@@ -1,16 +1,12 @@
+import { OptionsWithUri } from 'request';
 import {
-	OptionsWithUri,
-} from 'request';
-
-import {
+	IHookFunctions,
 	IExecuteFunctions,
 	IExecuteSingleFunctions,
-	IHookFunctions,
 	ILoadOptionsFunctions,
 } from 'n8n-core';
-
 import {
-	IDataObject, NodeApiError,
+	IDataObject,
 } from 'n8n-workflow';
 
 import {
@@ -26,7 +22,7 @@ export async function helpscoutApiRequest(this: IExecuteFunctions | IExecuteSing
 		body,
 		qs,
 		uri: uri || `https://api.helpscout.net${resource}`,
-		json: true,
+		json: true
 	};
 	try {
 		if (Object.keys(option).length !== 0) {
@@ -38,11 +34,21 @@ export async function helpscoutApiRequest(this: IExecuteFunctions | IExecuteSing
 		//@ts-ignore
 		return await this.helpers.requestOAuth2.call(this, 'helpScoutOAuth2Api', options);
 	} catch (error) {
-		throw new NodeApiError(this.getNode(), error);
+		if (error.response && error.response.body
+		&&	error.response.body._embedded
+		&&	error.response.body._embedded.errors) {
+			// Try to return the error prettier
+			//@ts-ignore
+			throw new Error(`HelpScout error response [${error.statusCode}]: ${error.response.body.message} - ${error.response.body._embedded.errors.map(error => {
+				return `${error.path} ${error.message}`;
+			}).join('-')}`);
+		}
+
+		throw new Error(`HelpScout error response [${error.statusCode}]: ${error.message}`);
 	}
 }
 
-export async function helpscoutApiRequestAllItems(this: IExecuteFunctions | ILoadOptionsFunctions | IHookFunctions, propertyName: string, method: string, endpoint: string, body: any = {}, query: IDataObject = {}): Promise<any> { // tslint:disable-line:no-any
+export async function helpscoutApiRequestAllItems(this: IExecuteFunctions | ILoadOptionsFunctions | IHookFunctions, propertyName: string ,method: string, endpoint: string, body: any = {}, query: IDataObject = {}): Promise<any> { // tslint:disable-line:no-any
 
 	const returnData: IDataObject[] = [];
 

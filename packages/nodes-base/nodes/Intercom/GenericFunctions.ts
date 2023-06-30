@@ -2,17 +2,20 @@ import { OptionsWithUri } from 'request';
 
 import {
 	IExecuteFunctions,
-	IExecuteSingleFunctions,
 	IHookFunctions,
 	ILoadOptionsFunctions,
+	IExecuteSingleFunctions
 } from 'n8n-core';
 
 import {
-	IDataObject, NodeApiError, NodeOperationError,
+	IDataObject,
 } from 'n8n-workflow';
 
 export async function intercomApiRequest(this: IHookFunctions | IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions, endpoint: string, method: string, body: any = {}, query?: IDataObject, uri?: string): Promise<any> { // tslint:disable-line:no-any
-	const credentials = await this.getCredentials('intercomApi');
+	const credentials = this.getCredentials('intercomApi');
+	if (credentials === undefined) {
+		throw new Error('No credentials got returned!');
+	}
 
 	const headerWithAuthentication = Object.assign({},
 		{ Authorization: `Bearer ${credentials.apiKey}`, Accept: 'application/json' });
@@ -23,13 +26,18 @@ export async function intercomApiRequest(this: IHookFunctions | IExecuteFunction
 		qs: query,
 		uri: uri || `https://api.intercom.io${endpoint}`,
 		body,
-		json: true,
+		json: true
 	};
 
 	try {
 		return await this.helpers.request!(options);
 	} catch (error) {
-		throw new NodeApiError(this.getNode(), error);
+		const errorMessage = error.response.body.message || error.response.body.Message;
+
+		if (errorMessage !== undefined) {
+			throw errorMessage;
+		}
+		throw error.response.body;
 	}
 }
 

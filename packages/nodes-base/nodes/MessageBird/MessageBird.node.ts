@@ -1,13 +1,12 @@
 import {
 	IExecuteFunctions,
-} from 'n8n-core';
+ } from 'n8n-core';
 
 import {
 	IDataObject,
+	INodeTypeDescription,
 	INodeExecutionData,
 	INodeType,
-	INodeTypeDescription,
-	NodeOperationError,
 } from 'n8n-workflow';
 
 import {
@@ -18,13 +17,14 @@ export class MessageBird implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'MessageBird',
 		name: 'messageBird',
-		icon: 'file:messagebird.svg',
+		icon: 'file:messagebird.png',
 		group: ['output'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Sends SMS via MessageBird',
+		description: 'Sending SMS',
 		defaults: {
 			name: 'MessageBird',
+			color: '#2481d7',
 		},
 		inputs: ['main'],
 		outputs: ['main'],
@@ -43,10 +43,6 @@ export class MessageBird implements INodeType {
 					{
 						name: 'SMS',
 						value: 'sms',
-					},
-					{
-						name: 'Balance',
-						value: 'balance',
 					},
 				],
 				default: 'sms',
@@ -73,27 +69,6 @@ export class MessageBird implements INodeType {
 				default: 'send',
 				description: 'The operation to perform.',
 			},
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				displayOptions: {
-					show: {
-						resource: [
-							'balance',
-						],
-					},
-				},
-				options: [
-					{
-						name: 'Get',
-						value: 'get',
-						description: 'Get the balance',
-					},
-				],
-				default: 'get',
-				description: 'The operation to perform.',
-			},
 
 			// ----------------------------------
 			//         sms:send
@@ -115,7 +90,7 @@ export class MessageBird implements INodeType {
 						],
 					},
 				},
-				description: 'The number from which to send the message',
+				description: 'The number from which to send the message.',
 			},
 			{
 				displayName: 'To',
@@ -134,7 +109,7 @@ export class MessageBird implements INodeType {
 						],
 					},
 				},
-				description: 'All recipients separated by commas',
+				description: 'All recipients separated by commas.',
 			},
 			{
 				displayName: 'Message',
@@ -152,22 +127,12 @@ export class MessageBird implements INodeType {
 						],
 					},
 				},
-				description: 'The message to be send',
+				description: 'The message to be send.',
 			},
 			{
 				displayName: 'Additional Fields',
 				name: 'additionalFields',
 				type: 'collection',
-				displayOptions: {
-					show: {
-						operation: [
-							'send',
-						],
-						resource: [
-							'sms',
-						],
-					},
-				},
 				placeholder: 'Add Fields',
 				default: {},
 				options: [
@@ -176,7 +141,7 @@ export class MessageBird implements INodeType {
 						name: 'createdDatetime',
 						type: 'dateTime',
 						default: '',
-						description: 'The date and time of the creation of the message in RFC3339 format (Y-m-dTH:i:sP)',
+						description: 'The date and time of the creation of the message in RFC3339 format (Y-m-dTH:i:sP).',
 					},
 					{
 						displayName: 'Datacoding',
@@ -197,14 +162,14 @@ export class MessageBird implements INodeType {
 							},
 						],
 						default: '',
-						description: 'Using unicode will limit the maximum number of characters to 70 instead of 160',
+						description: 'Using unicode will limit the maximum number of characters to 70 instead of 160.',
 					},
 					{
 						displayName: 'Gateway',
 						name: 'gateway',
 						type: 'number',
 						default: '',
-						description: 'The SMS route that is used to send the message',
+						description: 'The SMS route that is used to send the message.',
 					},
 					{
 						displayName: 'Group IDs',
@@ -212,7 +177,7 @@ export class MessageBird implements INodeType {
 						placeholder: '1,2',
 						type: 'string',
 						default: '',
-						description: 'Group IDs separated by commas, If provided recipients can be omitted',
+						description: 'Group IDs separated by commas, If provided recipients can be omitted.',
 					},
 					{
 						displayName: 'Message Type',
@@ -237,21 +202,21 @@ export class MessageBird implements INodeType {
 						name: 'reference',
 						type: 'string',
 						default: '',
-						description: 'A client reference',
+						description: 'A client reference.',
 					},
 					{
 						displayName: 'Report Url',
 						name: 'reportUrl',
 						type: 'string',
 						default: '',
-						description: 'The status report URL to be used on a per-message basis. Reference is required for a status report webhook to be sent.',
+						description: 'The status report URL to be used on a per-message basis.<br /> Reference is required for a status report webhook to be sent.',
 					},
 					{
 						displayName: 'Scheduled Date-time',
 						name: 'scheduledDatetime',
 						type: 'dateTime',
 						default: '',
-						description: 'The scheduled date and time of the message in RFC3339 format (Y-m-dTH:i:sP)',
+						description: 'The scheduled date and time of the message in RFC3339 format (Y-m-dTH:i:sP).',
 					},
 					{
 						displayName: 'Type',
@@ -272,14 +237,14 @@ export class MessageBird implements INodeType {
 							},
 						],
 						default: '',
-						description: 'The type of message. Values can be: sms, binary, or flash.',
+						description: 'The type of message.<br /> Values can be: sms, binary, or flash.',
 					},
 					{
 						displayName: 'Type Details',
 						name: 'typeDetails',
 						type: 'string',
 						default: '',
-						description: 'A hash with extra information. Is only used when a binary message is sent.',
+						description: 'A hash with extra information.<br /> Is only used when a binary message is sent.',
 					},
 					{
 						displayName: 'Validity',
@@ -289,7 +254,7 @@ export class MessageBird implements INodeType {
 						typeOptions: {
 							minValue: 1,
 						},
-						description: 'The amount of seconds that the message is valid',
+						description: 'The amount of seconds that the message is valid.',
 					},
 				],
 			},
@@ -304,109 +269,94 @@ export class MessageBird implements INodeType {
 		let resource: string;
 
 		// For POST
-		let bodyRequest: IDataObject = {};
+		let bodyRequest: IDataObject;
 		// For Query string
 		let qs: IDataObject;
 
 		let requestMethod;
-		let requestPath;
 
 		for (let i = 0; i < items.length; i++) {
 			qs = {};
-			try {
-				resource = this.getNodeParameter('resource', i) as string;
-				operation = this.getNodeParameter('operation', i) as string;
 
-				if (resource === 'sms') {
-					//https://developers.messagebird.com/api/sms-messaging/#sms-api
-					if (operation === 'send') {
-						// ----------------------------------
-						//         sms:send
-						// ----------------------------------
+			resource = this.getNodeParameter('resource', i) as string;
+			operation = this.getNodeParameter('operation', i) as string;
 
-						requestMethod = 'POST';
-						requestPath = '/messages';
-						const originator = this.getNodeParameter('originator', i) as string;
-						const body = this.getNodeParameter('message', i) as string;
+			if (resource === 'sms') {
+				//https://developers.messagebird.com/api/sms-messaging/#sms-api
+				if (operation === 'send') {
+					// ----------------------------------
+					//         sms:send
+					// ----------------------------------
 
-						bodyRequest = {
-							recipients: [],
-							originator,
-							body,
-						};
-						const additionalFields = this.getNodeParameter(
-							'additionalFields',
-							i,
-						) as IDataObject;
+					requestMethod = 'POST';
+					const originator = this.getNodeParameter('originator', i) as string;
+					const body = this.getNodeParameter('message', i) as string;
 
-						if (additionalFields.groupIds) {
-							bodyRequest.groupIds = additionalFields.groupIds as string;
-						}
-						if (additionalFields.type) {
-							bodyRequest.type = additionalFields.type as string;
-						}
-						if (additionalFields.reference) {
-							bodyRequest.reference = additionalFields.reference as string;
-						}
-						if (additionalFields.reportUrl) {
-							bodyRequest.reportUrl = additionalFields.reportUrl as string;
-						}
-						if (additionalFields.validity) {
-							bodyRequest.validity = additionalFields.reportUrl as number;
-						}
-						if (additionalFields.gateway) {
-							bodyRequest.gateway = additionalFields.gateway as string;
-						}
-						if (additionalFields.typeDetails) {
-							bodyRequest.typeDetails = additionalFields.typeDetails as string;
-						}
-						if (additionalFields.datacoding) {
-							bodyRequest.datacoding = additionalFields.datacoding as string;
-						}
-						if (additionalFields.mclass) {
-							bodyRequest.mclass = additionalFields.mclass as number;
-						}
-						if (additionalFields.scheduledDatetime) {
-							bodyRequest.scheduledDatetime = additionalFields.scheduledDatetime as string;
-						}
-						if (additionalFields.createdDatetime) {
-							bodyRequest.createdDatetime = additionalFields.createdDatetime as string;
-						}
+					bodyRequest = {
+						recipients: [],
+						originator,
+						body
+					};
+					const additionalFields = this.getNodeParameter(
+						'additionalFields',
+						i
+					) as IDataObject;
 
-						const receivers = this.getNodeParameter('recipients', i) as string;
-						bodyRequest.recipients = receivers.split(',').map(item => {
-
-							return parseInt(item, 10);
-						});
+					if (additionalFields.groupIds) {
+						bodyRequest.groupIds = additionalFields.groupIds as string;
 					}
-					else {
-						throw new NodeOperationError(this.getNode(), `The operation "${operation}" is not known!`);
+					if (additionalFields.type) {
+						bodyRequest.type = additionalFields.type as string;
+					}
+					if (additionalFields.reference) {
+						bodyRequest.reference = additionalFields.reference as string;
+					}
+					if (additionalFields.reportUrl) {
+						bodyRequest.reportUrl = additionalFields.reportUrl as string;
+					}
+					if (additionalFields.validity) {
+						bodyRequest.validity = additionalFields.reportUrl as number;
+					}
+					if (additionalFields.gateway) {
+						bodyRequest.gateway = additionalFields.gateway as string;
+					}
+					if (additionalFields.typeDetails) {
+						bodyRequest.typeDetails = additionalFields.typeDetails as string;
+					}
+					if (additionalFields.datacoding) {
+						bodyRequest.datacoding = additionalFields.datacoding as string;
+					}
+					if (additionalFields.mclass) {
+						bodyRequest.mclass = additionalFields.mclass as number;
+					}
+					if (additionalFields.scheduledDatetime) {
+						bodyRequest.scheduledDatetime = additionalFields.scheduledDatetime as string;
+					}
+					if (additionalFields.createdDatetime) {
+						bodyRequest.createdDatetime = additionalFields.createdDatetime as string;
 					}
 
-				} else if (resource === 'balance') {
-					requestMethod = 'GET';
-					requestPath = '/balance';
-				}
-				else {
-					throw new NodeOperationError(this.getNode(), `The resource "${resource}" is not known!`);
-				}
+					const receivers = this.getNodeParameter('recipients', i) as string;
 
-				const responseData = await messageBirdApiRequest.call(
-					this,
-					requestMethod,
-					requestPath,
-					bodyRequest,
-					qs,
-				);
-
-				returnData.push(responseData as IDataObject);
-			} catch (error) {
-				if (this.continueOnFail()) {
-					returnData.push({ error: error.message });
-					continue;
+					bodyRequest.recipients = receivers.split(',').map(item => {
+						return parseInt(item, 10);
+					});
+				} else {
+					throw new Error(`The operation "${operation}" is not known!`);
 				}
-				throw error;
+			} else {
+				throw new Error(`The resource "${resource}" is not known!`);
 			}
+
+			const responseData = await messageBirdApiRequest.call(
+				this,
+				requestMethod,
+				'/messages',
+				bodyRequest,
+				qs
+			);
+
+			returnData.push(responseData as IDataObject);
 		}
 
 		return [this.helpers.returnJsonArray(returnData)];

@@ -1,8 +1,8 @@
 import {
 	INodeProperties,
-} from 'n8n-workflow';
+ } from 'n8n-workflow';
 
-export const ticketOperations: INodeProperties[] = [
+export const ticketOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -36,11 +36,6 @@ export const ticketOperations: INodeProperties[] = [
 				description: 'Get all tickets',
 			},
 			{
-				name: 'Recover',
-				value: 'recover',
-				description: 'Recover a suspended ticket',
-			},
-			{
 				name: 'Update',
 				value: 'update',
 				description: 'Update a ticket',
@@ -49,13 +44,13 @@ export const ticketOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const ticketFields: INodeProperties[] = [
+export const ticketFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                ticket:create                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                ticket:create                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Description',
 		name: 'description',
@@ -82,6 +77,7 @@ export const ticketFields: INodeProperties[] = [
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				resource: [
@@ -142,7 +138,7 @@ export const ticketFields: INodeProperties[] = [
 								name: 'value',
 								type: 'string',
 								default: '',
-								description: 'Custom field Value',
+								description: 'Custom field Value.',
 							},
 						],
 					},
@@ -153,7 +149,7 @@ export const ticketFields: INodeProperties[] = [
 				name: 'externalId',
 				type: 'string',
 				default: '',
-				description: 'An ID you can use to link Zendesk Support tickets to local records',
+				description: 'An id you can use to link Zendesk Support tickets to local records',
 			},
 			{
 				displayName: 'Group',
@@ -178,20 +174,12 @@ export const ticketFields: INodeProperties[] = [
 				type: 'options',
 				options: [
 					{
-						name: 'Closed',
-						value: 'closed',
+						name: 'Open',
+						value: 'open',
 					},
 					{
 						name: 'New',
 						value: 'new',
-					},
-					{
-						name: 'On-hold',
-						value: 'hold',
-					},
-					{
-						name: 'Open',
-						value: 'open',
 					},
 					{
 						name: 'Pending',
@@ -200,6 +188,10 @@ export const ticketFields: INodeProperties[] = [
 					{
 						name: 'Solved',
 						value: 'solved',
+					},
+					{
+						name: 'Closed',
+						value: 'closed',
 					},
 				],
 				default: '',
@@ -270,12 +262,12 @@ export const ticketFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Object of values to set as described <a href="https://developer.zendesk.com/rest_api/docs/support/tickets">here</a>',
+		description: `Object of values to set as described <a href="https://developer.zendesk.com/rest_api/docs/support/tickets" target="_blank">here</a>.`,
 	},
 
-	/* -------------------------------------------------------------------------- */
-	/*                                ticket:update                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                ticket:update                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Ticket ID',
 		name: 'id',
@@ -292,16 +284,18 @@ export const ticketFields: INodeProperties[] = [
 				],
 			},
 		},
+		description: 'Ticket ID',
 	},
 	{
 		displayName: 'JSON Parameters',
 		name: 'jsonParameters',
 		type: 'boolean',
 		default: false,
+		description: '',
 		displayOptions: {
 			show: {
 				resource: [
-					'ticket',
+					'ticket'
 				],
 				operation: [
 					'update',
@@ -329,13 +323,6 @@ export const ticketFields: INodeProperties[] = [
 			},
 		},
 		options: [
-			{
-				displayName: 'Assignee Email',
-				name: 'assigneeEmail',
-				type: 'string',
-				default: '',
-				description: 'The e-mail address of the assignee',
-			},
 			{
 				displayName: 'Custom Fields',
 				name: 'customFieldsUi',
@@ -365,7 +352,7 @@ export const ticketFields: INodeProperties[] = [
 								name: 'value',
 								type: 'string',
 								default: '',
-								description: 'Custom field Value',
+								description: 'Custom field Value.',
 							},
 						],
 					},
@@ -376,7 +363,7 @@ export const ticketFields: INodeProperties[] = [
 				name: 'externalId',
 				type: 'string',
 				default: '',
-				description: 'An ID you can use to link Zendesk Support tickets to local records',
+				description: 'An id you can use to link Zendesk Support tickets to local records',
 			},
 			{
 				displayName: 'Group',
@@ -387,20 +374,6 @@ export const ticketFields: INodeProperties[] = [
 				},
 				default: '',
 				description: 'The group this ticket is assigned to',
-			},
-			{
-				displayName: 'Internal Note',
-				name: 'internalNote',
-				type: 'string',
-				default: '',
-				description: 'Internal Ticket Note (Accepts HTML)',
-			},
-			{
-				displayName: 'Public Reply',
-				name: 'publicReply',
-				type: 'string',
-				default: '',
-				description: 'Public ticket reply',
 			},
 			{
 				displayName: 'Recipient',
@@ -415,20 +388,12 @@ export const ticketFields: INodeProperties[] = [
 				type: 'options',
 				options: [
 					{
-						name: 'Closed',
-						value: 'closed',
+						name: 'Open',
+						value: 'open',
 					},
 					{
 						name: 'New',
 						value: 'new',
-					},
-					{
-						name: 'On-hold',
-						value: 'hold',
-					},
-					{
-						name: 'Open',
-						value: 'open',
 					},
 					{
 						name: 'Pending',
@@ -437,6 +402,10 @@ export const ticketFields: INodeProperties[] = [
 					{
 						name: 'Solved',
 						value: 'solved',
+					},
+					{
+						name: 'Closed',
+						value: 'closed',
 					},
 				],
 				default: '',
@@ -507,40 +476,12 @@ export const ticketFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Object of values to update as described <a href="https://developer.zendesk.com/rest_api/docs/support/tickets">here</a>',
+		description: `Object of values to update as described <a href="https://developer.zendesk.com/rest_api/docs/support/tickets" target="_blank">here</a>.`,
 	},
-	{
-		displayName: 'Ticket Type',
-		name: 'ticketType',
-		type: 'options',
-		options: [
-			{
-				name: 'Regular',
-				value: 'regular',
-			},
-			{
-				name: 'Suspended',
-				value: 'suspended',
-			},
-		],
-		default: 'regular',
-		required: true,
-		displayOptions: {
-			show: {
-				resource: [
-					'ticket',
-				],
-				operation: [
-					'get',
-					'delete',
-					'getAll',
-				],
-			},
-		},
-	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 ticket:get                                 */
-	/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                 ticket:get                                 */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Ticket ID',
 		name: 'id',
@@ -555,36 +496,13 @@ export const ticketFields: INodeProperties[] = [
 				operation: [
 					'get',
 				],
-				ticketType: [
-					'regular',
-				],
-			},
-		},
-	},
-	{
-		displayName: 'Suspended Ticket ID',
-		name: 'id',
-		type: 'string',
-		default: '',
-		required: true,
-		displayOptions: {
-			show: {
-				resource: [
-					'ticket',
-				],
-				operation: [
-					'get',
-				],
-				ticketType: [
-					'suspended',
-				],
 			},
 		},
 		description: 'Ticket ID',
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                   ticket:getAll                            */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                   ticket:getAll                            */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Return All',
 		name: 'returnAll',
@@ -600,7 +518,7 @@ export const ticketFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -624,7 +542,7 @@ export const ticketFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 100,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -643,37 +561,6 @@ export const ticketFields: INodeProperties[] = [
 			},
 		},
 		options: [
-			{
-				displayName: 'Group',
-				name: 'group',
-				type: 'options',
-				typeOptions: {
-					loadOptionsMethod: 'getGroups',
-				},
-				displayOptions: {
-					show: {
-						'/ticketType': [
-							'regular',
-						],
-					},
-				},
-				default: '',
-				description: 'The group to search',
-			},
-			{
-				displayName: 'Query',
-				name: 'query',
-				type: 'string',
-				displayOptions: {
-					show: {
-						'/ticketType': [
-							'regular',
-						],
-					},
-				},
-				default: '',
-				description: '<a href="https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#syntax-examples">Query syntax</a> to search tickets',
-			},
 			{
 				displayName: 'Sort By',
 				name: 'sortBy',
@@ -709,43 +596,29 @@ export const ticketFields: INodeProperties[] = [
 				type: 'options',
 				options: [
 					{
-						name: 'Ascending',
+						name: 'Asc',
 						value: 'asc',
 					},
 					{
-						name: 'Descending',
+						name: 'Desc',
 						value: 'desc',
 					},
 				],
-				default: 'asc',
+				default: 'desc',
+				description: 'Sort order',
 			},
 			{
 				displayName: 'Status',
 				name: 'status',
 				type: 'options',
-				displayOptions: {
-					show: {
-						'/ticketType': [
-							'regular',
-						],
-					},
-				},
 				options: [
 					{
-						name: 'Closed',
-						value: 'closed',
+						name: 'Open',
+						value: 'open',
 					},
 					{
 						name: 'New',
 						value: 'new',
-					},
-					{
-						name: 'On-hold',
-						value: 'hold',
-					},
-					{
-						name: 'Open',
-						value: 'open',
 					},
 					{
 						name: 'Pending',
@@ -755,6 +628,10 @@ export const ticketFields: INodeProperties[] = [
 						name: 'Solved',
 						value: 'solved',
 					},
+					{
+						name: 'Closed',
+						value: 'closed',
+					},
 				],
 				default: '',
 				description: 'The state of the ticket',
@@ -762,9 +639,9 @@ export const ticketFields: INodeProperties[] = [
 		],
 	},
 
-	/* -------------------------------------------------------------------------- */
-	/*                                ticket:delete                               */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                ticket:delete                               */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Ticket ID',
 		name: 'id',
@@ -779,51 +656,8 @@ export const ticketFields: INodeProperties[] = [
 				operation: [
 					'delete',
 				],
-				ticketType: [
-					'regular',
-				],
-			},
-		},
-	},
-	{
-		displayName: 'Suspended Ticket ID',
-		name: 'id',
-		type: 'string',
-		default: '',
-		required: true,
-		displayOptions: {
-			show: {
-				resource: [
-					'ticket',
-				],
-				operation: [
-					'delete',
-				],
-				ticketType: [
-					'suspended',
-				],
 			},
 		},
 		description: 'Ticket ID',
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                ticket:recover                              */
-	/* -------------------------------------------------------------------------- */
-	{
-		displayName: 'Suspended Ticket ID',
-		name: 'id',
-		type: 'string',
-		default: '',
-		required: true,
-		displayOptions: {
-			show: {
-				resource: [
-					'ticket',
-				],
-				operation: [
-					'recover',
-				],
-			},
-		},
-	},
-];
+] as INodeProperties[];

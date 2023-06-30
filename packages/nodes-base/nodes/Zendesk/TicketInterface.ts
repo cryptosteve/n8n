@@ -4,8 +4,6 @@ import {
 
  export interface IComment {
 	body?: string;
-	html_body?: string;
-	public?: boolean;
 }
 
 export interface ITicket {
@@ -18,5 +16,4 @@ export interface ITicket {
 	status?: string;
 	recipient?: string;
 	custom_fields?: IDataObject[];
-	assignee_email?: string;
 }

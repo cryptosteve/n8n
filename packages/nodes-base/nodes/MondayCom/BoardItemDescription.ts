@@ -2,7 +2,7 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export const boardItemOperations: INodeProperties[] = [
+export const boardItemOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -18,7 +18,7 @@ export const boardItemOperations: INodeProperties[] = [
 			{
 				name: 'Add Update',
 				value: 'addUpdate',
-				description: 'Add an update to an item',
+				description: `Add an update to an item.`,
 			},
 			{
 				name: 'Change Column Value',
@@ -33,12 +33,12 @@ export const boardItemOperations: INodeProperties[] = [
 			{
 				name: 'Create',
 				value: 'create',
-				description: 'Create an item in a board\'s group',
+				description: `Create an item in a board's group`,
 			},
 			{
 				name: 'Delete',
 				value: 'delete',
-				description: 'Delete an item',
+				description: `Delete an item`,
 			},
 			{
 				name: 'Get',
@@ -48,29 +48,24 @@ export const boardItemOperations: INodeProperties[] = [
 			{
 				name: 'Get All',
 				value: 'getAll',
-				description: 'Get all items',
+				description: 'Get all item',
 			},
 			{
 				name: 'Get By Column Value',
 				value: 'getByColumnValue',
 				description: 'Get items by column value',
 			},
-			{
-				name: 'Move',
-				value: 'move',
-				description: 'Move item to group',
-			},
 		],
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const boardItemFields: INodeProperties[] = [
+export const boardItemFields = [
 
-	/* -------------------------------------------------------------------------- */
-	/*                                 boardItem:addUpdate                         */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 boardItem:addUpdate                         */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Item ID',
 		name: 'itemId',
@@ -87,7 +82,7 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The unique identifier of the item to add update to',
+		description: 'The unique identifier of the item to add update to.',
 	},
 	{
 		displayName: 'Update Text',
@@ -105,11 +100,11 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The update text to add',
+		description: 'The update text to add.',
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 boardItem:changeColumnValue                */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 boardItem:changeColumnValue                */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Board ID',
 		name: 'boardId',
@@ -129,7 +124,7 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The unique identifier of the board',
+		description: 'The unique identifier of the board.',
 	},
 	{
 		displayName: 'Item ID',
@@ -147,7 +142,7 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The unique identifier of the item to to change column of',
+		description: 'The unique identifier of the item to to change column of.',
 	},
 	{
 		displayName: 'Column ID',
@@ -156,7 +151,7 @@ export const boardItemFields: INodeProperties[] = [
 		typeOptions: {
 			loadOptionsMethod: 'getColumns',
 			loadOptionsDependsOn: [
-				'boardId',
+				'boardId'
 			],
 		},
 		default: '',
@@ -171,7 +166,7 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The column\'s unique identifier',
+		description: `The column's unique identifier.`,
 	},
 	{
 		displayName: 'Value',
@@ -189,11 +184,11 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The column value in JSON format. Documentation can be found <a href="https://monday.com/developers/v2#mutations-section-columns-change-column-value">here</a>.',
+		description: 'The column value in JSON format. Documentation can be found <a href="https://monday.com/developers/v2#mutations-section-columns-change-column-value" target="_blank">here</a>.',
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 boardItem:changeMultipleColumnValues       */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 boardItem:changeMultipleColumnValues       */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Board ID',
 		name: 'boardId',
@@ -213,7 +208,7 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The unique identifier of the board',
+		description: 'The unique identifier of the board.',
 	},
 	{
 		displayName: 'Item ID',
@@ -231,7 +226,7 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Item\'s ID',
+		description: `Item's ID`
 	},
 	{
 		displayName: 'Column Values',
@@ -249,14 +244,14 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The column fields and values in JSON format. Documentation can be found <a href="https://monday.com/developers/v2#mutations-section-columns-change-multiple-column-values">here</a>.',
+		description: 'The column fields and values in JSON format. Documentation can be found <a href="https://monday.com/developers/v2#mutations-section-columns-change-multiple-column-values" target="_blank">here</a>.',
 		typeOptions: {
 			alwaysOpenEditWindow: true,
 		},
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 boardItem:create                           */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 boardItem:create                           */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Board ID',
 		name: 'boardId',
@@ -285,7 +280,7 @@ export const boardItemFields: INodeProperties[] = [
 		typeOptions: {
 			loadOptionsMethod: 'getGroups',
 			loadOptionsDependsOn: [
-				'boardId',
+				'boardId'
 			],
 		},
 		required: true,
@@ -316,7 +311,7 @@ export const boardItemFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The new item\'s name',
+		description: `The new item's name.`,
 	},
 	{
 		displayName: 'Additional Fields',
@@ -347,9 +342,9 @@ export const boardItemFields: INodeProperties[] = [
 			},
 		],
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 boardItem:delete                           */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 boardItem:delete                           */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Item ID',
 		name: 'itemId',
@@ -366,11 +361,11 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Item\'s ID',
+		description: `Item's ID`
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 boardItem:get                              */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 boardItem:get                              */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Item ID',
 		name: 'itemId',
@@ -387,11 +382,11 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Item\'s ID (Multiple can be added separated by comma)',
+		description: `Item's ID (Multiple can be added separated by comma)`
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 boardItem:getAll                           */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 boardItem:getAll                           */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Board ID',
 		name: 'boardId',
@@ -450,7 +445,7 @@ export const boardItemFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -474,11 +469,11 @@ export const boardItemFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 boardItem:getByColumnValue                 */
-	/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 boardItem:getByColumnValue                 */
+/* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Board ID',
 		name: 'boardId',
@@ -498,7 +493,7 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The unique identifier of the board',
+		description: 'The unique identifier of the board.',
 	},
 	{
 		displayName: 'Column ID',
@@ -507,7 +502,7 @@ export const boardItemFields: INodeProperties[] = [
 		typeOptions: {
 			loadOptionsMethod: 'getColumns',
 			loadOptionsDependsOn: [
-				'boardId',
+				'boardId'
 			],
 		},
 		default: '',
@@ -522,7 +517,7 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The column\'s unique identifier',
+		description: `The column's unique identifier.`,
 	},
 	{
 		displayName: 'Column Value',
@@ -540,7 +535,7 @@ export const boardItemFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The column value to search items by',
+		description: 'The column value to search items by.'
 	},
 	{
 		displayName: 'Return All',
@@ -557,7 +552,7 @@ export const boardItemFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -581,70 +576,6 @@ export const boardItemFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
-	/* -------------------------------------------------------------------------- */
-	/*                                 boardItem:move                             */
-	/* -------------------------------------------------------------------------- */
-	{
-		displayName: 'Board ID',
-		name: 'boardId',
-		type: 'options',
-		typeOptions: {
-			loadOptionsMethod: 'getBoards',
-		},
-		default: '',
-		required: true,
-		displayOptions: {
-			show: {
-				resource: [
-					'boardItem',
-				],
-				operation: [
-					'move',
-				],
-			},
-		},
-	},
-	{
-		displayName: 'Item ID',
-		name: 'itemId',
-		type: 'string',
-		required: true,
-		displayOptions: {
-			show: {
-				operation: [
-					'move',
-				],
-				resource: [
-					'boardItem',
-				],
-			},
-		},
-		default: '',
-		description: 'The item\'s ID',
-	},
-	{
-		displayName: 'Group ID',
-		name: 'groupId',
-		type: 'options',
-		default: '',
-		typeOptions: {
-			loadOptionsMethod: 'getGroups',
-			loadOptionsDependsOn: [
-				'boardId',
-			],
-		},
-		required: true,
-		displayOptions: {
-			show: {
-				resource: [
-					'boardItem',
-				],
-				operation: [
-					'move',
-				],
-			},
-		},
-	},
-];
+] as INodeProperties[];

@@ -1,67 +1,62 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 export class OAuth1Api implements ICredentialType {
 	name = 'oAuth1Api';
 	displayName = 'OAuth1 API';
-	documentationUrl = 'httpRequest';
-	properties: INodeProperties[] = [
-		{
-			displayName: 'Authorization URL',
-			name: 'authUrl',
-			type: 'string',
-			default: '',
-			required: true,
-		},
-		{
-			displayName: 'Access Token URL',
-			name: 'accessTokenUrl',
-			type: 'string',
-			default: '',
-			required: true,
-		},
+	properties = [
 		{
 			displayName: 'Consumer Key',
 			name: 'consumerKey',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 			required: true,
 		},
 		{
 			displayName: 'Consumer Secret',
 			name: 'consumerSecret',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 			required: true,
 		},
 		{
 			displayName: 'Request Token URL',
 			name: 'requestTokenUrl',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
+			default: '',
+			required: true,
+		},
+		{
+			displayName: 'Authorization URL',
+			name: 'authUrl',
+			type: 'string' as NodePropertyTypes,
+			default: '',
+			required: true,
+		},
+		{
+			displayName: 'Access Token URL',
+			name: 'accessTokenUrl',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 			required: true,
 		},
 		{
 			displayName: 'Signature Method',
 			name: 'signatureMethod',
-			type: 'options',
+			type: 'options' as NodePropertyTypes,
 			options: [
 				{
 					name: 'HMAC-SHA1',
-					value: 'HMAC-SHA1',
+					value: 'HMAC-SHA1'
 				},
 				{
 					name: 'HMAC-SHA256',
-					value: 'HMAC-SHA256',
-				},
-				{
-					name: 'HMAC-SHA512',
-					value: 'HMAC-SHA512',
+					value: 'HMAC-SHA256'
 				},
 			],
-			default: 'HMAC-SHA1',
+			default: '',
 			required: true,
 		},
 	];

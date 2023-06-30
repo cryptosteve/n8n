@@ -2,7 +2,7 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export const folderOperations: INodeProperties[] = [
+export const folderOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -34,9 +34,9 @@ export const folderOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const folderFields: INodeProperties[] = [
+export const folderFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                folder:create                               */
@@ -97,7 +97,7 @@ export const folderFields: INodeProperties[] = [
 				name: 'parentFolderKey',
 				type: 'string',
 				default: '',
-				description: 'Parent folder you want to create the folder in',
+				description: 'Parent folder you want to create the folder in'
 			},
 			{
 				displayName: 'Requester Pays',
@@ -141,7 +141,7 @@ export const folderFields: INodeProperties[] = [
 					},
 				],
 				default: 'standard',
-				description: 'Amazon S3 storage classes',
+				description: 'Amazon S3 storage classes.'
 			},
 		],
 	},
@@ -217,7 +217,7 @@ export const folderFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -241,7 +241,7 @@ export const folderFields: INodeProperties[] = [
 			maxValue: 500,
 		},
 		default: 100,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
 	{
 		displayName: 'Options',
@@ -265,7 +265,7 @@ export const folderFields: INodeProperties[] = [
 				name: 'fetchOwner',
 				type: 'boolean',
 				default: false,
-				description: 'The owner field is not present in listV2 by default, if you want to return owner field with each key in the result then set the fetch owner field to true',
+				description: 'The owner field is not present in listV2 by default, if you want to return owner field with each key in the result then set the fetch owner field to true.',
 			},
 			{
 				displayName: 'Folder Key',
@@ -275,4 +275,4 @@ export const folderFields: INodeProperties[] = [
 			},
 		],
 	},
-];
+] as INodeProperties[];

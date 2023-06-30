@@ -1,8 +1,6 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import { INodeProperties } from 'n8n-workflow';
 
-export const folderOperations: INodeProperties[] = [
+export const folderOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -21,11 +19,6 @@ export const folderOperations: INodeProperties[] = [
 				description: 'Create a folder',
 			},
 			{
-				name: 'Delete',
-				value: 'delete',
-				description: 'Delete a folder',
-			},
-			{
 				name: 'Get Children',
 				value: 'getChildren',
 				description: 'Get items inside a folder',
@@ -35,18 +28,13 @@ export const folderOperations: INodeProperties[] = [
 				value: 'search',
 				description: 'Search a folder',
 			},
-			{
-				name: 'Share',
-				value: 'share',
-				description: 'Share a folder',
-			},
 		],
 		default: 'getChildren',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const folderFields: INodeProperties[] = [
+export const folderFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                 folder:create                              */
@@ -56,7 +44,6 @@ export const folderFields: INodeProperties[] = [
 		name: 'name',
 		required: true,
 		type: 'string',
-		placeholder: '/Pictures/2021',
 		displayOptions: {
 			show: {
 				operation: [
@@ -68,7 +55,7 @@ export const folderFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The name or path of the folder',
+		description: `Folder's name`,
 	},
 	{
 		displayName: 'Options',
@@ -97,7 +84,7 @@ export const folderFields: INodeProperties[] = [
 		],
 	},
 /* -------------------------------------------------------------------------- */
-/*                                 folder:getChildren/delete                  */
+/*                                 folder:getChildren                         */
 /* -------------------------------------------------------------------------- */
 	{
 		displayName: 'Folder ID',
@@ -106,7 +93,6 @@ export const folderFields: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				operation: [
-					'delete',
 					'getChildren',
 				],
 				resource: [
@@ -115,6 +101,7 @@ export const folderFields: INodeProperties[] = [
 			},
 		},
 		default: '',
+		description: 'Folder ID',
 	},
 /* -------------------------------------------------------------------------- */
 /*                                 folder:search                              */
@@ -134,84 +121,7 @@ export const folderFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The query text used to search for items. Values may be matched across several fields including filename, metadata, and file content.',
+		description: `The query text used to search for items. Values may be matched
+		across several fields including filename, metadata, and file content.`,
 	},
-/* -------------------------------------------------------------------------- */
-/*                                 folder:share                               */
-/* -------------------------------------------------------------------------- */
-	{
-		displayName: 'Folder ID',
-		name: 'folderId',
-		type: 'string',
-		displayOptions: {
-			show: {
-				operation: [
-					'share',
-				],
-				resource: [
-					'folder',
-				],
-			},
-		},
-		default: '',
-		description: 'File ID',
-	},
-	{
-		displayName: 'Type',
-		name: 'type',
-		type: 'options',
-		options: [
-			{
-				name: 'View',
-				value: 'view',
-			},
-			{
-				name: 'Edit',
-				value: 'edit',
-			},
-			{
-				name: 'Embed',
-				value: 'embed',
-			},
-		],
-		displayOptions: {
-			show: {
-				operation: [
-					'share',
-				],
-				resource: [
-					'folder',
-				],
-			},
-		},
-		default: '',
-		description: 'The type of sharing link to create',
-	},
-	{
-		displayName: 'Scope',
-		name: 'scope',
-		type: 'options',
-		options: [
-			{
-				name: 'Anonymous',
-				value: 'anonymous',
-			},
-			{
-				name: 'Organization',
-				value: 'organization',
-			},
-		],
-		displayOptions: {
-			show: {
-				operation: [
-					'share',
-				],
-				resource: [
-					'folder',
-				],
-			},
-		},
-		default: '',
-		description: 'The type of sharing link to create',
-	},
-];
+] as INodeProperties[];

@@ -5,10 +5,9 @@ import {
 
 import {
 	IDataObject,
-	INodeType,
 	INodeTypeDescription,
+	INodeType,
 	IWebhookResponseData,
-	NodeOperationError,
 } from 'n8n-workflow';
 
 import {
@@ -25,6 +24,7 @@ export class FlowTrigger implements INodeType {
 		description: 'Handle Flow events via webhooks',
 		defaults: {
 			name: 'Flow Trigger',
+			color: '#559922',
 		},
 		inputs: [],
 		outputs: ['main'],
@@ -32,7 +32,7 @@ export class FlowTrigger implements INodeType {
 			{
 				name: 'flowApi',
 				required: true,
-			},
+			}
 		],
 		webhooks: [
 			{
@@ -52,11 +52,11 @@ export class FlowTrigger implements INodeType {
 					[
 						{
 							name: 'Project',
-							value: 'list',
+							value: 'list'
 						},
 						{
 							name: 'Task',
-							value: 'task',
+							value: 'task'
 						},
 					],
 				description: 'Resource that triggers the webhook',
@@ -70,16 +70,16 @@ export class FlowTrigger implements INodeType {
 				displayOptions: {
 					show: {
 						resource:[
-							'list',
-						],
+							'list'
+						]
 					},
 					hide: {
 						resource: [
-							'task',
-						],
-					},
+							'task'
+						]
+					}
 				},
-				description: 'Lists IDs, perhaps known better as "Projects" separated by a comma (,)',
+				description: `Lists ids, perhaps known better as "Projects" separated by ,`,
 			},
 			{
 				displayName: 'Task ID',
@@ -90,16 +90,16 @@ export class FlowTrigger implements INodeType {
 				displayOptions: {
 					show: {
 						resource:[
-							'task',
-						],
+							'task'
+						]
 					},
 					hide: {
 						resource: [
-							'list',
-						],
-					},
+							'list'
+						]
+					}
 				},
-				description: 'Task IDs separated by a comma (,)',
+				description: `Taks ids separated by ,`,
 			},
 		],
 
@@ -108,7 +108,11 @@ export class FlowTrigger implements INodeType {
 	webhookMethods = {
 		default: {
 			async checkExists(this: IHookFunctions): Promise<boolean> {
-				const credentials = await this.getCredentials('flowApi');
+				const credentials = this.getCredentials('flowApi');
+
+				if (credentials === undefined) {
+					throw new Error('No credentials got returned!');
+				}
 
 				let webhooks;
 				const qs: IDataObject = {};
@@ -124,8 +128,8 @@ export class FlowTrigger implements INodeType {
 				try {
 					webhooks = await flowApiRequest.call(this, 'GET', endpoint, {}, qs);
 					webhooks = webhooks.integration_webhooks;
-				} catch (error) {
-					throw error;
+				} catch (e) {
+					throw e;
 				}
 				for (const webhook of webhooks) {
 					// @ts-ignore
@@ -138,7 +142,11 @@ export class FlowTrigger implements INodeType {
 				return true;
 			},
 			async create(this: IHookFunctions): Promise<boolean> {
-				const credentials = await this.getCredentials('flowApi');
+				const credentials = this.getCredentials('flowApi');
+
+				if (credentials === undefined) {
+					throw new Error('No credentials got returned!');
+				}
 
 				let resourceIds, body, responseData;
 				const webhookUrl = this.getNodeWebhookUrl('default');
@@ -160,7 +168,7 @@ export class FlowTrigger implements INodeType {
 							url: webhookUrl,
 							resource_type: resource,
 							resource_id: parseInt(resourceId, 10),
-						},
+						}
 					};
 					try {
 						 responseData = await flowApiRequest.call(this, 'POST', endpoint, body);
@@ -178,7 +186,11 @@ export class FlowTrigger implements INodeType {
 				return true;
 			},
 			async delete(this: IHookFunctions): Promise<boolean> {
-				const credentials = await this.getCredentials('flowApi');
+				const credentials = this.getCredentials('flowApi');
+
+				if (credentials === undefined) {
+					throw new Error('No credentials got returned!');
+				}
 
 				const qs: IDataObject = {};
 				const webhookData = this.getWorkflowStaticData('node');
@@ -190,7 +202,7 @@ export class FlowTrigger implements INodeType {
 						const endpoint = `/integration_webhooks/${webhookId}`;
 						try {
 							await flowApiRequest.call(this, 'DELETE', endpoint, {}, qs);
-						} catch (error) {
+						} catch (e) {
 							return false;
 						}
 					}
@@ -205,7 +217,7 @@ export class FlowTrigger implements INodeType {
 		const req = this.getRequestObject();
 		return {
 			workflowData: [
-				this.helpers.returnJsonArray(req.body),
+				this.helpers.returnJsonArray(req.body)
 			],
 		};
 	}

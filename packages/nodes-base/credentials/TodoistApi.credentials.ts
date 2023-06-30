@@ -1,18 +1,17 @@
 import {
 	ICredentialType,
-	INodeProperties,
+	NodePropertyTypes,
 } from 'n8n-workflow';
 
 
 export class TodoistApi implements ICredentialType {
 	name = 'todoistApi';
 	displayName = 'Todoist API';
-	documentationUrl = 'todoist';
-	properties: INodeProperties[] = [
+	properties = [
 		{
 			displayName: 'API Key',
 			name: 'apiKey',
-			type: 'string',
+			type: 'string' as NodePropertyTypes,
 			default: '',
 		},
 	];

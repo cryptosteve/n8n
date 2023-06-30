@@ -2,7 +2,7 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export const boardOperations: INodeProperties[] = [
+export const boardOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -39,9 +39,9 @@ export const boardOperations: INodeProperties[] = [
 		default: 'create',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const boardFields: INodeProperties[] = [
+export const boardFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                 board:archive                              */
@@ -65,7 +65,7 @@ export const boardFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Board unique identifiers',
+		description: 'Board unique identifiers.',
 	},
 /* -------------------------------------------------------------------------- */
 /*                                 board:create                               */
@@ -86,7 +86,7 @@ export const boardFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The board\'s name',
+		description: `The board's name`,
 	},
 	{
 		displayName: 'Kind',
@@ -118,7 +118,7 @@ export const boardFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The board\'s kind (public / private / share)',
+		description: `The board's kind (public / private / share)`,
 	},
 	{
 		displayName: 'Additional Fields',
@@ -145,7 +145,7 @@ export const boardFields: INodeProperties[] = [
 					minValue: 0,
 				},
 				default: 0,
-				description: 'Optional board template ID',
+				description: 'Optional board template id',
 			},
 		],
 	},
@@ -171,7 +171,7 @@ export const boardFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Board unique identifiers',
+		description: 'Board unique identifiers.',
 	},
 /* -------------------------------------------------------------------------- */
 /*                                  board:getAll                              */
@@ -191,7 +191,7 @@ export const boardFields: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -215,6 +215,6 @@ export const boardFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
-];
+] as INodeProperties[];

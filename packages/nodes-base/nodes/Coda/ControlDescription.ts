@@ -1,6 +1,6 @@
 import { INodeProperties } from 'n8n-workflow';
 
-export const controlOperations: INodeProperties[] = [
+export const controlOperations = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -27,9 +27,9 @@ export const controlOperations: INodeProperties[] = [
 		default: 'get',
 		description: 'The operation to perform.',
 	},
-];
+] as INodeProperties[];
 
-export const controlFields: INodeProperties[] = [
+export const controlFields = [
 
 /* -------------------------------------------------------------------------- */
 /*                                   control:get                              */
@@ -50,10 +50,10 @@ export const controlFields: INodeProperties[] = [
 				],
 				operation: [
 					'get',
-				],
+				]
 			},
 		},
-		description: 'ID of the doc',
+		description: 'ID of the doc.',
 	},
 	{
 		displayName: 'Control ID',
@@ -68,10 +68,10 @@ export const controlFields: INodeProperties[] = [
 				],
 				operation: [
 					'get',
-				],
+				]
 			},
 		},
-		description: 'The control to get the row from',
+		description: 'The control to get the row from.',
 	},
 /* -------------------------------------------------------------------------- */
 /*                                   control:getAll                           */
@@ -92,10 +92,10 @@ export const controlFields: INodeProperties[] = [
 				],
 				operation: [
 					'getAll',
-				],
+				]
 			},
 		},
-		description: 'ID of the doc',
+		description: 'ID of the doc.',
 	},
 	{
 		displayName: 'Return All',
@@ -108,11 +108,11 @@ export const controlFields: INodeProperties[] = [
 				],
 				operation: [
 					'getAll',
-				],
+				]
 			},
 		},
 		default: false,
-		description: 'Whether to return all results or only up to a given limit',
+		description: 'If all results should be returned or only up to a given limit.',
 	},
 	{
 		displayName: 'Limit',
@@ -136,6 +136,6 @@ export const controlFields: INodeProperties[] = [
 			maxValue: 100,
 		},
 		default: 50,
-		description: 'Max number of results to return',
+		description: 'How many results to return.',
 	},
-];
+] as INodeProperties[];
